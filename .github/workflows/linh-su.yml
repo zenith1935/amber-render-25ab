@@ -1,0 +1,94 @@
+# KHÔI LỖI TÔNG MÔN THỨ HAI — chạy trên runner của GitHub, song song với khôi lỗi trên VM.
+#
+# CHỖ ĐẶT TỆP NÀY LÀ MỘT LUẬT, không phải một chỗ tuỳ tiện (13/08/2026): **kho nào giữ MÃ NGUỒN
+# thì không chạy nó.** Workflow này nằm trong `.github/workflows/` của một kho khôi lỗi dùng rồi
+# bỏ, và chỉ ở đó. Lý do: nó đòi `WORKER_TOKEN` — chìa TOÀN CỤC, mở cookie của MỌI thành viên —
+# nằm trong Secrets của kho chạy nó, và nó đổ nhật ký vĩnh viễn, ai cũng đọc được, của một tiến
+# trình chuyên cầm cookie đã giải mã. Đặt cả hai thứ ấy lên một kho dùng rồi bỏ thì mất một kho
+# dùng rồi bỏ; đặt lên kho mã nguồn thì mất kho mã nguồn.
+#
+# PHỐI HỢP VỚI VM: không có cơ chế điều phối nào ở đây, và đó là chủ ý — Postgres đã phân xử
+# sẵn. `claimNextJob` là MỘT câu UPDATE nguyên tử: hai khôi lỗi giành nhau thì nhận hai dòng
+# khác nhau, hoặc một dòng và một null. Cộng index `jobs_one_active_per_account`, hai đàn cùng
+# một tài khoản là bất khả thi về cấu trúc. Thêm một tầng "chia việc" ở đây chỉ là dựng một
+# luật thứ hai sống lệch luật thật.
+#
+# BA THỨ PHẢI ĐÚNG, và cả ba đều nằm ở dưới dạng con số:
+#
+#   1. WORKER_ID phải KHÁC VM (`tong-mon-khoiloi`). Trùng tên thì hai tiến trình ghi đè nhau
+#      trong bảng `workers`, và mục Khôi Lỗi trên dashboard nói dối về việc ai đang trực.
+#
+#   2. Tuổi thọ phải NGẮN HƠN trần của nền tảng. Runner bị giết cứng ở 6 giờ; giết giữa một ván
+#      Mê Cung 35 phút thì nhịp tim tắt và `reapStaleJobs` kết liễu đàn ấy sau 3 phút. Nên:
+#        thôi nhận việc ở phút 290 → chờ thu đàn tối đa 50 phút → 340 < 350 (timeout của job)
+#        < 360 (trần nền tảng). Hai lớp đệm, mỗi lớp 10 phút.
+#
+#   3. Lịch phải DÀY HƠN tuổi thọ. 4 giờ một lần trong khi một lượt sống ~4,8 giờ, nên lượt kế
+#      đã nằm chờ sẵn trong hàng đợi lúc lượt cũ thu đàn — `concurrency` giữ đúng một lượt chạy
+#      và một lượt chờ, nên hai lượt không bao giờ chồng nhau mà khoảng hở giữa chúng gần bằng 0.
+#
+# SỨC CHỨA: runner 4 nhân/16GB. Đo trên VM 4 vCPU ngày 10/08/2026: 8 ghế → load 14 và đàn hỏng
+# vì timeout; 5 ghế → load ~2. Runner có ít RAM hơn và chia sẻ I/O nên lấy 2 ghế, dè dặt có chủ
+# ý — VM vẫn là chỗ gánh chính, đây là phần cộng thêm.
+#
+# CÀI ĐẶT — một việc, và lượt dựng tự động đã làm sẵn: Settings → Secrets and variables →
+# Actions, thêm `WORKER_TOKEN` đúng giá trị đang đặt trên Vercel. Chỉ phải làm tay khi dựng kho
+# bằng tay. Thiếu nó thì bước cuối dừng ngay với một câu nói rõ, không chạy rỗng rồi để người ta
+# đoán.
+
+name: Khôi lỗi tông môn (GitHub)
+
+on:
+  schedule:
+    # Xem điều 3 ở trên: dày hơn tuổi thọ để lượt kế đã chờ sẵn khi lượt cũ rút lui.
+    - cron: "0 */4 * * *"
+  workflow_dispatch:
+
+# Đúng MỘT khôi lỗi GitHub tại một thời điểm. `cancel-in-progress: false` là bắt buộc: huỷ lượt
+# đang chạy nghĩa là cắt ngang đàn đang cày, đúng thứ cả thiết kế này sinh ra để tránh.
+concurrency:
+  group: linh-su-github
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  linh-su:
+    runs-on: ubuntu-latest
+    # 350 phút: để timeout của GitHub bắn TRƯỚC trần 6 giờ của nền tảng, nên lượt chạy kết thúc
+    # bằng một dòng đỏ đọc được thay vì biến mất không lời giải thích.
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # Chỉ Chromium — cùng lý do với workflow usage: mặc định Playwright kéo cả Firefox lẫn
+      # WebKit, tức vài phút mỗi lượt cho hai thứ không ai dùng. `--with-deps` cài thư viện hệ
+      # thống mà Chromium cần trên runner sạch.
+      - run: npx playwright install --with-deps chromium
+
+      - name: Trực ca
+        env:
+          WEB_URL: ${{ vars.WEB_URL || 'https://auto-hh3d-4.vercel.app' }}
+          WORKER_TOKEN: ${{ secrets.WORKER_TOKEN }}
+          # Danh tính riêng — xem điều 1.
+          WORKER_ID: amber-render-25ab
+          WORKER_MAX_JOBS: "2"
+          WORKER_QUEST_TABS: "3"
+          # 290 phút / 50 phút — xem điều 2. Viết bằng mili giây vì worker.mjs đọc thẳng.
+          WORKER_MAX_LIFETIME_MS: "17400000"
+          WORKER_DRAIN_TIMEOUT_MS: "3000000"
+        run: |
+          set -eu
+          if [ -z "${WORKER_TOKEN:-}" ]; then
+            echo "::error::Thiếu secret WORKER_TOKEN — khôi lỗi không xác thực được với /api/worker."
+            exit 1
+          fi
+          node scripts/worker.mjs
