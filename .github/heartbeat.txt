@@ -1,0 +1,6 @@
+Mốc nuôi kho — giữ cho lịch `schedule` của workflow khỏi bị GitHub tắt sau
+60 ngày kho không có commit nào. Ghi tự động, ~20 ngày một lần.
+
+ĐỪNG XOÁ tệp này, và cũng đừng sửa tay: lượt ghi kế tiếp cần `sha` của bản hiện tại.
+
+2026-08-18T17:11:30.806Z
