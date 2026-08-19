@@ -23,12 +23,17 @@
  * không phải hằng số — biến môi trường `GAME_BASE_URL` đè lên được, để một cú dời tên miền
  * chỉ tốn một lần sửa env thay vì một lần deploy.
  *
+ * Cú dời 20/08/2026 (.one → .so) tốn NHIỀU NGÀY và năm lượt vá đi chữa nhầm chỗ: hằng số này
+ * đứng im ở .one trong khi tông chủ đã đặt .so ở trang Tông Môn, mà giá trị ấy lại không có
+ * đường nào tới khôi lỗi (xem cửa phát việc trong api/worker/route.ts). Triệu chứng đọc y hệt
+ * một cú chặn của Cloudflare, nên cả năm lượt đều đi vá trình duyệt.
+ *
  * Cú dời 07/08/2026 (.am → .one) tốn của tông môn nhiều giờ chạy vô ích, và bài học không
  * nằm ở con số này: cookie GẮN CHẶT vào tên miền, nên đổi tên miền là mọi phiên đăng nhập
  * đã lưu chết theo, và đạo hữu BẮT BUỘC phải dán lại chuỗi cookie lấy từ tên miền mới. Cổng
  * sẵn sàng giờ tự nhận ra cú 301 và nói thẳng điều đó (xem `movedTo` trong runCycle).
  */
-export const DEFAULT_GAME_BASE_URL = "https://hoathinh3d.one";
+export const DEFAULT_GAME_BASE_URL = "https://hoathinh3d.so";
 
 /**
  * Chuẩn hoá thứ trưởng môn gõ vào ô tên miền thành một ORIGIN sạch, hoặc nói rõ vì sao không.

@@ -272,8 +272,9 @@ const result = (quest, outcome, extra = {}) => ({
  * @param {{info:Function, debug:Function, warning:Function}} deps.log  nhận (scope, message)
  * @param {() => boolean} [deps.shouldStop]   true khi người dùng đã bấm dừng
  * @param {{resolve:Function, learn:Function}} [deps.quiz]  kho đáp án, nếu có
- * @param {(session: object) => Promise<boolean>} [deps.clickTurnstile]  cách GỠ một màn kiểm tra
- *   gặp giữa vòng — trả `true` CHỈ KHI trang đã hết màn kiểm tra. Vắng mặt (cờ tắt) thì engine
+ * @param {(session: object) => Promise<{cleared: boolean, clicked: boolean}>} [deps.clickTurnstile]  cách GỠ một màn kiểm tra
+ *   gặp giữa vòng — `cleared: true` CHỈ KHI trang đã hết màn kiểm tra; `clicked` để lời báo kể
+ *   đúng chuyện đã xảy ra. Vắng mặt (cờ tắt) thì engine
  *   giữ nguyên nết cũ: phát hiện rồi dừng cả vòng.
  */
 export function createQuestEngine(deps) {
@@ -536,9 +537,13 @@ export function createQuestEngine(deps) {
         // THỬ GỠ trước khi bỏ chạy. Đo 20/08/2026 trên sản xuất: màn kiểm tra tới GIỮA VÒNG chứ
         // không ở cổng đầu vòng — nên cú bấm Turnstile đặt ở cổng (1.3.18) chưa một lần được
         // chạy, dù cờ đã bật. Không thử ở đây thì nó vĩnh viễn không có cơ hội nào.
+        // Giữ lại CHI TIẾT chứ không chỉ true/false: một lời báo nói「đã thử bấm」trong khi thực ra
+        // không tìm thấy ô nào để bấm là đúng loại câu đánh lừa người đọc đi chữa nhầm chỗ — bài
+        // học từ chính dòng「Trang chưa dựng xong sau 25s」của bản 1.3.18.
+        let attempt2 = null;
         if (clickTurnstile && challengeClears < MAX_CHALLENGE_CLEARS) {
-          const cleared = await clickTurnstile(session);
-          if (cleared) {
+          attempt2 = await clickTurnstile(session);
+          if (attempt2 && attempt2.cleared === true) {
             challengeClears += 1;
             log.info(scope, "Đã gỡ được màn kiểm tra — đi tiếp nhiệm vụ này.");
             continue;
@@ -547,7 +552,13 @@ export function createQuestEngine(deps) {
         throw new CycleBlocked(
           "Trang game dựng màn kiểm tra (Cloudflare) giữa vòng — mọi nhiệm vụ sau đều sẽ hỏng vì " +
             "cùng lẽ ấy, nên dừng sớm để nhường ghế thay vì thử lại vô ích." +
-            (clickTurnstile ? " Đã thử bấm ô kiểm tra mà không qua." : ""),
+            (attempt2 == null
+              ? challengeClears > 0
+                ? ` Đã gỡ được ${challengeClears} lần mà màn kiểm tra cứ dựng lại.`
+                : ""
+              : attempt2.clicked === true
+                ? " Đã bấm ô kiểm tra mà vẫn không qua."
+                : " Không tìm thấy ô nào để bấm — màn kiểm tra dạng tự chạy."),
         );
       }
 

@@ -832,7 +832,8 @@ export async function runCycle(deps) {
       /**
      * Gỡ màn kiểm tra gặp GIỮA VÒNG: bấm ô Turnstile rồi hỏi lại trang.
      *
-     * Trả về true CHỈ KHI trang đã hết màn kiểm tra — engine tin vào câu trả lời ấy để đi tiếp,
+     * Trả `cleared: true` CHỈ KHI trang đã hết màn kiểm tra — engine tin vào câu trả lời ấy để đi
+     * tiếp; `clicked` nói có hạ được cú bấm nào không, để lời báo cuối kể ĐÚNG chuyện đã xảy ra,
      * nên một lời hứa hão ở đây sẽ đổi thành mười ba nhiệm vụ hỏng. Không bật cờ thì `null`, và
      * engine giữ nguyên nết cũ: phát hiện rồi dừng sớm.
      */
@@ -842,7 +843,7 @@ export async function runCycle(deps) {
             const res = await attemptTurnstileClick(sess.page);
             if (!res.clicked) {
               log.debug("Sẵn sàng", `Không bấm được ô kiểm tra giữa vòng: ${res.note}.`);
-              return false;
+              return { cleared: false, clicked: false };
             }
             await say("Đã bấm ô kiểm tra (Turnstile) giữa vòng — chờ xem có qua không…");
             // Cloudflare cần vài giây để đổi trang sau một cú bấm hợp lệ; hỏi lại vài nhịp thay
@@ -851,9 +852,9 @@ export async function runCycle(deps) {
             while (Date.now() < deadlineAt) {
               await new Promise((r) => setTimeout(r, TURNSTILE_CLEAR_POLL_MS));
               const again = await sess.evaluate(readinessProbe);
-              if (again && again.challenge !== true) return true;
+              if (again && again.challenge !== true) return { cleared: true, clicked: true };
             }
-            return false;
+            return { cleared: false, clicked: true };
           };
 
       const engine = createQuestEngine({ log, shouldStop, quiz, clickTurnstile: clearChallenge });
