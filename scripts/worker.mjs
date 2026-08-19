@@ -20,6 +20,10 @@
  *   • Linh phù cá nhân phát ở mục Khôi Lỗi           → chỉ nhận job của chính chủ.
  *
  *   WEB_URL=https://<app>.vercel.app WORKER_TOKEN=... node scripts/worker.mjs
+ *
+ * WORKER_SOLVE_TURNSTILE=1 bật cú tự bấm ô Turnstile khi vấp màn Cloudflare (mặc định TẮT).
+ * Chỉ giúp màn tương tác, và KHÔNG chữa được gốc IP trung tâm dữ liệu — bật cho máy IP dân dụng.
+ * Chi tiết ở runCycle.mjs (khối TURNSTILE) và deploy/github-actions.md.
  */
 
 import { fileURLToPath } from "node:url";

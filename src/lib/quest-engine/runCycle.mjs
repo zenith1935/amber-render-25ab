@@ -155,6 +155,91 @@ export function launchProfile(headless) {
   };
 }
 
+/**
+ * ── QUA MÀN TURNSTILE BẰNG CHÍNH BROWSER CỦA WORKER (không tiêm token) ───────────────────────
+ *
+ * Cửa Cloudflare chặn khôi lỗi là màn "Just a moment" — một interstitial mang widget Turnstile
+ * (iframe challenges.cloudflare.com). Qua được nó, Cloudflare cấp cookie cf_clearance, thứ nó
+ * KHOÁ CHẶT vào IP + User-Agent + dấu tay TLS đã giải nó. Vì thế KHÔNG có đường「giải ở nơi khác
+ * rồi tiêm token vào」: một token/clearance sinh trên IP khác là vô hiệu ngay khi worker dùng từ
+ * IP của mình. Cách duy nhất đúng kiến trúc là để CHÍNH browser của worker tự bấm ô Turnstile,
+ * trong cùng phiên, cùng IP.
+ *
+ * GIỚI HẠN, nói thẳng: cú bấm này chỉ giúp màn Turnstile TƯƠNG TÁC (có ô để bấm). Màn managed
+ * non-interactive tự chạy, không có ô — cú bấm rơi vào khoảng không, vô hại. Và nó KHÔNG chữa
+ * được gốc「IP trung tâm dữ liệu bị Cloudflare ghét」: một IP đã bị đánh dấu thì bấm kiểu gì
+ * cũng bị phát lại màn kiểm tra. Đường chữa gốc là proxy dân dụng / IP dân dụng, không phải đây.
+ * Xem deploy/github-actions.md và ghi nhớ client-hints-lo-headlesschrome.
+ */
+export const TURNSTILE_IFRAME_SELECTOR = 'iframe[src*="challenges.cloudflare.com"]';
+
+/** Ô tick của Turnstile nằm sát MÉP TRÁI widget, canh giữa theo chiều dọc (đo trên bản normal 300×65). */
+const CHECKBOX_INSET_PX = 30;
+/** Không bao giờ bấm sát mép iframe — lệch vài pixel là cú bấm rơi ra ngoài widget. */
+const CHECKBOX_MARGIN_PX = 6;
+/** Người thật không bấm trúng một pixel hai lần. */
+const CHECKBOX_JITTER_PX = 6;
+/** Bấm nhiều nhất bấy nhiêu lần trong MỘT màn kiểm tra — không dội mỗi nhịp poll. */
+export const MAX_TURNSTILE_CLICKS = 2;
+/** Cách quãng giữa hai lần thử, để một màn còn treo không bị bấm liên hồi. */
+export const TURNSTILE_CLICK_GAP_MS = 6_000;
+
+const clampNum = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const mouseSleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const errMsg = (e) => (e instanceof Error ? e.message : String(e));
+
+/**
+ * Điểm bấm trên ô tick, tính từ hộp bao của iframe widget. Thuần để kiểm được: `rand` tiêm vào
+ * (mặc định Math.random) nên phép thử chốt được toạ độ. Widget hẹp hơn 2×INSET thì nhắm GIỮA
+ * thay vì 30px từ trái — ô tick của bản compact xê vào trong.
+ */
+export function turnstileCheckboxPoint(box, rand = Math.random) {
+  const jitter = (rand() * 2 - 1) * CHECKBOX_JITTER_PX;
+  const insetX = box.width >= CHECKBOX_INSET_PX * 2 ? CHECKBOX_INSET_PX : box.width / 2;
+  const marginX = Math.min(CHECKBOX_MARGIN_PX, box.width / 2);
+  const marginY = Math.min(CHECKBOX_MARGIN_PX, box.height / 2);
+  const x = box.x + clampNum(insetX + jitter, marginX, box.width - marginX);
+  const y = box.y + clampNum(box.height / 2 + jitter, marginY, box.height - marginY);
+  return { x, y };
+}
+
+/**
+ * Thử bấm ô tick Turnstile trên trang SỐNG. Best-effort: KHÔNG BAO GIỜ ném — trả về
+ * `{ clicked, note }`, note luôn nói vì sao (để người gọi ghi Debug, không nuốt lỗi lặng lẽ).
+ *
+ * Di chuột theo một quãng ngắn rồi mới bấm, thay vì nhảy thẳng tới ô: Turnstile soi quỹ đạo con
+ * trỏ, một cú teleport-rồi-click là dấu tự động rõ nhất. KHÔNG hứa đây là「như người」— chỉ ít
+ * máy móc hơn một cú click tại chỗ. Click qua TOẠ ĐỘ trang nên xuyên được iframe khác gốc (sự
+ * kiện chuột theo toạ độ không cần với vào trong frame).
+ */
+export async function attemptTurnstileClick(page, { rand = Math.random } = {}) {
+  let handle;
+  try {
+    handle = await page.$(TURNSTILE_IFRAME_SELECTOR);
+  } catch (err) {
+    return { clicked: false, note: `không hỏi được iframe: ${errMsg(err)}` };
+  }
+  if (!handle) return { clicked: false, note: "không thấy iframe Turnstile" };
+  try {
+    const box = await handle.boundingBox();
+    if (!box || box.width < 1 || box.height < 1) {
+      return { clicked: false, note: "iframe Turnstile chưa có kích thước (headless, hoặc chưa dựng xong)" };
+    }
+    const point = turnstileCheckboxPoint(box, rand);
+    const startX = Math.max(0, box.x - 30 - rand() * 40);
+    const startY = Math.max(0, box.y - 15 - rand() * 25);
+    await page.mouse.move(startX, startY);
+    await page.mouse.move(point.x, point.y, { steps: 12 + Math.floor(rand() * 10) });
+    await mouseSleep(120 + Math.floor(rand() * 240));
+    await page.mouse.click(point.x, point.y, { delay: 40 + Math.floor(rand() * 90) });
+    return { clicked: true, note: `đã bấm (${Math.round(point.x)}, ${Math.round(point.y)})` };
+  } catch (err) {
+    return { clicked: false, note: `bấm hỏng: ${errMsg(err)}` };
+  } finally {
+    await handle.dispose().catch(() => {});
+  }
+}
+
 /** Outcome của engine → câu người đọc, và mức độ để hiện trên Hoạt động. */
 const OUTCOME_TEXT = {
   completed: { level: "success", say: (r) => r.message?.trim() || "xong" },
@@ -223,7 +308,7 @@ function delayUntilDailyReset(resetsInSeconds) {
  * đâu thay vì làm tròn thành「xong」, và người gọi — vốn ghé hub ngay sau đó — mới là chỗ có
  * bằng chứng dứt điểm. Đêm 07/08 mất bốn phút mỗi vòng chỉ vì chỗ này từng làm tròn.
  */
-async function ensureReady(session, baseUrl, say, log, { context, cookieJar }) {
+async function ensureReady(session, baseUrl, say, log, { context, cookieJar, solveTurnstile }) {
   /**
    * Tên miền mà lượt điều hướng THẬT SỰ dừng chân, nếu nó khác nơi ta gõ cửa. Site đổi TLD
    * định kỳ (mx → am → …) và tên miền cũ 301 sang tên miền mới; cookie thì gắn chặt vào
@@ -253,6 +338,8 @@ async function ensureReady(session, baseUrl, say, log, { context, cookieJar }) {
     const deadline = Date.now() + 45_000;
     let probe = null;
     let saidChallenge = false;
+    let turnstileClicks = 0;
+    let nextTurnstileClickAt = 0;
 
     while (Date.now() < deadline) {
       probe = await session.evaluate(readinessProbe);
@@ -268,6 +355,18 @@ async function ensureReady(session, baseUrl, say, log, { context, cookieJar }) {
         // sau vài giây, nhưng mỗi nhịp poll mà một dòng nhật ký thì thành rác.
         await say("Trang game đang dựng màn kiểm tra (Cloudflare) — khôi lỗi đứng chờ trước cổng…", "warn");
         saidChallenge = true;
+      }
+      // Chỉ bấm khi được bật, và bấm có chừng: nhiều nhất MAX lần, cách nhau GAP — màn managed
+      // non-interactive không có ô nên `clicked` là false, ta ghi Debug rồi chờ tiếp như cũ.
+      if (solveTurnstile && turnstileClicks < MAX_TURNSTILE_CLICKS && Date.now() >= nextTurnstileClickAt) {
+        const res = await attemptTurnstileClick(session.page);
+        nextTurnstileClickAt = Date.now() + TURNSTILE_CLICK_GAP_MS;
+        if (res.clicked) {
+          turnstileClicks += 1;
+          log.debug("Sẵn sàng", `Thử qua Turnstile: ${res.note} (lần ${turnstileClicks}/${MAX_TURNSTILE_CLICKS}).`);
+        } else {
+          log.debug("Sẵn sàng", `Chưa bấm được Turnstile: ${res.note}.`);
+        }
       }
       await new Promise((r) => setTimeout(r, 2_000));
     }
@@ -382,6 +481,11 @@ export async function runCycle(deps) {
     headless = true,
     profileDir = process.env.BROWSER_PROFILE_DIR || "",
     dailyDone = null,
+    // Thử tự bấm ô Turnstile khi vấp màn Cloudflare. TẮT mặc định: nó chưa đo được với
+    // Cloudflare thật, và một cú bấm sai chỗ trên hạ tầng CHUNG (nhiều đàn của người khác
+    // trên cùng worker) có thể làm Cloudflare nghi hơn. Bật cho từng máy bằng
+    // WORKER_SOLVE_TURNSTILE=1 — hợp nhất với máy IP dân dụng, nơi nó có cửa ăn thua.
+    solveTurnstile = process.env.WORKER_SOLVE_TURNSTILE === "1",
   } = deps;
 
   if (!config?.gameCookie?.trim()) {
@@ -551,7 +655,7 @@ export async function runCycle(deps) {
     // Cổng sẵn sàng TRƯỚC mọi quest: bị Cloudflare chặn hay hết phiên đăng nhập phải được
     // gọi đúng tên ở đây, không phải chết ở selector đầu tiên của một quest vô tội. Đưa cả
     // context và cookieJar vào để nó tự chữa được một hồ sơ mang cookie đã chết.
-    const ready = await ensureReady(session, baseUrl, say, log, { context, cookieJar });
+    const ready = await ensureReady(session, baseUrl, say, log, { context, cookieJar, solveTurnstile });
     if (!ready.ok) {
       return scheduledCycleResult("failed", ready.message);
     }
