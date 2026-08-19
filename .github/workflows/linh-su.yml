@@ -85,6 +85,11 @@ jobs:
           # 290 phút / 50 phút — xem điều 2. Viết bằng mili giây vì worker.mjs đọc thẳng.
           WORKER_MAX_LIFETIME_MS: "17400000"
           WORKER_DRAIN_TIMEOUT_MS: "3000000"
+          # Tự bấm ô Turnstile khi vấp màn kiểm tra. Bật ở ĐÂY (chứ không đổi mặc định trong mã)
+          # vì cân nhắc đã đổi: đo 20/08/2026 thì cả bốn khôi lỗi tông môn đều bị chặn, `việc
+          # xong = 0` suốt ba giờ — không còn gì để mất. Lượt ghé cổng nay tự kể đã bấm mấy lần,
+          # nên bật xong là ĐO ĐƯỢC ngay trên Hoạt động chứ không phải đoán.
+          WORKER_SOLVE_TURNSTILE: "1"
         run: |
           set -eu
           if [ -z "${WORKER_TOKEN:-}" ]; then

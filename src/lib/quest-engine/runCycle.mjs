@@ -318,6 +318,9 @@ async function ensureReady(session, baseUrl, say, log, { context, cookieJar, sol
   let movedTo = null;
 
   /** Vào trang chủ rồi đọc trạng thái, chờ màn Cloudflare tự qua nếu có. */
+  /** Tổng số cú bấm Turnstile của CẢ lượt ghé cổng — để lời báo cuối kể được nó có làm gì không. */
+  let clicksThisGate = 0;
+
   async function probeOnce() {
     // Dọn trước mỗi lượt: hàm này chạy tới HAI lần (lượt sau là sau khi tiêm lại cookie),
     // và `movedTo` phải kể về lượt điều hướng CUỐI chứ không giữ lại kết luận của lượt đầu.
@@ -363,6 +366,14 @@ async function ensureReady(session, baseUrl, say, log, { context, cookieJar, sol
         nextTurnstileClickAt = Date.now() + TURNSTILE_CLICK_GAP_MS;
         if (res.clicked) {
           turnstileClicks += 1;
+          // ĐÚNG MỘT dòng lên Hoạt động, ở cú bấm ĐẦU TIÊN. Vòng poll chạy mỗi 2 giây nên nói
+          // mỗi nhịp là rác; nhưng im hẳn (chỉ log.debug — thứ chỉ vào console runner, không
+          // vào job_events) thì bật cờ này lên là bật một thứ KHÔNG ĐO ĐƯỢC: không ai biết nó
+          // có bấm không, càng không biết bấm xong có qua không.
+          clicksThisGate += 1;
+          if (turnstileClicks === 1) {
+            await say("Đã bấm ô kiểm tra (Turnstile) — chờ xem màn kiểm tra có qua không…");
+          }
           log.debug("Sẵn sàng", `Thử qua Turnstile: ${res.note} (lần ${turnstileClicks}/${MAX_TURNSTILE_CLICKS}).`);
         } else {
           log.debug("Sẵn sàng", `Chưa bấm được Turnstile: ${res.note}.`);
@@ -406,10 +417,19 @@ async function ensureReady(session, baseUrl, say, log, { context, cookieJar, sol
   }
 
   if (probe.challenge) {
+    // Kể luôn đã bấm mấy lần: đó là thứ phân biệt「chưa từng thử」với「thử rồi mà Cloudflare
+    // vẫn không cho qua」— hai kết luận dẫn tới hai việc phải làm hoàn toàn khác nhau.
+    const clicked =
+      clicksThisGate > 0
+        ? ` Đã bấm ô kiểm tra ${clicksThisGate} lần mà vẫn không qua.`
+        : solveTurnstile
+          ? " Không thấy ô nào để bấm (màn kiểm tra dạng tự chạy)."
+          : "";
     return {
       ok: false,
       message:
-        "Màn kiểm tra (Cloudflare) của trang game không tự qua — lượt này đành dừng, lượt sau sẽ thử lại.",
+        "Màn kiểm tra (Cloudflare) của trang game không tự qua — lượt này đành dừng, lượt sau sẽ thử lại." +
+        clicked,
     };
   }
 
