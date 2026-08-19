@@ -680,11 +680,19 @@ export function createQuestEngine(deps) {
           // dừng là「hết lượt hôm nay」hay「ta chưa biết đáp án」— một phép đoán chết lặng vào
           // ngày ai đó sửa lời văn của một quest trong hồ sơ.
           state.dailyCapReached = true;
-          // Info chứ không Debug: "đã đủ huyền tinh hôm nay" là câu trả lời người ta mở
-          // Hoạt động lên để tìm, không phải một chi tiết máy móc. Và nói TRẦN câu trả lời:
-          // "stopIf khớp" là tên một loại bước trong script — ngôn ngữ của người viết flow,
-          // không phải của người đọc nhật ký (ảnh 05/08 là bằng chứng nó gây khó hiểu).
-          log.info(scope, state.stopReason);
+          // KHÔNG kể ở đây, và đó là chủ ý — xem `stopReason` đi tiếp vào `result.message`.
+          //
+          // Lý do dừng vẫn phải tới tay người đọc bằng lời TRẦN ("đã đủ huyền tinh hôm nay",
+          // chứ không phải "stopIf khớp" — ngôn ngữ của người viết flow; ảnh 05/08 là bằng
+          // chứng nó gây khó hiểu). Nhưng người kể là VÒNG CHẠY, không phải chỗ này: mọi kết
+          // cục đều đi qua `OUTCOME_TEXT` của runCycle và ra đúng một dòng tổng kết
+          //「<tên>: <lý do>」, cùng khuôn với mọi nhiệm vụ khác.
+          //
+          // Kể ở CẢ HAI nơi là cái lỗi vừa gỡ: nhật ký hiện hai dòng y hệt nhau cách nhau vài
+          // mili giây, chỉ khác mỗi tiền tố `Quest:` của scope này —「Quest:Mê Cung: đã đủ
+          // huyền tinh hôm nay」ngay trên「Mê Cung: đã đủ huyền tinh hôm nay」. Đo trên bản ghi
+          // thật 19/08/2026: 323 đôi trong ba ngày, trải khắp 11 nhiệm vụ. Và vì hai lượt gửi
+          // đều là POST bắn-rồi-quên, thứ tự hai dòng còn đảo qua đảo lại giữa các lượt.
         }
 
         return null;

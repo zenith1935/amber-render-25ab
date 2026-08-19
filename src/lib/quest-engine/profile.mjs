@@ -116,14 +116,35 @@ export const PHU_DAILY_MARK = "khoang-mach:phu";
  * người dùng bật — không có danh sách thứ hai nào có quyền phủ quyết ngầm.
  *
  * @param {object} config  UserConfig đã qua Zod (xem services/configs.ts)
- * @param {(msg: string) => void} [log]  nơi kể lại những chỗ dịch không khớp
+ * @param {(msg: string) => void} [say]  nơi kể lại những chỗ dịch không khớp. MỖI CÂU ĐÚNG
+ *   MỘT LẦN — xem `log` bên dưới.
  * @param {Iterable<string>} [marksToday]  sổ ngày của đàn (`daily_done.questIds`) — những gì
  *   đã làm xong hôm nay. Vắng mặt = sổ trắng, đúng nghĩa cho mọi người gọi chỉ muốn dịch cấu
  *   hình (smoke test, lưới kiểm chứng) chứ không chạy một vòng thật.
  */
-export function profileForConfig(config, log, marksToday) {
+export function profileForConfig(config, say, marksToday) {
   const doneToday = marksToday instanceof Set ? marksToday : new Set(marksToday ?? []);
   const profile = loadProfile();
+
+  /**
+   * Mỗi câu ĐÚNG MỘT LẦN, chặn ngay tại cửa ra.
+   *
+   * Từ schema 45 mỗi tên nhiệm vụ là một CẶP flow (VIP + thường) dùng chung cấu hình, nên mọi
+   * vòng dịch bên dưới chạy hai lượt và `setOption` kể lại y hệt hai lần. Nhật ký của đàn vì
+   * thế mang từng đôi một: đo trên bản ghi thật 19/08/2026 là 414 dòng thừa trong ba ngày,
+   * kiểu「Option 'kickIdle' của「Mê Cung」nhận giá trị tự nhập: '20'.」cách nhau 156ms.
+   *
+   * Lọc được ở đây mà không mất mát gì, vì TÊN NHIỆM VỤ nằm sẵn trong mọi câu: trùng chữ
+   * nghĩa là trùng cả nhiệm vụ lẫn option, tức đúng một sự thật được nói hai lần. Đặt ở cửa
+   * ra chứ không ở từng vòng dịch — người gọi nào cũng khỏi phải tự lọc, và một vòng dịch
+   * thêm sau này không kéo cái lỗi ấy sống lại.
+   */
+  const said = new Set();
+  const log = (message) => {
+    if (said.has(message)) return;
+    said.add(message);
+    say?.(message);
+  };
 
   // ---- Mê Cung ----------------------------------------------------------------------
   // Số NHIỀU từ schema 45: mỗi tên có cặp flow VIP/thường (me-cung + me-cung-thuong) dùng
