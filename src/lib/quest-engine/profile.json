@@ -1,6 +1,6 @@
 {
   "name": "Ho\u1EA1t \u0111\u1ED9ng h\u00E0ng ng\u00E0y (m\u1EB7c \u0111\u1ECBnh)",
-  "schemaVersion": 70,
+  "schemaVersion": 71,
   "dailyQuestPath": "/nhiem-vu-hang-ngay",
   "quests": [
     {
@@ -871,6 +871,361 @@
       "requiresVip": true,
       "order": 10,
       "notes": "\u0110i\u1EC3m danh m\u1ED7i ng\u00E0y nh\u1EADn th\u01B0\u1EDFng v\u00E0 gi\u1EEF chu\u1ED7i ng\u00E0y (streak)."
+    },
+    {
+      "id": "hy-su-duong",
+      "name": "H\u1EF7 S\u1EF1 \u0110\u01B0\u1EDDng",
+      "enabled": false,
+      "kind": "customSteps",
+      "matchTexts": [
+        "h\u1EF7 s\u1EF1 \u0111\u01B0\u1EDDng",
+        "hy su duong"
+      ],
+      "pagePath": "/tien-duyen",
+      "steps": [
+        {
+          "action": "navigate",
+          "text": "/tien-duyen",
+          "timeoutMs": 15000
+        },
+        {
+          "action": "waitForSelector",
+          "selector": ".tien-duyen-btn.hy-su-btn",
+          "timeoutMs": 25000,
+          "note": "trang Ti\u00EAn Duy\u00EAn render xong m\u1EDBi c\u00F3 d\u00E3y n\u00FAt ch\u1EE9c n\u0103ng"
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { try { sessionStorage.removeItem(\u0027__jvz_hy_su_seen\u0027); sessionStorage.removeItem(\u0027__jvz_hy_su_log\u0027); sessionStorage.removeItem(\u0027__jvz_hy_su_gift\u0027); } catch (e) { } return \u0027h\u1EF7 s\u1EF1: s\u1ED5 ph\u00F2ng \u0111\u00E3 gh\u00E9 v\u00E0 s\u1ED5 k\u1EBFt c\u1EE5c \u0111\u01B0\u1EE3c xo\u00E1 cho l\u01B0\u1EE3t m\u1EDBi\u0027; }",
+          "timeoutMs": 4000,
+          "note": "xo\u00E1 s\u1ED5 ph\u00F2ng \u0111\u00E3 gh\u00E9 c\u1EE7a l\u01B0\u1EE3t tr\u01B0\u1EDBc \u2014 sessionStorage s\u1ED1ng l\u00E2u h\u01A1n m\u1ED9t l\u01B0\u1EE3t gh\u00E9, s\u1ED5 c\u0169 s\u1EBD l\u00E0m l\u01B0\u1EE3t n\u00E0y t\u01B0\u1EDFng \u0111\u00E3 gh\u00E9 h\u1EBFt r\u1ED3i",
+          "optional": true
+        },
+        {
+          "action": "click",
+          "selector": ".tien-duyen-btn.hy-su-btn",
+          "timeoutMs": 15000,
+          "note": "m\u1EDF modal \u0022\u0110\u1EA1i \u0110i\u1EC3n \u0110ang Di\u1EC5n Ra\u0022 \u2014 badge \u0111\u1ECF tr\u00EAn n\u00FAt l\u00E0 s\u1ED1 ti\u1EC7c \u0111ang m\u1EDF"
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 10000,
+          "note": "modal \u0111\u00E3 m\u1EDF",
+          "condition": {
+            "kind": "visible",
+            "selector": "#wedding-now-body"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 15000,
+          "note": "danh s\u00E1ch ti\u1EC7c n\u1EA1p async (\u0022\u0110ang t\u1EA3i danh s\u00E1ch ti\u1EC7c c\u01B0\u1EDBi...\u0022) \u2014 ph\u1EA3i ch\u1EDD n\u00F3 v\u1EC1 r\u1ED3i m\u1EDBi \u0111\u01B0\u1EE3c ph\u00E1n \u0022h\u1EBFt ph\u00F2ng ch\u01B0a ch\u00FAc\u0022; optional v\u00EC h\u00F4m kh\u00F4ng c\u00F3 ti\u1EC7c n\u00E0o l\u00E0 chuy\u1EC7n b\u00ECnh th\u01B0\u1EDDng, StopIf/until b\u00EAn d\u01B0\u1EDBi m\u1EDBi l\u00E0 n\u01A1i tr\u1EA3 l\u1EDDi",
+          "optional": true,
+          "condition": {
+            "kind": "visible",
+            "selector": "#wedding-now-body .wedding-now-item"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const MARK = \u0027jvz-hy-su-done\u0027; const FAILED = \u0027jvz-hy-su-all-failed\u0027; const KEY = \u0027__jvz_hy_su_seen\u0027; const LOG = \u0027__jvz_hy_su_log\u0027; const read = (k) =\u003E { try { return JSON.parse(sessionStorage.getItem(k) || \u0027[]\u0027); } catch (e) { return []; } }; const roomId = (row) =\u003E { const a = row.querySelector(\u0027a.wedding-now-btn\u0027); const href = a ? (a.getAttribute(\u0027href\u0027) || \u0027\u0027) : \u0027\u0027; const m = href.match(/[?\u0026]id=(\\d\u002B)/); return m ? m[1] : href; }; const gift = (r) =\u003E !!r.querySelector(\u0027.wedding-now-li-xi-available\u0027); if (document.body) { document.body.classList.remove(MARK); document.body.classList.remove(FAILED); } const rows = [...document.querySelectorAll(\u0027#wedding-now-body .wedding-now-item\u0027)]; const match = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027)); const gifts = rows.filter(gift); const wanted = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027) || gift(r)); const done = read(KEY); const left = wanted.filter((r) =\u003E done.indexOf(roomId(r)) \u003C 0 \u0026\u0026 r.querySelector(\u0027a.wedding-now-btn\u0027)); if (left.length === 0 \u0026\u0026 document.body) document.body.classList.add(MARK); const blessed = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status .blessed\u0027)).length; const lixi = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-li-xi-status .li-xi-sent\u0027)).length; const log = read(LOG); const ok = log.filter((e) =\u003E e.state === \u0027ok\u0027).length; const bad = log.filter((e) =\u003E e.state === \u0027fail\u0027); const got = log.filter((e) =\u003E e.gift); const missed = log.filter((e) =\u003E e.giftWhy); if (log.length \u003E 0 \u0026\u0026 ok === 0 \u0026\u0026 bad.length === log.length \u0026\u0026 document.body) document.body.classList.add(FAILED); const tail = log.length === 0 ? \u0027\u0027 : \u0027 \u2014 l\u01B0\u1EE3t n\u00E0y ch\u00FAc \u0111\u01B0\u1EE3c \u0027 \u002B ok \u002B (bad.length \u003E 0 ? \u0027, TR\u01AF\u1EE2T \u0027 \u002B bad.length \u002B \u0027: \u0027 \u002B bad.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.why \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027) \u002B (got.length \u003E 0 ? \u0027, khai \u0111\u01B0\u1EE3c \u0027 \u002B got.length \u002B \u0027 h\u1ED3ng bao: \u0027 \u002B got.map((e) =\u003E e.gift).join(\u0027 \u00B7 \u0027) : \u0027\u0027) \u002B (missed.length \u003E 0 ? \u0027, h\u1ED3ng bao TR\u01AF\u1EE2T \u0027 \u002B missed.length \u002B \u0027: \u0027 \u002B missed.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.giftWhy \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027); return \u0027!H\u1EF7 S\u1EF1 \u0110\u01B0\u1EDDng: \u0027 \u002B rows.length \u002B \u0027 ti\u1EC7c \u0111ang m\u1EDF (\u0027 \u002B blessed \u002B \u0027 \u0111\u00E3 ch\u00FAc, \u0027 \u002B (rows.length - blessed) \u002B \u0027 ch\u01B0a ch\u00FAc, \u0027 \u002B lixi \u002B \u0027 \u0111\u00E3 ph\u00E1t l\u00EC x\u00EC, \u0027 \u002B gifts.length \u002B \u0027 c\u00F2n h\u1ED3ng bao ch\u01B0a khai) \u2014 kh\u1EDBp b\u1ED9 l\u1ECDc: \u0027 \u002B match.length \u002B \u0027, c\u00F2n ch\u01B0a gh\u00E9: \u0027 \u002B left.length \u002B tail; }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u1EBFm v\u00E0 k\u1EC3: t\u1ED5ng ti\u1EC7c, \u0111\u00E3 ch\u00FAc, kh\u1EDBp b\u1ED9 l\u1ECDc, c\u00F2n ch\u01B0a gh\u00E9 \u2014 r\u1ED3i c\u1EAFm c\u1EDD d\u1EEBng khi kh\u00F4ng c\u00F2n ph\u00F2ng n\u00E0o \u0111\u1EC3 gh\u00E9. Ch\u1EA1y sau M\u1ED6I l\u1EA7n m\u1EDF modal, n\u00EAn v\u1EEBa l\u00E0 c\u00E2u tr\u1EA3 l\u1EDDi \u0111\u1EA7u l\u01B0\u1EE3t v\u1EEBa l\u00E0 \u0111i\u1EC1u ki\u1EC7n until c\u1EE7a v\u00F2ng l\u1EB7p"
+        },
+        {
+          "action": "stopIf",
+          "text": "kh\u00F4ng c\u00F3 ti\u1EC7c c\u01B0\u1EDBi n\u00E0o \u0111ang di\u1EC5n ra",
+          "timeoutMs": 15000,
+          "note": "modal m\u1EDF m\u00E0 kh\u00F4ng c\u00F3 ph\u00F2ng n\u00E0o \u2014 ch\u1EDD ti\u1EC7c m\u1EDBi, kh\u00E1c h\u1EB3n \u0022kh\u00F4ng ph\u00F2ng n\u00E0o kh\u1EDBp\u0022 b\u00EAn d\u01B0\u1EDBi",
+          "condition": {
+            "kind": "hidden",
+            "selector": "#wedding-now-body .wedding-now-item"
+          }
+        },
+        {
+          "action": "stopIf",
+          "text": "kh\u00F4ng c\u00F3 ph\u00F2ng n\u00E0o kh\u1EDBp b\u1ED9 l\u1ECDc \u0111\u1EC3 gh\u00E9",
+          "timeoutMs": 15000,
+          "note": "c\u1EDD do b\u01B0\u1EDBc \u0111\u1EBFm li\u1EC1n tr\u01B0\u1EDBc c\u1EAFm; b\u01B0\u1EDBc \u1EA5y \u0111\u00E3 k\u1EC3 ra con s\u1ED1 n\u00EAn d\u00F2ng n\u00E0y ch\u1EC9 l\u00E0 k\u1EBFt lu\u1EADn, kh\u00F4ng ph\u1EA3i ch\u1ED7 duy nh\u1EA5t ng\u01B0\u1EDDi \u0111\u1ECDc bi\u1EBFt chuy\u1EC7n g\u00EC x\u1EA3y ra",
+          "condition": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-done"
+          }
+        },
+        {
+          "action": "repeat",
+          "timeoutMs": 15000,
+          "note": "m\u1ED7i v\u00F2ng gh\u00E9 m\u1ED9t ph\u00F2ng r\u1ED3i m\u1EDF l\u1EA1i danh s\u00E1ch; b\u01B0\u1EDBc \u0111\u1EBFm cu\u1ED1i m\u1ED7i v\u00F2ng c\u1EAFm c\u1EDD khi h\u1EBFt ph\u00F2ng ch\u01B0a gh\u00E9. D\u1EEBng theo S\u1ED4 \u0110\u00C3 GH\u00C9 ch\u1EE9 kh\u00F4ng theo tr\u1EA1ng th\u00E1i ph\u00F2ng \u2014 ch\u1ECDn \u0022\u0111\u00E3 ch\u00FAc\u0022 th\u00EC ch\u00FAc xong l\u1EA1i l\u00E0m T\u0102NG s\u1ED1 .blessed, d\u1EEBng theo tr\u1EA1ng th\u00E1i s\u1EBD quay v\u00F2ng v\u00F4 t\u1EADn. Tr\u1EA7n 40 v\u00F2ng ~ g\u1EA5p n\u0103m s\u1ED1 ti\u1EC7c t\u1EEBng th\u1EA5y c\u00F9ng l\u00FAc (8)",
+          "steps": [
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const KEY = \u0027__jvz_hy_su_seen\u0027; const LOG = \u0027__jvz_hy_su_log\u0027; const GIFT = \u0027__jvz_hy_su_gift\u0027; const read = (k) =\u003E { try { return JSON.parse(sessionStorage.getItem(k) || \u0027[]\u0027); } catch (e) { return []; } }; const write = (k, v) =\u003E { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { } }; const roomId = (row) =\u003E { const a = row.querySelector(\u0027a.wedding-now-btn\u0027); const href = a ? (a.getAttribute(\u0027href\u0027) || \u0027\u0027) : \u0027\u0027; const m = href.match(/[?\u0026]id=(\\d\u002B)/); return m ? m[1] : href; }; const done = read(KEY); const rows = [...document.querySelectorAll(\u0027#wedding-now-body .wedding-now-item\u0027)].filter((r) =\u003E (r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027) || r.querySelector(\u0027.wedding-now-li-xi-available\u0027)) \u0026\u0026 r.querySelector(\u0027a.wedding-now-btn\u0027) \u0026\u0026 done.indexOf(roomId(r)) \u003C 0); if (rows.length === 0) return \u0027h\u1EF7 s\u1EF1: kh\u00F4ng c\u00F2n ph\u00F2ng n\u00E0o kh\u1EDBp b\u1ED9 l\u1ECDc m\u00E0 ch\u01B0a gh\u00E9\u0027; const row = rows[0]; const cp = row.querySelector(\u0027.wedding-now-couple\u0027); const couple = (cp ? cp.textContent : \u0027\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim(); const lixi = row.querySelector(\u0027.wedding-now-li-xi-status .li-xi-sent\u0027) ? \u0027 \u00B7 \u0111\u00E3 ph\u00E1t l\u00EC x\u00EC\u0027 : \u0027\u0027; const hasGift = !!row.querySelector(\u0027.wedding-now-li-xi-available\u0027); try { sessionStorage.setItem(GIFT, hasGift ? \u00271\u0027 : \u0027\u0027); } catch (e) { } const href = row.querySelector(\u0027a.wedding-now-btn\u0027).href; done.push(roomId(row)); write(KEY, done); const log = read(LOG); log.push({ couple: couple, state: \u0027pending\u0027, why: \u0027\u0027, gift: \u0027\u0027, giftWhy: \u0027\u0027 }); write(LOG, log); setTimeout(() =\u003E location.assign(href), 0); return \u0027!V\u00E0o ph\u00F2ng: \u0027 \u002B couple \u002B lixi \u002B (hasGift ? \u0027 \u00B7 \uD83E\uDDE7 h\u1ED3ng bao ch\u01B0a khai\u0027 : \u0027\u0027); }",
+              "timeoutMs": 15000,
+              "note": "link \u0022V\u00E0o Ch\u00FAc Ngay\u0022 mang target=_blank n\u00EAn KH\u00D4NG click \u2014 \u0111\u1ECDc href c\u1EE7a ph\u00F2ng kh\u1EDBp b\u1ED9 l\u1ECDc m\u00E0 ch\u01B0a gh\u00E9 (\u01B0u ti\u00EAn /phong-cuoi \u0111\u00E3 c\u00F3 recording) r\u1ED3i \u0111i\u1EC1u h\u01B0\u1EDBng ngay trong tab; setTimeout \u0111\u1EC3 c\u00E2u tr\u1EA3 l\u1EDDi kh\u00F4ng \u0111ua v\u1EDBi \u0111i\u1EC1u h\u01B0\u1EDBng"
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 25000,
+              "note": "sang trang ph\u00F2ng c\u01B0\u1EDBi: ho\u1EB7c c\u00F3 form ch\u00FAc, ho\u1EB7c trang n\u00F3i \u0111\u00E3 ch\u00FAc r\u1ED3i \u2014 kh\u00F4ng th\u1EA5y c\u00E1i n\u00E0o th\u00EC b\u01B0\u1EDBc \u0111\u1ECDc tr\u1EA1ng th\u00E1i b\u00EAn d\u01B0\u1EDBi ghi ph\u00F2ng n\u00E0y l\u00E0 tr\u01B0\u1EE3t v\u00E0 l\u01B0\u1EE3t \u0111i ti\u1EBFp, thay v\u00EC gi\u1EBFt n\u1ED1t c\u00E1c ph\u00F2ng ch\u01B0a gh\u00E9",
+              "optional": true,
+              "condition": {
+                "kind": "visible",
+                "selector": "#blessing-default-options, .blessing-message, #hn-select, .hn-already-blessed"
+              }
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const MARK = \u0027jvz-hy-su-gift\u0027; const body = document.body; if (!body) return \u0027h\u1EF7 s\u1EF1 l\u00EC x\u00EC: trang ch\u01B0a c\u00F3 body\u0027; body.classList.remove(MARK); let promised = \u0027\u0027; try { promised = sessionStorage.getItem(\u0027__jvz_hy_su_gift\u0027) || \u0027\u0027; } catch (e) { } if (!promised) return \u0027h\u1EF7 s\u1EF1 l\u00EC x\u00EC: danh s\u00E1ch kh\u00F4ng h\u1EE9a h\u1ED3ng bao \u1EDF ph\u00F2ng n\u00E0y\u0027; body.classList.add(MARK); return \u0027h\u1EF7 s\u1EF1 l\u00EC x\u00EC: danh s\u00E1ch h\u1EE9a c\u00F3 h\u1ED3ng bao \u2014 ch\u1EDD khay m\u1EDF\u0027; }",
+              "timeoutMs": 4000,
+              "note": "mang l\u1EDDi h\u1EE9a \u0022ph\u00F2ng n\u00E0y c\u00F3 h\u1ED3ng bao\u0022 t\u1EEB danh s\u00E1ch sang trang ph\u00F2ng \u2014 ch\u1EC9 ph\u00F2ng c\u00F3 h\u1EE9a m\u1EDBi ph\u1EA3i tr\u1EA3 gi\u00E1 b\u01B0\u1EDBc ch\u1EDD khay ngay d\u01B0\u1EDBi"
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 8000,
+              "note": "khay h\u1ED3ng bao hi\u1EC7n ra ~1,2s SAU khi trang v\u1EBD xong (\u0111o tr\u00EAn b\u1EA3n ghi), n\u00EAn qu\u00E9t ngay l\u00E0 qu\u00E9t v\u00E0o kho\u1EA3ng tr\u1ED1ng. H\u1ECFi th\u1EB3ng c\u00E1i khay \u0111\u01B0\u1EE3c v\u00EC opacity n\u1EB1m tr\u00EAn ch\u00EDnh n\u00F3",
+              "optional": true,
+              "condition": {
+                "kind": "visible",
+                "selector": "#hnLiXiModal, #liXiModal"
+              },
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-hy-su-gift"
+              }
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const GO = \u0027jvz-hy-su-lixi\u0027; const BOX = \u0027jvz-hy-su-lixi-box\u0027; const body = document.body; if (!body) return \u0027h\u1EF7 s\u1EF1 l\u00EC x\u00EC: trang ch\u01B0a c\u00F3 body\u0027; body.classList.remove(GO); body.classList.remove(BOX); const shown = (el) =\u003E { for (let n = el; n \u0026\u0026 n.nodeType === 1; n = n.parentElement) { const r = n.getBoundingClientRect(); if (r.width \u003C 1 || r.height \u003C 1) return false; const st = getComputedStyle(n); if (st.visibility === \u0027hidden\u0027 || st.display === \u0027none\u0027 || st.opacity === \u00270\u0027 || st.pointerEvents === \u0027none\u0027) return false; } return true; }; const tray = document.querySelector(\u0027#hnLiXiModal, #liXiModal\u0027); if (!tray || !shown(tray)) return body.classList.contains(\u0027jvz-hy-su-gift\u0027) ? \u0027!Danh s\u00E1ch h\u1EE9a c\u00F3 h\u1ED3ng bao m\u00E0 ph\u00F2ng n\u00E0y kh\u00F4ng m\u1EDF khay \u2014 b\u1ECF qua ph\u1EA7n l\u00EC x\u00EC, ph\u00F2ng v\u1EABn \u0111\u01B0\u1EE3c ch\u00FAc nh\u01B0 th\u01B0\u1EDDng\u0027 : \u0027h\u1EF7 s\u1EF1 l\u00EC x\u00EC: ph\u00F2ng n\u00E0y kh\u00F4ng c\u00F3 khay h\u1ED3ng bao\u0027; body.classList.add(BOX); const btn = tray.querySelector(\u0027#hnOpenBtn, #openButton\u0027); if (!btn || btn.disabled || !shown(btn)) return \u0027!Khay h\u1ED3ng bao \u0111ang m\u1EDF nh\u01B0ng kh\u00F4ng c\u00F3 n\u00FAt khai \u2014 ch\u1EC9 \u0111\u00F3ng khay r\u1ED3i \u0111i ti\u1EBFp\u0027; body.classList.add(GO); return \u0027!C\u00F3 h\u1ED3ng bao ch\u01B0a khai \u2014 khai tr\u01B0\u1EDBc, v\u00EC khay che k\u00EDn c\u1EA3 form ch\u00FAc\u0027; }",
+              "timeoutMs": 4000,
+              "note": "c\u1EAFm hai c\u1EDD: khai \u0111\u01B0\u1EE3c / khay \u0111ang m\u1EDF"
+            },
+            {
+              "action": "click",
+              "selector": "#hnOpenBtn, #openButton",
+              "timeoutMs": 15000,
+              "note": "\u0022\uD83E\uDDE7 Khai Phong L\u00EC X\u00EC\u0022 \u2014 m\u1ED9t c\u00FA POST hh3d_receive_li_xi, kh\u00F4ng c\u00F3 h\u1ED9p x\u00E1c nh\u1EADn n\u00E0o \u1EDF gi\u1EEFa",
+              "optional": true,
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-hy-su-lixi"
+              }
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 15000,
+              "note": "m\u00E1y ch\u1EE7 nh\u1EADn l\u00E0 n\u00FAt khai t\u1EF1 nh\u1EADn display:none (\u0111o: 1,9 gi\u00E2y sau c\u00FA b\u1EA5m) \u2014 ch\u1EDD n\u00F3 t\u1EAFt r\u1ED3i m\u1EDBi \u0111\u1ECDc thi\u1EC7p, kh\u00F4ng th\u00EC \u0111\u1ECDc ph\u1EA3i hai g\u1EA1ch \u0022\u2014\u0022 c\u1EE7a khay ch\u01B0a l\u1EADt",
+              "optional": true,
+              "condition": {
+                "kind": "hidden",
+                "selector": "#hnOpenBtn, #openButton"
+              },
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-hy-su-lixi"
+              }
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const LOG = \u0027__jvz_hy_su_log\u0027; const mark = (field, value) =\u003E { try { const log = JSON.parse(sessionStorage.getItem(LOG) || \u0027[]\u0027); if (log.length \u003E 0) { log[log.length - 1][field] = value; sessionStorage.setItem(LOG, JSON.stringify(log)); } } catch (e) { } }; const txt = (sel) =\u003E { const el = document.querySelector(sel); return el ? (el.textContent || \u0027\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim() : \u0027\u0027; }; const wrap = document.querySelector(\u0027#hnRewardWrap, #rewardReveal\u0027); const amount = txt(\u0027#hnRewardAmount, #rewardItem .lixi-reward-amount\u0027); const name = txt(\u0027#hnRewardName, #rewardItem .lixi-reward-name\u0027); const blank = (s) =\u003E s === \u0027\u0027 || s === \u0027\u2014\u0027 || s === \u0027-\u0027; if (wrap \u0026\u0026 wrap.classList.contains(\u0027show\u0027) \u0026\u0026 !blank(amount)) { const got = (amount \u002B \u0027 \u0027 \u002B name).trim(); mark(\u0027gift\u0027, got); return \u0027!Khai phong l\u00EC x\u00EC: \u0027 \u002B got; } const why = !wrap ? \u0027trang kh\u00F4ng c\u00F3 khay ph\u1EA7n th\u01B0\u1EDFng\u0027 : (blank(amount) ? \u0027khay m\u1EDF m\u00E0 kh\u00F4ng k\u00EA ph\u1EA7n th\u01B0\u1EDFng\u0027 : \u0027khay ch\u01B0a l\u1EADt ph\u1EA7n th\u01B0\u1EDFng\u0027); mark(\u0027giftWhy\u0027, why); return \u0027!KHAI H\u1ED2NG BAO TR\u01AF\u1EE2T \u2014 \u0027 \u002B why \u002B \u0027; h\u1ED3ng bao c\u00F2n nguy\u00EAn cho l\u01B0\u1EE3t sau, l\u01B0\u1EE3t n\u00E0y v\u1EABn \u0111i ti\u1EBFp\u0027; }",
+              "timeoutMs": 4000,
+              "note": "\u0111\u1ECDc t\u1EA5m thi\u1EC7p ph\u1EA7n th\u01B0\u1EDFng r\u1ED3i ghi v\u00E0o s\u1ED5 k\u1EBFt c\u1EE5c",
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-hy-su-lixi"
+              }
+            },
+            {
+              "action": "click",
+              "selector": "#hnCloseBtn, #closeButton",
+              "timeoutMs": 8000,
+              "note": "\u0111\u00F3ng khay \u2014 B\u1EAET BU\u1ED8C ph\u1EA3i l\u00E0m k\u1EC3 c\u1EA3 khi khai tr\u01B0\u1EE3t, v\u00EC khay c\u00F2n m\u1EDF l\u00E0 form ch\u00FAc b\u00EAn d\u01B0\u1EDBi kh\u00F4ng b\u1EA5m \u0111\u01B0\u1EE3c. Guard l\u00E0 c\u1EDD KHAY ch\u1EE9 kh\u00F4ng ph\u1EA3i c\u1EDD KHAI",
+              "optional": true,
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-hy-su-lixi-box"
+              }
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 8000,
+              "note": "khay t\u1EAFt b\u1EB1ng m\u1ED9t l\u01B0\u1EE3t chuy\u1EC3n opacity 0,5s r\u1ED3i r\u1EDDi DOM \u2014 h\u1ECFi c\u00E1i khay th\u00EC c\u1EA3 hai k\u1EBFt c\u1EE5c \u0111\u1EC1u \u0111\u1ECDc l\u00E0 Hidden",
+              "optional": true,
+              "condition": {
+                "kind": "hidden",
+                "selector": "#hnLiXiModal, #liXiModal"
+              },
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-hy-su-lixi-box"
+              }
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const MARK = \u0027jvz-can-bless\u0027; const LOG = \u0027__jvz_hy_su_log\u0027; const mark = (state, why) =\u003E { try { const log = JSON.parse(sessionStorage.getItem(LOG) || \u0027[]\u0027); if (log.length \u003E 0) { log[log.length - 1].state = state; log[log.length - 1].why = why; sessionStorage.setItem(LOG, JSON.stringify(log)); } } catch (e) { } }; const shown = (el) =\u003E { if (!el) return false; const r = el.getBoundingClientRect(); if (r.width \u003C 1 || r.height \u003C 1) return false; const st = getComputedStyle(el); return st.visibility !== \u0027hidden\u0027 \u0026\u0026 st.display !== \u0027none\u0027 \u0026\u0026 st.opacity !== \u00270\u0027; }; if (document.body) document.body.classList.remove(MARK); const already = document.querySelector(\u0027.blessing-message, .hn-already-blessed\u0027); if (already) { mark(\u0027skip\u0027, \u0027\u0111\u00E3 ch\u00FAc t\u1EEB tr\u01B0\u1EDBc\u0027); return \u0027!Ph\u00F2ng n\u00E0y \u0111\u00E3 ch\u00FAc r\u1ED3i \u2014 b\u1ECF qua ph\u1EA7n ch\u00FAc\u0027; } const form = [...document.querySelectorAll(\u0027#blessing-default-options, #hn-select\u0027)].find(shown); if (form) { if (document.body) document.body.classList.add(MARK); return \u0027ph\u00F2ng ch\u01B0a ch\u00FAc (\u0027 \u002B (form.id === \u0027hn-select\u0027 ? \u0027H\u1ED3ng Nhan\u0027 : \u0027\u0110\u1EA1o L\u1EEF\u0027) \u002B \u0027) \u2014 g\u1EEDi l\u1EDDi ch\u00FAc\u0027; } if (document.querySelector(\u0027#hn-select\u0027)) { mark(\u0027skip\u0027, \u0027form H\u1ED3ng Nhan b\u1ECB \u1EA9n m\u00E0 kh\u00F4ng c\u00F3 d\u00F2ng b\u00E1o \u0111\u00E3 ch\u00FAc\u0027); return \u0027!Form ch\u00FAc b\u1ECB \u1EA9n nh\u01B0ng kh\u00F4ng c\u00F3 d\u00F2ng b\u00E1o \u0111\u00E3 ch\u00FAc \u2014 \u0111\u1ECDc l\u00E0 \u0110\u00C3 XONG ch\u1EE9 kh\u00F4ng ph\u1EA3i trang l\u1EA1, b\u1ECF qua ph\u00F2ng n\u00E0y\u0027; } mark(\u0027fail\u0027, \u0027trang ph\u00F2ng kh\u00F4ng c\u00F3 form ch\u00FAc l\u1EABn d\u1EA5u \u0111\u00E3 ch\u00FAc\u0027); return \u0027!Kh\u00F4ng th\u1EA5y form ch\u00FAc l\u1EABn d\u1EA5u \u0111\u00E3 ch\u00FAc \u2014 b\u1ECF qua ph\u00F2ng n\u00E0y, l\u01B0\u1EE3t v\u1EABn \u0111i ti\u1EBFp c\u00E1c ph\u00F2ng c\u00F2n l\u1EA1i\u0027; }",
+              "timeoutMs": 4000,
+              "note": "c\u1EAFm c\u1EDD cho c\u1EE5m g\u1EEDi l\u1EDDi ch\u00FAc b\u00EAn d\u01B0\u1EDBi: ch\u1EC9 ph\u00F2ng CH\u01AFA ch\u00FAc m\u1EDBi c\u00F3 form"
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const shown = (el) =\u003E { if (!el) return false; const r = el.getBoundingClientRect(); if (r.width \u003C 1 || r.height \u003C 1) return false; const st = getComputedStyle(el); return st.visibility !== \u0027hidden\u0027 \u0026\u0026 st.display !== \u0027none\u0027 \u0026\u0026 st.opacity !== \u00270\u0027; }; const sel = [...document.querySelectorAll(\u0027#blessing-default-options, #hn-select\u0027)].find(shown); if (!sel || sel.options.length \u003C 2) return \u0027\u0027; const pick = 1 \u002B Math.floor(Math.random() * (sel.options.length - 1)); sel.selectedIndex = pick; sel.dispatchEvent(new Event(\u0027change\u0027, { bubbles: true })); const box = document.querySelector(\u0027#blessing-message, #hn-message\u0027); if (box \u0026\u0026 !box.value) box.value = sel.value; return \u0027!L\u1EDDi ch\u00FAc ng\u1EABu nhi\u00EAn: \u0027 \u002B (sel.options[pick].textContent || \u0027\u0027).trim(); }",
+              "timeoutMs": 15000,
+              "note": "ch\u1ECDn NG\u1EAAU NHI\u00CAN m\u1ED9t l\u1EDDi ch\u00FAc m\u1EB7c \u0111\u1ECBnh (ghi ch\u00FA c\u1EE7a ch\u00EDnh recording); dispatch change \u0111\u1EC3 trang t\u1EF1 \u0111i\u1EC1n \u00F4 l\u1EDDi ch\u00FAc \u2014 fillBlessingMessage() b\u00EAn \u0110\u1EA1o L\u1EEF, hnFillMessage() b\u00EAn H\u1ED3ng Nhan \u2014 r\u1ED3i g\u00E1n th\u1EB3ng l\u00E0m l\u01B0\u1EDBi \u0111\u1EE1 n\u1EBFu trang \u0111\u1ED5i c\u00E1ch \u0111i\u1EC1n. Ch\u1ECDn \u00F4 select \u0110ANG HI\u1EC2N TH\u1ECA ch\u1EE9 kh\u00F4ng ph\u1EA3i \u00F4 \u0111\u1EA7u ti\u00EAn t\u00ECm th\u1EA5y: ph\u00F2ng H\u1ED3ng Nhan \u0111\u00E3 ch\u00FAc v\u1EABn gi\u1EEF nguy\u00EAn #hn-select trong DOM, ch\u1EC9 cho cha display:none",
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-can-bless"
+              }
+            },
+            {
+              "action": "click",
+              "selector": ".blessing-form .blessing-button, #hn-bless-btn",
+              "timeoutMs": 15000,
+              "note": "\u0022G\u1EEDi Ch\u00FAc Ph\u00FAc\u0022 \u2014 m\u1EDF h\u1ED9p x\u00E1c nh\u1EADn d\u00F9ng 30 Ti\u00EAn Ng\u1ECDc",
+              "optional": true,
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-can-bless"
+              }
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 8000,
+              "note": "h\u1ED9p \u0022X\u00E1c Nh\u1EADn G\u1EEDi L\u1EDDi Ch\u00FAc\u0022 lu\u00F4n hi\u1EC7n; thi\u1EBFu n\u00F3 th\u00EC b\u01B0\u1EDBc ph\u00E1n x\u1EED b\u00EAn d\u01B0\u1EDBi ghi ph\u00F2ng n\u00E0y l\u00E0 tr\u01B0\u1EE3t",
+              "optional": true,
+              "condition": {
+                "kind": "visible",
+                "selector": "#confirm-modal .custom-modal-button.confirm, #hn-confirm-modal .hn-modal-btn.confirm"
+              },
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-can-bless"
+              }
+            },
+            {
+              "action": "click",
+              "selector": "#confirm-modal .custom-modal-button.confirm, #hn-confirm-modal .hn-modal-btn.confirm",
+              "timeoutMs": 15000,
+              "note": "ch\u1EC9 b\u1EA5m \u0111\u00FAng n\u00FAt x\u00E1c nh\u1EADn theo selector \u2014 kh\u00F4ng bao gi\u1EDD \u0111\u1EE5ng \u0022H\u1EE7y B\u1ECF\u0022",
+              "optional": true,
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-can-bless"
+              }
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 15000,
+              "note": "server nh\u1EADn l\u00E0 n\u00FAt g\u1EEDi b\u1ECB g\u1EE1 h\u1EB3n kh\u1ECFi DOM (m\u1ED7i ph\u00F2ng ch\u1EC9 ch\u00FAc m\u1ED9t l\u1EA7n)",
+              "optional": true,
+              "condition": {
+                "kind": "hidden",
+                "selector": ".blessing-form .blessing-button, #hn-bless-btn"
+              },
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-can-bless"
+              }
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const LOG = \u0027__jvz_hy_su_log\u0027; const mark = (state, why) =\u003E { try { const log = JSON.parse(sessionStorage.getItem(LOG) || \u0027[]\u0027); if (log.length \u003E 0) { log[log.length - 1].state = state; log[log.length - 1].why = why; sessionStorage.setItem(LOG, JSON.stringify(log)); } } catch (e) { } }; const shown = (el) =\u003E { if (!el) return false; const r = el.getBoundingClientRect(); if (r.width \u003C 1 || r.height \u003C 1) return false; const st = getComputedStyle(el); return st.visibility !== \u0027hidden\u0027 \u0026\u0026 st.display !== \u0027none\u0027 \u0026\u0026 st.opacity !== \u00270\u0027; }; const offering = [...document.querySelectorAll(\u0027.blessing-form .blessing-button, #hn-bless-btn\u0027)].some((b) =\u003E shown(b) \u0026\u0026 !b.disabled); if (!offering) { mark(\u0027ok\u0027, \u0027\u0027); return \u0027!L\u1EDDi ch\u00FAc \u0111\u00E3 g\u1EEDi xong\u0027; } mark(\u0027fail\u0027, \u0027n\u00FAt g\u1EEDi v\u1EABn c\u00F2n sau khi x\u00E1c nh\u1EADn\u0027); return \u0027!G\u1EECI TR\u01AF\u1EE2T \u2014 n\u00FAt g\u1EEDi v\u1EABn c\u00F2n sau khi x\u00E1c nh\u1EADn, ph\u00F2ng n\u00E0y ch\u01B0a ch\u00FAc \u0111\u01B0\u1EE3c (30 Ti\u00EAn Ng\u1ECDc ch\u01B0a ti\u00EAu); l\u01B0\u1EE3t v\u1EABn \u0111i ti\u1EBFp c\u00E1c ph\u00F2ng c\u00F2n l\u1EA1i\u0027; }",
+              "timeoutMs": 4000,
+              "note": "ph\u00E1n x\u1EED ph\u00F2ng v\u1EEBa ch\u00FAc: n\u00FAt g\u1EEDi m\u1EA5t l\u00E0 server \u0111\u00E3 nh\u1EADn; c\u00F2n nguy\u00EAn l\u00E0 G\u1EECI TR\u01AF\u1EE2T, 30 Ti\u00EAn Ng\u1ECDc ch\u01B0a ti\u00EAu \u2014 ghi v\u00E0o s\u1ED5 k\u1EBFt c\u1EE5c \u0111\u1EC3 l\u1EDDi k\u1EC3 cu\u1ED1i l\u01B0\u1EE3t g\u1ECDi \u0111\u00FAng t\u00EAn ph\u00F2ng \u1EA5y",
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-can-bless"
+              }
+            },
+            {
+              "action": "waitMilliseconds",
+              "timeoutMs": 1200,
+              "note": "nh\u1ECBp l\u1EAFng cho request nh\u1EADn l\u00EC x\u00EC k\u1ECBp r\u1EDDi trang: b\u01B0\u1EDBc navigate kh\u00F4ng c\u00F3 humanDelay, \u0111i\u1EC1u h\u01B0\u1EDBng ngay sau c\u00FA b\u1EA5m l\u00E0 c\u00F3 th\u1EC3 c\u1EAFt ngang fetch \u0111ang bay"
+            },
+            {
+              "action": "navigate",
+              "text": "/tien-duyen",
+              "timeoutMs": 15000,
+              "note": "v\u1EC1 danh s\u00E1ch ki\u1EC3m c\u00F2n ph\u00F2ng ch\u01B0a ch\u00FAc n\u00E0o kh\u00F4ng (ghi ch\u00FA c\u1EE7a ch\u00EDnh recording)"
+            },
+            {
+              "action": "waitForSelector",
+              "selector": ".tien-duyen-btn.hy-su-btn",
+              "timeoutMs": 25000
+            },
+            {
+              "action": "click",
+              "selector": ".tien-duyen-btn.hy-su-btn",
+              "timeoutMs": 15000,
+              "note": "m\u1EDF modal \u0022\u0110\u1EA1i \u0110i\u1EC3n \u0110ang Di\u1EC5n Ra\u0022 \u2014 badge \u0111\u1ECF tr\u00EAn n\u00FAt l\u00E0 s\u1ED1 ti\u1EC7c \u0111ang m\u1EDF"
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 10000,
+              "note": "modal \u0111\u00E3 m\u1EDF",
+              "condition": {
+                "kind": "visible",
+                "selector": "#wedding-now-body"
+              }
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 15000,
+              "note": "danh s\u00E1ch ti\u1EC7c n\u1EA1p async (\u0022\u0110ang t\u1EA3i danh s\u00E1ch ti\u1EC7c c\u01B0\u1EDBi...\u0022) \u2014 ph\u1EA3i ch\u1EDD n\u00F3 v\u1EC1 r\u1ED3i m\u1EDBi \u0111\u01B0\u1EE3c ph\u00E1n \u0022h\u1EBFt ph\u00F2ng ch\u01B0a ch\u00FAc\u0022; optional v\u00EC h\u00F4m kh\u00F4ng c\u00F3 ti\u1EC7c n\u00E0o l\u00E0 chuy\u1EC7n b\u00ECnh th\u01B0\u1EDDng, StopIf/until b\u00EAn d\u01B0\u1EDBi m\u1EDBi l\u00E0 n\u01A1i tr\u1EA3 l\u1EDDi",
+              "optional": true,
+              "condition": {
+                "kind": "visible",
+                "selector": "#wedding-now-body .wedding-now-item"
+              }
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const MARK = \u0027jvz-hy-su-done\u0027; const FAILED = \u0027jvz-hy-su-all-failed\u0027; const KEY = \u0027__jvz_hy_su_seen\u0027; const LOG = \u0027__jvz_hy_su_log\u0027; const read = (k) =\u003E { try { return JSON.parse(sessionStorage.getItem(k) || \u0027[]\u0027); } catch (e) { return []; } }; const roomId = (row) =\u003E { const a = row.querySelector(\u0027a.wedding-now-btn\u0027); const href = a ? (a.getAttribute(\u0027href\u0027) || \u0027\u0027) : \u0027\u0027; const m = href.match(/[?\u0026]id=(\\d\u002B)/); return m ? m[1] : href; }; const gift = (r) =\u003E !!r.querySelector(\u0027.wedding-now-li-xi-available\u0027); if (document.body) { document.body.classList.remove(MARK); document.body.classList.remove(FAILED); } const rows = [...document.querySelectorAll(\u0027#wedding-now-body .wedding-now-item\u0027)]; const match = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027)); const gifts = rows.filter(gift); const wanted = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027) || gift(r)); const done = read(KEY); const left = wanted.filter((r) =\u003E done.indexOf(roomId(r)) \u003C 0 \u0026\u0026 r.querySelector(\u0027a.wedding-now-btn\u0027)); if (left.length === 0 \u0026\u0026 document.body) document.body.classList.add(MARK); const blessed = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status .blessed\u0027)).length; const lixi = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-li-xi-status .li-xi-sent\u0027)).length; const log = read(LOG); const ok = log.filter((e) =\u003E e.state === \u0027ok\u0027).length; const bad = log.filter((e) =\u003E e.state === \u0027fail\u0027); const got = log.filter((e) =\u003E e.gift); const missed = log.filter((e) =\u003E e.giftWhy); if (log.length \u003E 0 \u0026\u0026 ok === 0 \u0026\u0026 bad.length === log.length \u0026\u0026 document.body) document.body.classList.add(FAILED); const tail = log.length === 0 ? \u0027\u0027 : \u0027 \u2014 l\u01B0\u1EE3t n\u00E0y ch\u00FAc \u0111\u01B0\u1EE3c \u0027 \u002B ok \u002B (bad.length \u003E 0 ? \u0027, TR\u01AF\u1EE2T \u0027 \u002B bad.length \u002B \u0027: \u0027 \u002B bad.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.why \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027) \u002B (got.length \u003E 0 ? \u0027, khai \u0111\u01B0\u1EE3c \u0027 \u002B got.length \u002B \u0027 h\u1ED3ng bao: \u0027 \u002B got.map((e) =\u003E e.gift).join(\u0027 \u00B7 \u0027) : \u0027\u0027) \u002B (missed.length \u003E 0 ? \u0027, h\u1ED3ng bao TR\u01AF\u1EE2T \u0027 \u002B missed.length \u002B \u0027: \u0027 \u002B missed.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.giftWhy \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027); return \u0027!H\u1EF7 S\u1EF1 \u0110\u01B0\u1EDDng: \u0027 \u002B rows.length \u002B \u0027 ti\u1EC7c \u0111ang m\u1EDF (\u0027 \u002B blessed \u002B \u0027 \u0111\u00E3 ch\u00FAc, \u0027 \u002B (rows.length - blessed) \u002B \u0027 ch\u01B0a ch\u00FAc, \u0027 \u002B lixi \u002B \u0027 \u0111\u00E3 ph\u00E1t l\u00EC x\u00EC, \u0027 \u002B gifts.length \u002B \u0027 c\u00F2n h\u1ED3ng bao ch\u01B0a khai) \u2014 kh\u1EDBp b\u1ED9 l\u1ECDc: \u0027 \u002B match.length \u002B \u0027, c\u00F2n ch\u01B0a gh\u00E9: \u0027 \u002B left.length \u002B tail; }",
+              "timeoutMs": 4000,
+              "note": "\u0111\u1EBFm v\u00E0 k\u1EC3: t\u1ED5ng ti\u1EC7c, \u0111\u00E3 ch\u00FAc, kh\u1EDBp b\u1ED9 l\u1ECDc, c\u00F2n ch\u01B0a gh\u00E9 \u2014 r\u1ED3i c\u1EAFm c\u1EDD d\u1EEBng khi kh\u00F4ng c\u00F2n ph\u00F2ng n\u00E0o \u0111\u1EC3 gh\u00E9. Ch\u1EA1y sau M\u1ED6I l\u1EA7n m\u1EDF modal, n\u00EAn v\u1EEBa l\u00E0 c\u00E2u tr\u1EA3 l\u1EDDi \u0111\u1EA7u l\u01B0\u1EE3t v\u1EEBa l\u00E0 \u0111i\u1EC1u ki\u1EC7n until c\u1EE7a v\u00F2ng l\u1EB7p"
+            }
+          ],
+          "until": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-done"
+          },
+          "maxIterations": 40,
+          "maxSeconds": 1800
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 3000,
+          "note": "gh\u00E9 ph\u00F2ng n\u00E0o c\u0169ng tr\u01B0\u1EE3t = trang ph\u00F2ng c\u01B0\u1EDBi \u0111\u00E3 \u0111\u1ED5i, kh\u00F4ng ph\u1EA3i \u0022h\u00F4m nay kh\u00F4ng c\u00F3 g\u00EC \u0111\u1EC3 ch\u00FAc\u0022 \u2014 ph\u1EA3i h\u1ECFng to. L\u1EDDi k\u1EC3 ngay tr\u01B0\u1EDBc \u0111\u00E3 g\u1ECDi t\u00EAn t\u1EEBng ph\u00F2ng tr\u01B0\u1EE3t",
+          "condition": {
+            "kind": "hidden",
+            "selector": "body.jvz-hy-su-all-failed"
+          }
+        }
+      ],
+      "options": [
+        {
+          "key": "blessFilter",
+          "label": "V\u00E0o ti\u1EC7c c\u01B0\u1EDBi n\u00E0o",
+          "choices": [
+            {
+              "value": ".not-blessed",
+              "label": "Ch\u01B0a ch\u00FAc"
+            },
+            {
+              "value": ".blessed",
+              "label": "\u0110\u00E3 ch\u00FAc"
+            },
+            {
+              "value": ":is(.blessed, .not-blessed)",
+              "label": "T\u1EA5t c\u1EA3"
+            }
+          ],
+          "allowCustom": false,
+          "selectedValue": ".not-blessed"
+        }
+      ],
+      "fallbackCooldownSeconds": 3600,
+      "requiresVip": true,
+      "order": 95,
+      "notes": "Ch\u00FAc ph\u00FAc c\u00E1c ti\u1EC7c c\u01B0\u1EDBi \u0111ang m\u1EDF \u1EDF H\u1EF7 S\u1EF1 \u0110\u01B0\u1EDDng \u2014 m\u1ED7i l\u1EDDi ch\u00FAc t\u1ED1n 30 Ti\u00EAn Ng\u1ECDc, nh\u1EADn 120 Tu Vi. Ph\u00F2ng n\u00E0o c\u00F2n l\u00EC x\u00EC ch\u01B0a m\u1EDF th\u00EC lu\u00F4n \u0111\u01B0\u1EE3c gh\u00E9 \u0111\u1EC3 khai, b\u1EA5t k\u1EC3 b\u1ED9 l\u1ECDc ch\u1ECDn g\u00EC."
     },
     {
       "id": "phan-thuong-hoat-dong",
