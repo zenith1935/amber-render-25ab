@@ -85,10 +85,18 @@ export async function wearRealBrowserIdentity(context, page) {
     }
 
     /**
-     * Brand GREASE của chính bản dựng này. Chuỗi ấy đổi theo đời Chromium ("Not=A?Brand",
-     * "Not(A:Brand", "Not_A Brand"…) nên chép cứng là hẹn ngày lệch; nhưng CDP không trả nó ra,
-     * và nó phải khớp với thứ binary vẫn gửi. Lấy đúng chuỗi bản dựng đang dùng, đo được ở
-     * `verify:browser-fingerprint`.
+     * Brand GREASE của chính bản dựng này — ĐO chứ không đoán.
+     *
+     * Chuỗi ấy là hàm của SỐ HIỆU BẢN, đổi theo đời Chromium ("Not=A?Brand", "Not)A;Brand",
+     * "Not(A:Brand", "Not_A Brand"…) và số đi kèm cũng đổi theo (99, 24, 8…). CDP không có getter,
+     * còn `navigator.userAgentData` thì chỉ tồn tại trong secure context — thứ trang chưa có lúc
+     * phép đè phải chạy (trước lượt điều hướng đầu, cố ý). Nên nó buộc phải là hằng số, và hằng số
+     * ấy buộc phải có người canh: `verify:browser-fingerprint` mở thêm một trình duyệt TRẦN, đọc
+     * `Sec-CH-UA` thật của bản dựng, rồi đỏ nếu hai bên lệch.
+     *
+     * Cái giá của việc KHÔNG canh đã trả ngày 19/08/2026, ở bản desktop: bản vá bên ấy chép đúng
+     * cặp `Not=A?Brand`/99 này (đo trên Chromium 151) vào một bản dựng 149 vốn gửi `Not)A;Brand`/24
+     * — tức tự dựng một dấu vân tay không tồn tại ngoài đời, đúng thứ cả phép đè sinh ra để tránh.
      */
     const GREASE = { brand: "Not=A?Brand", version: "99", full: "99.0.0.0" };
     const brands = [
