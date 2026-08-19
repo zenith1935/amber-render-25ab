@@ -12,7 +12,7 @@ import { closeBrowserWithin } from "./browserShutdown.mjs";
 import { computeNextDelaySeconds } from "./cooldown.mjs";
 import { DEFAULT_GAME_BASE_URL, parseCookieString } from "./cookies.mjs";
 import { isDailyQuotaQuest, peersDoneForQuota, reachedDailyQuota } from "./dailyQuota.mjs";
-import { createQuestEngine, enabledQuestsInOrder, questsForAccount, QuestAborted } from "./engine.mjs";
+import { createQuestEngine, CycleBlocked, enabledQuestsInOrder, questsForAccount, QuestAborted } from "./engine.mjs";
 import { profileForConfig } from "./profile.mjs";
 import { acquireQuestSlot, isDedicatedPageQuest } from "./questGate.mjs";
 import { createReferenceQuiz, DEFAULT_QUIZ_REFERENCE_URL } from "./quizReference.mjs";
@@ -850,6 +850,16 @@ export async function runCycle(deps) {
         } catch (err) {
           if (err instanceof QuestAborted) {
             return { outcome: "stopped", message: `Đã thu đàn giữa chừng — xong ${done}/${quests.length}.` };
+          }
+          // Cả vòng bị chặn ở cổng: KHÔNG đi tiếp các nhiệm vụ còn lại (chúng hỏng cùng một lẽ,
+          // mỗi cái 3×25 giây), nhả ghế sớm cho đàn khác, và hẹn vòng sau theo nhịp thường.
+          if (err instanceof CycleBlocked) {
+            await say(err.message, "warn");
+            return scheduledCycleResult(
+              "failed",
+              `${err.message} Đã xong ${done}/${quests.length} nhiệm vụ trước khi bị chặn.`,
+              results,
+            );
           }
           throw err;
         } finally {

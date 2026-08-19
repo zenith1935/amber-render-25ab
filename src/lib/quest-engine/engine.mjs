@@ -26,6 +26,7 @@ import {
   menuProbe,
   quizCorrectAnswer,
   quizProbe,
+  readinessProbe,
   selectorPresence,
 } from "./boardScripts.mjs";
 
@@ -91,6 +92,27 @@ export class QuestAborted extends Error {
   constructor() {
     super("Lượt chạy đã bị dừng.");
     this.name = "QuestAborted";
+  }
+}
+
+/**
+ * CẢ VÒNG bị chặn ở cổng — không phải một nhiệm vụ hỏng.
+ *
+ * Vì sao là một kiểu lỗi RIÊNG chứ không phải một `failed` nữa: khi trang game dựng màn kiểm
+ * tra (Cloudflare), MỌI nhiệm vụ sau đó đều hỏng vì cùng một lẽ, và chúng hỏng ĐẮT — mỗi
+ * nhiệm vụ 3 lượt × 25 giây. Đo 20/08/2026 trên đàn 3ea5ccf0: một vòng bị chặn đốt ~16 phút
+ * để chứng minh đúng một điều mà nhiệm vụ ĐẦU TIÊN đã chứng minh xong, trong lúc vẫn giữ ghế
+ * khôi lỗi không cho đàn khác vào.
+ *
+ * Và nó còn nói DỐI: dòng nhật ký「Trang chưa dựng xong sau 25s — không thấy .nv-quest」đọc
+ * như một trang chậm hoặc một selector chết, nên người đọc đi chữa nhầm chỗ (nâng timeout).
+ * Sự thật thì 25s đã rộng gấp ba: một vòng KHOẺ đo được ~9 giây mỗi nhiệm vụ (cùng đàn ấy,
+ * 05:10). Trang không chậm — nó không phải trang game.
+ */
+export class CycleBlocked extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "CycleBlocked";
   }
 }
 
@@ -325,6 +347,10 @@ export function createQuestEngine(deps) {
       return result(quest, "skipped", { message: `Loại nhiệm vụ lạ: ${quest.kind}` });
     } catch (err) {
       if (err instanceof QuestAborted) throw err;
+      // CycleBlocked cũng phải XUYÊN QUA đây, cùng lẽ với QuestAborted: nó nói về CẢ VÒNG, không
+      // phải về nhiệm vụ này. Nuốt nó thành một outcome failed là biến một lệnh dừng thành một
+      // dòng nhật ký — rồi mười hai nhiệm vụ sau vẫn lần lượt đâm vào đúng bức tường ấy.
+      if (err instanceof CycleBlocked) throw err;
       return result(quest, "failed", { message: err instanceof Error ? err.message : String(err) });
     }
   }
@@ -473,7 +499,24 @@ export function createQuestEngine(deps) {
       };
       error = await executeSteps(session, quest, quest.steps, state, 0);
 
-      if (!error || !state.pageNotRendered || attempt >= MAX_PAGE_RENDER_ATTEMPTS) break;
+      if (!error || !state.pageNotRendered) break;
+
+      // Trang không dựng xong thì HỎI XEM NÓ CÓ PHẢI TRANG GAME KHÔNG, trước khi tốn thêm một
+      // lượt 25 giây. Màn kiểm tra (Cloudflare) chặn CẢ VÒNG chứ không riêng nhiệm vụ này, nên
+      // thử lại là vô ích — và mười ba nhiệm vụ cùng thử lại thì thành mười sáu phút vô ích.
+      //
+      // Chỉ chạy trên đường HỎNG (đằng nào cũng đã mất 25 giây), nên đường khoẻ không tốn gì.
+      // Probe hỏng/trả undefined thì coi như không có màn kiểm tra: một phép chẩn đoán không
+      // bao giờ được tự nó giết một vòng chạy.
+      const gate = await session.evaluate(readinessProbe);
+      if (gate && gate.challenge === true) {
+        throw new CycleBlocked(
+          "Trang game dựng màn kiểm tra (Cloudflare) giữa vòng — mọi nhiệm vụ sau đều sẽ hỏng vì " +
+            "cùng lẽ ấy, nên dừng sớm để nhường ghế thay vì thử lại vô ích.",
+        );
+      }
+
+      if (attempt >= MAX_PAGE_RENDER_ATTEMPTS) break;
 
       // Mức info: đây là thứ giải thích vì sao một nhiệm vụ tốn gấp đôi, gấp ba thời gian —
       // im lặng ở đây là để người đọc nhật ký tự đoán.
