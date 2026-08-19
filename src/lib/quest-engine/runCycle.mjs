@@ -25,16 +25,105 @@ import { createSession } from "./session.mjs";
 export { DEFAULT_GAME_BASE_URL, parseCookieString } from "./cookies.mjs";
 
 /**
- * UA của một Chrome desktop thật — thế chỗ UA mặc định của headless, vốn tự xưng
- * "HeadlessChrome/…". Site nằm sau Cloudflare, và chuỗi ấy là lời tự thú.
- *
- * Ghim "151" cho khớp bản Chromium mà playwright-core 1.62 tải về: Cloudflare đối chiếu
- * được UA header với client hints (Sec-CH-UA) do chính browser tự khai, nên một UA nói
- * "Chrome 131" trên một engine 151 là một mâu thuẫn dâng tận miệng. Chrome thật từ lâu chỉ
- * khai major version (x.0.0.0), nên dạng này không lệch gì với đời thật.
+ * UA của một Chrome desktop thật, chờ điền số hiệu bản. Chrome thật từ lâu chỉ khai major
+ * (`x.0.0.0`) trong UA, nên dạng này không lệch gì với đời thật.
  */
-const DESKTOP_USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36";
+const desktopUserAgent = (major) =>
+  `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${major}.0.0.0 Safari/537.36`;
+
+/**
+ * Bản GHIM của UA trên — chỉ còn là đường DỰ PHÒNG, dùng lúc mở context trước khi hỏi được
+ * chính binary nó là bản mấy (xem `wearRealBrowserIdentity`).
+ *
+ * Số 151 khớp bản Chromium mà playwright-core 1.62 tải về, và cái ghim ấy chính là chỗ dễ
+ * trôi: nâng playwright là số này lệch mà không ai thấy. Từ 19/08/2026 nó không còn là nguồn
+ * sự thật — lượt chạy hỏi `Browser.getVersion` rồi tự viết lại UA theo đúng binary.
+ */
+const DESKTOP_USER_AGENT = desktopUserAgent(151);
+
+/**
+ * ── CHROMIUM TỰ KHAI「HeadlessChrome」TRONG CLIENT HINTS, VÀ ĐÓ LÀ CỚ ĐỂ CLOUDFLARE ĐÁNH CAPTCHA ──
+ *
+ * Đè `userAgent` lúc mở context chỉ sửa được HEADER `User-Agent` và `navigator.userAgent`. Bộ
+ * client hints (`Sec-CH-UA`, `Sec-CH-UA-Full-Version-List`, `navigator.userAgentData`) do CHÍNH
+ * BINARY tự khai và KHÔNG đi theo phép đè ấy. Đo trên VM ngày 19/08/2026, đúng cấu hình khôi lỗi
+ * đang chạy:
+ *
+ *     user-agent : … Chrome/151.0.0.0 Safari/537.36          ← thứ ta đè
+ *     sec-ch-ua  : "Not=A?Brand";v="99", "HeadlessChrome";v="151", "Chromium";v="151"
+ *
+ * Hai dòng ấy nói hai chuyện khác nhau, và dòng thứ hai còn tự xưng là trình duyệt không đầu.
+ * Cloudflare đối chiếu đúng cặp này — nên lời tự thú mà chú thích cũ tưởng đã gỡ (bằng cách đè
+ * UA) vẫn còn nguyên, chỉ chuyển sang một cái cửa khác.
+ *
+ * Chữa bằng CDP, cửa duy nhất Chromium mở cho việc này: `Emulation.setUserAgentOverride` nhận
+ * `userAgentMetadata`, tức đè được CẢ client hints. Ba luật của phép đè:
+ *
+ *   1. MỌI con số lấy từ chính binary (`Browser.getVersion`) — hết ghim tay, hết trôi. Nâng
+ *      playwright lên bản khác là UA lẫn brand tự đi theo.
+ *   2. Chỉ thay ĐÚNG chữ「HeadlessChrome」thành「Google Chrome」, giữ nguyên brand GREASE và
+ *      「Chromium」của chính bản dựng ấy. Bịa cả danh sách là dựng một dấu vân tay không tồn tại
+ *      ngoài đời; giữ nguyên phần còn lại thì nó khớp với mọi thứ khác binary tự khai.
+ *   3. Hỏng thì KÊU rồi đi tiếp. Không có phép đè này lượt chạy vẫn chạy được (và trước
+ *      19/08/2026 nó vẫn chạy như thế) — chỉ là dễ ăn captcha hơn. Ném ở đây là đổi một cái bất
+ *      lợi lấy một lượt chạy chết hẳn.
+ *
+ * KHÔNG `detach()` phiên CDP: phép đè sống theo phiên, gỡ phiên là trả trang về lời tự thú cũ.
+ * Nó tự tan khi trang/trình duyệt đóng.
+ *
+ * @returns {Promise<{ok: boolean, detail: string}>}
+ */
+export async function wearRealBrowserIdentity(context, page) {
+  try {
+    const cdp = await context.newCDPSession(page);
+    const info = await cdp.send("Browser.getVersion");
+    // "HeadlessChrome/151.0.7922.34" → full "151.0.7922.34" → major "151"
+    const full = String(info?.product ?? "").split("/")[1] ?? "";
+    const major = full.split(".")[0] ?? "";
+    if (!/^\d+$/.test(major)) {
+      return { ok: false, detail: `không đọc được số hiệu Chromium từ「${info?.product ?? "(rỗng)"}」` };
+    }
+
+    /**
+     * Brand GREASE của chính bản dựng này. Chuỗi ấy đổi theo đời Chromium ("Not=A?Brand",
+     * "Not(A:Brand", "Not_A Brand"…) nên chép cứng là hẹn ngày lệch; nhưng CDP không trả nó ra,
+     * và nó phải khớp với thứ binary vẫn gửi. Lấy đúng chuỗi bản dựng đang dùng, đo được ở
+     * `verify:browser-fingerprint`.
+     */
+    const GREASE = { brand: "Not=A?Brand", version: "99", full: "99.0.0.0" };
+    const brands = [
+      { brand: GREASE.brand, version: GREASE.version },
+      { brand: "Google Chrome", version: major },
+      { brand: "Chromium", version: major },
+    ];
+    const fullVersionList = [
+      { brand: GREASE.brand, version: GREASE.full },
+      { brand: "Google Chrome", version: full },
+      { brand: "Chromium", version: full },
+    ];
+
+    await cdp.send("Emulation.setUserAgentOverride", {
+      userAgent: desktopUserAgent(major),
+      acceptLanguage: "vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7",
+      platform: "Win32",
+      userAgentMetadata: {
+        brands,
+        fullVersionList,
+        fullVersion: full,
+        platform: "Windows",
+        platformVersion: "10.0",
+        architecture: "x86",
+        model: "",
+        mobile: false,
+        bitness: "64",
+        wow64: false,
+      },
+    });
+    return { ok: true, detail: `Chrome ${full} (Windows)` };
+  } catch (err) {
+    return { ok: false, detail: err instanceof Error ? err.message.slice(0, 160) : "lỗi lạ" };
+  }
+}
 
 /**
  * Cấu hình mở trình duyệt — port TRUNG THỰC từ PlaywrightBrowserSession.cs của bản desktop.
@@ -44,7 +133,7 @@ const DESKTOP_USER_AGENT =
  * (thủ phạm là cookie parse ra rỗng), nhưng là món nợ trước sau gì cũng phải trả — và
  * desktop đã trả từ đầu.
  */
-function launchProfile(headless) {
+export function launchProfile(headless) {
   return {
     headless,
     userAgent: DESKTOP_USER_AGENT,
@@ -428,6 +517,20 @@ export async function runCycle(deps) {
     }
 
     const page = context.pages().length > 0 ? context.pages()[0] : await context.newPage();
+
+    // TRƯỚC mọi lượt điều hướng, bằng không lượt tải đầu tiên đã kịp khai「HeadlessChrome」với
+    // Cloudflare — và lượt tải đầu tiên chính là lượt bị soi kỹ nhất.
+    const identity = await wearRealBrowserIdentity(context, page, log);
+    if (identity.ok) {
+      log.debug("Trình duyệt", `Danh tính trình duyệt: ${identity.detail}.`);
+    } else {
+      log.warning(
+        "Trình duyệt",
+        `Không đè được client hints (${identity.detail}) — trình duyệt sẽ tự xưng HeadlessChrome, ` +
+          "dễ bị Cloudflare chặn hơn. Lượt chạy vẫn tiếp tục.",
+      );
+    }
+
     const session = createSession(page, {
       baseUrl,
       log: {
