@@ -1,6 +1,6 @@
 {
   "name": "Ho\u1EA1t \u0111\u1ED9ng h\u00E0ng ng\u00E0y (m\u1EB7c \u0111\u1ECBnh)",
-  "schemaVersion": 69,
+  "schemaVersion": 70,
   "dailyQuestPath": "/nhiem-vu-hang-ngay",
   "quests": [
     {
@@ -2175,7 +2175,7 @@
               "optional": true,
               "condition": {
                 "kind": "visible",
-                "selector": "#hnLiXiModal"
+                "selector": "#hnLiXiModal, #liXiModal"
               },
               "when": {
                 "kind": "visible",
@@ -2184,13 +2184,13 @@
             },
             {
               "action": "evaluateJavaScript",
-              "script": "() =\u003E { const GO = \u0027jvz-hy-su-lixi\u0027; const BOX = \u0027jvz-hy-su-lixi-box\u0027; const body = document.body; if (!body) return \u0027h\u1EF7 s\u1EF1 l\u00EC x\u00EC: trang ch\u01B0a c\u00F3 body\u0027; body.classList.remove(GO); body.classList.remove(BOX); const shown = (el) =\u003E { for (let n = el; n \u0026\u0026 n.nodeType === 1; n = n.parentElement) { const r = n.getBoundingClientRect(); if (r.width \u003C 1 || r.height \u003C 1) return false; const st = getComputedStyle(n); if (st.visibility === \u0027hidden\u0027 || st.display === \u0027none\u0027 || st.opacity === \u00270\u0027 || st.pointerEvents === \u0027none\u0027) return false; } return true; }; const tray = document.querySelector(\u0027#hnLiXiModal\u0027); if (!tray || !shown(tray)) return body.classList.contains(\u0027jvz-hy-su-gift\u0027) ? \u0027!Danh s\u00E1ch h\u1EE9a c\u00F3 h\u1ED3ng bao m\u00E0 ph\u00F2ng n\u00E0y kh\u00F4ng m\u1EDF khay \u2014 b\u1ECF qua ph\u1EA7n l\u00EC x\u00EC, ph\u00F2ng v\u1EABn \u0111\u01B0\u1EE3c ch\u00FAc nh\u01B0 th\u01B0\u1EDDng\u0027 : \u0027h\u1EF7 s\u1EF1 l\u00EC x\u00EC: ph\u00F2ng n\u00E0y kh\u00F4ng c\u00F3 khay h\u1ED3ng bao\u0027; body.classList.add(BOX); const btn = tray.querySelector(\u0027#hnOpenBtn\u0027); if (!btn || btn.disabled || !shown(btn)) return \u0027!Khay h\u1ED3ng bao \u0111ang m\u1EDF nh\u01B0ng kh\u00F4ng c\u00F3 n\u00FAt khai \u2014 ch\u1EC9 \u0111\u00F3ng khay r\u1ED3i \u0111i ti\u1EBFp\u0027; body.classList.add(GO); return \u0027!C\u00F3 h\u1ED3ng bao ch\u01B0a khai \u2014 khai tr\u01B0\u1EDBc, v\u00EC khay che k\u00EDn c\u1EA3 form ch\u00FAc\u0027; }",
+              "script": "() =\u003E { const GO = \u0027jvz-hy-su-lixi\u0027; const BOX = \u0027jvz-hy-su-lixi-box\u0027; const body = document.body; if (!body) return \u0027h\u1EF7 s\u1EF1 l\u00EC x\u00EC: trang ch\u01B0a c\u00F3 body\u0027; body.classList.remove(GO); body.classList.remove(BOX); const shown = (el) =\u003E { for (let n = el; n \u0026\u0026 n.nodeType === 1; n = n.parentElement) { const r = n.getBoundingClientRect(); if (r.width \u003C 1 || r.height \u003C 1) return false; const st = getComputedStyle(n); if (st.visibility === \u0027hidden\u0027 || st.display === \u0027none\u0027 || st.opacity === \u00270\u0027 || st.pointerEvents === \u0027none\u0027) return false; } return true; }; const tray = document.querySelector(\u0027#hnLiXiModal, #liXiModal\u0027); if (!tray || !shown(tray)) return body.classList.contains(\u0027jvz-hy-su-gift\u0027) ? \u0027!Danh s\u00E1ch h\u1EE9a c\u00F3 h\u1ED3ng bao m\u00E0 ph\u00F2ng n\u00E0y kh\u00F4ng m\u1EDF khay \u2014 b\u1ECF qua ph\u1EA7n l\u00EC x\u00EC, ph\u00F2ng v\u1EABn \u0111\u01B0\u1EE3c ch\u00FAc nh\u01B0 th\u01B0\u1EDDng\u0027 : \u0027h\u1EF7 s\u1EF1 l\u00EC x\u00EC: ph\u00F2ng n\u00E0y kh\u00F4ng c\u00F3 khay h\u1ED3ng bao\u0027; body.classList.add(BOX); const btn = tray.querySelector(\u0027#hnOpenBtn, #openButton\u0027); if (!btn || btn.disabled || !shown(btn)) return \u0027!Khay h\u1ED3ng bao \u0111ang m\u1EDF nh\u01B0ng kh\u00F4ng c\u00F3 n\u00FAt khai \u2014 ch\u1EC9 \u0111\u00F3ng khay r\u1ED3i \u0111i ti\u1EBFp\u0027; body.classList.add(GO); return \u0027!C\u00F3 h\u1ED3ng bao ch\u01B0a khai \u2014 khai tr\u01B0\u1EDBc, v\u00EC khay che k\u00EDn c\u1EA3 form ch\u00FAc\u0027; }",
               "timeoutMs": 4000,
               "note": "c\u1EAFm hai c\u1EDD: khai \u0111\u01B0\u1EE3c / khay \u0111ang m\u1EDF"
             },
             {
               "action": "click",
-              "selector": "#hnOpenBtn",
+              "selector": "#hnOpenBtn, #openButton",
               "timeoutMs": 15000,
               "note": "\u0022\uD83E\uDDE7 Khai Phong L\u00EC X\u00EC\u0022 \u2014 m\u1ED9t c\u00FA POST hh3d_receive_li_xi, kh\u00F4ng c\u00F3 h\u1ED9p x\u00E1c nh\u1EADn n\u00E0o \u1EDF gi\u1EEFa",
               "optional": true,
@@ -2206,7 +2206,7 @@
               "optional": true,
               "condition": {
                 "kind": "hidden",
-                "selector": "#hnOpenBtn"
+                "selector": "#hnOpenBtn, #openButton"
               },
               "when": {
                 "kind": "visible",
@@ -2215,7 +2215,7 @@
             },
             {
               "action": "evaluateJavaScript",
-              "script": "() =\u003E { const LOG = \u0027__jvz_hy_su_log\u0027; const mark = (field, value) =\u003E { try { const log = JSON.parse(sessionStorage.getItem(LOG) || \u0027[]\u0027); if (log.length \u003E 0) { log[log.length - 1][field] = value; sessionStorage.setItem(LOG, JSON.stringify(log)); } } catch (e) { } }; const txt = (sel) =\u003E { const el = document.querySelector(sel); return el ? (el.textContent || \u0027\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim() : \u0027\u0027; }; const wrap = document.querySelector(\u0027#hnRewardWrap\u0027); const amount = txt(\u0027#hnRewardAmount\u0027); const name = txt(\u0027#hnRewardName\u0027); const blank = (s) =\u003E s === \u0027\u0027 || s === \u0027\u2014\u0027 || s === \u0027-\u0027; if (wrap \u0026\u0026 wrap.classList.contains(\u0027show\u0027) \u0026\u0026 !blank(amount)) { const got = (amount \u002B \u0027 \u0027 \u002B name).trim(); mark(\u0027gift\u0027, got); return \u0027!Khai phong l\u00EC x\u00EC: \u0027 \u002B got; } const why = !wrap ? \u0027trang kh\u00F4ng c\u00F3 khay ph\u1EA7n th\u01B0\u1EDFng\u0027 : (blank(amount) ? \u0027khay m\u1EDF m\u00E0 kh\u00F4ng k\u00EA ph\u1EA7n th\u01B0\u1EDFng\u0027 : \u0027khay ch\u01B0a l\u1EADt ph\u1EA7n th\u01B0\u1EDFng\u0027); mark(\u0027giftWhy\u0027, why); return \u0027!KHAI H\u1ED2NG BAO TR\u01AF\u1EE2T \u2014 \u0027 \u002B why \u002B \u0027; h\u1ED3ng bao c\u00F2n nguy\u00EAn cho l\u01B0\u1EE3t sau, l\u01B0\u1EE3t n\u00E0y v\u1EABn \u0111i ti\u1EBFp\u0027; }",
+              "script": "() =\u003E { const LOG = \u0027__jvz_hy_su_log\u0027; const mark = (field, value) =\u003E { try { const log = JSON.parse(sessionStorage.getItem(LOG) || \u0027[]\u0027); if (log.length \u003E 0) { log[log.length - 1][field] = value; sessionStorage.setItem(LOG, JSON.stringify(log)); } } catch (e) { } }; const txt = (sel) =\u003E { const el = document.querySelector(sel); return el ? (el.textContent || \u0027\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim() : \u0027\u0027; }; const wrap = document.querySelector(\u0027#hnRewardWrap, #rewardReveal\u0027); const amount = txt(\u0027#hnRewardAmount, #rewardItem .lixi-reward-amount\u0027); const name = txt(\u0027#hnRewardName, #rewardItem .lixi-reward-name\u0027); const blank = (s) =\u003E s === \u0027\u0027 || s === \u0027\u2014\u0027 || s === \u0027-\u0027; if (wrap \u0026\u0026 wrap.classList.contains(\u0027show\u0027) \u0026\u0026 !blank(amount)) { const got = (amount \u002B \u0027 \u0027 \u002B name).trim(); mark(\u0027gift\u0027, got); return \u0027!Khai phong l\u00EC x\u00EC: \u0027 \u002B got; } const why = !wrap ? \u0027trang kh\u00F4ng c\u00F3 khay ph\u1EA7n th\u01B0\u1EDFng\u0027 : (blank(amount) ? \u0027khay m\u1EDF m\u00E0 kh\u00F4ng k\u00EA ph\u1EA7n th\u01B0\u1EDFng\u0027 : \u0027khay ch\u01B0a l\u1EADt ph\u1EA7n th\u01B0\u1EDFng\u0027); mark(\u0027giftWhy\u0027, why); return \u0027!KHAI H\u1ED2NG BAO TR\u01AF\u1EE2T \u2014 \u0027 \u002B why \u002B \u0027; h\u1ED3ng bao c\u00F2n nguy\u00EAn cho l\u01B0\u1EE3t sau, l\u01B0\u1EE3t n\u00E0y v\u1EABn \u0111i ti\u1EBFp\u0027; }",
               "timeoutMs": 4000,
               "note": "\u0111\u1ECDc t\u1EA5m thi\u1EC7p ph\u1EA7n th\u01B0\u1EDFng r\u1ED3i ghi v\u00E0o s\u1ED5 k\u1EBFt c\u1EE5c",
               "when": {
@@ -2225,7 +2225,7 @@
             },
             {
               "action": "click",
-              "selector": "#hnCloseBtn",
+              "selector": "#hnCloseBtn, #closeButton",
               "timeoutMs": 8000,
               "note": "\u0111\u00F3ng khay \u2014 B\u1EAET BU\u1ED8C ph\u1EA3i l\u00E0m k\u1EC3 c\u1EA3 khi khai tr\u01B0\u1EE3t, v\u00EC khay c\u00F2n m\u1EDF l\u00E0 form ch\u00FAc b\u00EAn d\u01B0\u1EDBi kh\u00F4ng b\u1EA5m \u0111\u01B0\u1EE3c. Guard l\u00E0 c\u1EDD KHAY ch\u1EE9 kh\u00F4ng ph\u1EA3i c\u1EDD KHAI",
               "optional": true,
@@ -2241,7 +2241,7 @@
               "optional": true,
               "condition": {
                 "kind": "hidden",
-                "selector": "#hnLiXiModal"
+                "selector": "#hnLiXiModal, #liXiModal"
               },
               "when": {
                 "kind": "visible",
