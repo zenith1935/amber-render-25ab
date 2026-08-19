@@ -183,6 +183,10 @@ const CHECKBOX_JITTER_PX = 6;
 export const MAX_TURNSTILE_CLICKS = 2;
 /** Cách quãng giữa hai lần thử, để một màn còn treo không bị bấm liên hồi. */
 export const TURNSTILE_CLICK_GAP_MS = 6_000;
+/** Chờ tối đa bấy nhiêu sau một cú bấm rồi mới kết luận là không qua. */
+export const TURNSTILE_CLEAR_WAIT_MS = 12_000;
+/** Nhịp hỏi lại trang trong lúc chờ ấy. */
+export const TURNSTILE_CLEAR_POLL_MS = 1_500;
 
 const clampNum = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const mouseSleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -825,7 +829,34 @@ export async function runCycle(deps) {
     // Cổng điều phối toàn cục VẪN còn và vẫn cần: một VM chạy nhiều đàn cùng lúc, nên hai
     // nhiệm vụ trang riêng của HAI đàn khác nhau vẫn có thể dẫm chân nhau trên cùng hai nhân.
     {
-      const engine = createQuestEngine({ log, shouldStop, quiz });
+      /**
+     * Gỡ màn kiểm tra gặp GIỮA VÒNG: bấm ô Turnstile rồi hỏi lại trang.
+     *
+     * Trả về true CHỈ KHI trang đã hết màn kiểm tra — engine tin vào câu trả lời ấy để đi tiếp,
+     * nên một lời hứa hão ở đây sẽ đổi thành mười ba nhiệm vụ hỏng. Không bật cờ thì `null`, và
+     * engine giữ nguyên nết cũ: phát hiện rồi dừng sớm.
+     */
+      const clearChallenge = !solveTurnstile
+        ? null
+        : async (sess) => {
+            const res = await attemptTurnstileClick(sess.page);
+            if (!res.clicked) {
+              log.debug("Sẵn sàng", `Không bấm được ô kiểm tra giữa vòng: ${res.note}.`);
+              return false;
+            }
+            await say("Đã bấm ô kiểm tra (Turnstile) giữa vòng — chờ xem có qua không…");
+            // Cloudflare cần vài giây để đổi trang sau một cú bấm hợp lệ; hỏi lại vài nhịp thay
+            // vì kết luận ngay, nhưng có HẠN để một màn không bao giờ qua đừng giữ ghế mãi.
+            const deadlineAt = Date.now() + TURNSTILE_CLEAR_WAIT_MS;
+            while (Date.now() < deadlineAt) {
+              await new Promise((r) => setTimeout(r, TURNSTILE_CLEAR_POLL_MS));
+              const again = await sess.evaluate(readinessProbe);
+              if (again && again.challenge !== true) return true;
+            }
+            return false;
+          };
+
+      const engine = createQuestEngine({ log, shouldStop, quiz, clickTurnstile: clearChallenge });
 
       for (const quest of quests) {
         if (shouldStop()) {

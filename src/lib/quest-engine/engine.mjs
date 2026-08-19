@@ -51,6 +51,16 @@ const MAX_REPEAT_DEPTH = 2;
 const MAX_PAGE_RENDER_ATTEMPTS = 3;
 
 /**
+ * Gỡ được màn kiểm tra bao nhiêu lần trong MỘT nhiệm vụ thì thôi.
+ *
+ * Có trần vì nhánh「gỡ được → chạy lại nhiệm vụ」cố ý KHÔNG đi qua `MAX_PAGE_RENDER_ATTEMPTS`:
+ * một lượt gỡ thành công không đáng bị tính là một lượt hỏng. Nhưng thiếu trần thì một trang cứ
+ * dựng lại màn kiểm tra sau mỗi cú bấm sẽ giữ khôi lỗi trong vòng lặp vô tận — mỗi vòng tốn 25
+ * giây chờ + 12 giây hỏi lại, và không ai thấy gì ngoài một nhiệm vụ chạy mãi không xong.
+ */
+const MAX_CHALLENGE_CLEARS = 2;
+
+/**
  * DẤU NGÀY — kênh thứ ba của một script, bên cạnh tường thuật (`!`) và số liệu (không dấu).
  *
  * Một dòng `@khoá` nghĩa là「việc mang tên KHOÁ này đã làm xong hôm nay cho đàn này」. Engine
@@ -262,11 +272,23 @@ const result = (quest, outcome, extra = {}) => ({
  * @param {{info:Function, debug:Function, warning:Function}} deps.log  nhận (scope, message)
  * @param {() => boolean} [deps.shouldStop]   true khi người dùng đã bấm dừng
  * @param {{resolve:Function, learn:Function}} [deps.quiz]  kho đáp án, nếu có
+ * @param {(session: object) => Promise<boolean>} [deps.clickTurnstile]  cách GỠ một màn kiểm tra
+ *   gặp giữa vòng — trả `true` CHỈ KHI trang đã hết màn kiểm tra. Vắng mặt (cờ tắt) thì engine
+ *   giữ nguyên nết cũ: phát hiện rồi dừng cả vòng.
  */
 export function createQuestEngine(deps) {
   const log = deps.log;
   const shouldStop = deps.shouldStop ?? (() => false);
   const quiz = deps.quiz ?? null;
+  /**
+   * Cách GỠ một màn kiểm tra gặp giữa vòng, do người gọi tiêm vào.
+   *
+   * Engine cố ý KHÔNG tự biết cách bấm ô Turnstile: nó không sở hữu danh tính trình duyệt (đó
+   * là việc của runCycle), và nhập thẳng hàm ấy từ runCycle.mjs sẽ tạo vòng import. Tiêm vào
+   * thì cả hai bên giữ đúng phần việc của mình, và bộ chạy thử dựng được ca giả mà không cần
+   * cả một trình duyệt thật.
+   */
+  const clickTurnstile = deps.clickTurnstile ?? null;
 
   const throwIfStopped = () => {
     if (shouldStop()) throw new QuestAborted();
@@ -488,6 +510,7 @@ export function createQuestEngine(deps) {
     // Thu Đàn giữa chừng ném QuestAborted từ `throwIfStopped` và KHÔNG bị bắt ở đây — nó
     // xuyên thẳng lên `run`, đúng như trước. Một vòng thử lại nuốt mất tín hiệu dừng là cách
     // biến nút Thu Đàn thành nút gợi ý.
+    let challengeClears = 0;
     for (let attempt = 1; ; attempt++) {
       state = {
         cooldown: null,
@@ -510,9 +533,21 @@ export function createQuestEngine(deps) {
       // bao giờ được tự nó giết một vòng chạy.
       const gate = await session.evaluate(readinessProbe);
       if (gate && gate.challenge === true) {
+        // THỬ GỠ trước khi bỏ chạy. Đo 20/08/2026 trên sản xuất: màn kiểm tra tới GIỮA VÒNG chứ
+        // không ở cổng đầu vòng — nên cú bấm Turnstile đặt ở cổng (1.3.18) chưa một lần được
+        // chạy, dù cờ đã bật. Không thử ở đây thì nó vĩnh viễn không có cơ hội nào.
+        if (clickTurnstile && challengeClears < MAX_CHALLENGE_CLEARS) {
+          const cleared = await clickTurnstile(session);
+          if (cleared) {
+            challengeClears += 1;
+            log.info(scope, "Đã gỡ được màn kiểm tra — đi tiếp nhiệm vụ này.");
+            continue;
+          }
+        }
         throw new CycleBlocked(
           "Trang game dựng màn kiểm tra (Cloudflare) giữa vòng — mọi nhiệm vụ sau đều sẽ hỏng vì " +
-            "cùng lẽ ấy, nên dừng sớm để nhường ghế thay vì thử lại vô ích.",
+            "cùng lẽ ấy, nên dừng sớm để nhường ghế thay vì thử lại vô ích." +
+            (clickTurnstile ? " Đã thử bấm ô kiểm tra mà không qua." : ""),
         );
       }
 
