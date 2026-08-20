@@ -141,9 +141,29 @@ export async function wearRealBrowserIdentity(context, page) {
  * (thủ phạm là cookie parse ra rỗng), nhưng là món nợ trước sau gì cũng phải trả — và
  * desktop đã trả từ đầu.
  */
+/**
+ * Kênh trình duyệt ƯU TIÊN, và đây là bản vá đắt nhất của cả tuần — đo được, không đoán.
+ *
+ * Từ Playwright 1.49, `headless: true` KHÔNG còn mở Chromium: nó mở `chrome-headless-shell`,
+ * một bản dựng riêng, gọn hơn, thiếu nhiều thứ của trình duyệt thật. Cloudflare phân biệt được
+ * hai thứ ấy, và nó chặn đúng cái shell.
+ *
+ * ĐO 20/08/2026 bằng `npm run diagnose:cf -- --walk`, chạy TRÊN VM (đúng dải IP trung tâm dữ
+ * liệu mà khôi lỗi GitHub dùng), LẶP BA LƯỢT, kết quả y hệt cả ba:
+ *
+ *   chrome-headless-shell → sạch ở trang chủ, CHẶN ngay trang thứ hai (/nhiem-vu-hang-ngay)
+ *   Chromium đầy đủ       → đi hết 8 trang của một vòng thật, không chặn lần nào
+ *
+ * Chú ý cái bẫy đã giấu nó suốt năm lượt vá: TRANG CHỦ QUA ĐƯỢC Ở CẢ HAI. Mọi phép đo một
+ * trang đều báo xanh, nên IP và tên miền lần lượt bị đổ oan. Chỉ phép đi bộ nhiều trang trong
+ * cùng một phiên mới lộ ra — đúng thứ khôi lỗi làm mà chẩn đoán không làm.
+ */
+const PREFERRED_CHANNEL = "chromium";
+
 export function launchProfile(headless) {
   return {
     headless,
+    channel: PREFERRED_CHANNEL,
     userAgent: DESKTOP_USER_AGENT,
     locale: "vi-VN",
     timezoneId: "Asia/Ho_Chi_Minh",
@@ -242,6 +262,52 @@ export async function attemptTurnstileClick(page, { rand = Math.random } = {}) {
   } finally {
     await handle.dispose().catch(() => {});
   }
+}
+
+/**
+ * Mở trình duyệt, ưu tiên Chromium đầy đủ và LUI VỀ shell nếu máy này không có nó.
+ *
+ * Vì sao phải có đường lui thay vì cứ đòi kênh `chromium`: `npx playwright install chromium`
+ * cài cả hai binary, nhưng một khôi lỗi cũ, một máy nhà cài tay, hay một image gọt bớt thì có
+ * thể chỉ có shell. Đòi cứng ở đó nghĩa là MỌI vòng chạy chết ngay từ cú mở trình duyệt — đổi
+ * một cú chặn Cloudflare lấy một cú chết hẳn, tệ hơn hẳn thứ đang chữa.
+ *
+ * Trả về cả `via` để lượt chạy NÓI RA mình đang chạy bằng binary nào: khi bản vá này còn phải
+ * chứng minh mình đúng, dòng ấy là bằng chứng, không phải lời hứa.
+ */
+export async function openBrowserPreferringFullChromium(chromium, fingerprint, profileDir, log) {
+  const { channel, ...withoutChannel } = fingerprint;
+  const plans = [
+    { note: "Chromium đầy đủ", options: fingerprint },
+    { note: "chrome-headless-shell (đường lui)", options: withoutChannel },
+  ];
+
+  let lastError = null;
+  for (const plan of plans) {
+    try {
+      if (profileDir) {
+        const context = await chromium.launchPersistentContext(profileDir, plan.options);
+        return { browser: null, context, via: plan.note };
+      }
+      const browser = await chromium.launch({
+        headless: plan.options.headless,
+        ...(plan.options.channel ? { channel: plan.options.channel } : {}),
+        args: plan.options.args,
+        ignoreDefaultArgs: plan.options.ignoreDefaultArgs,
+      });
+      const context = await browser.newContext({
+        userAgent: plan.options.userAgent,
+        locale: plan.options.locale,
+        timezoneId: plan.options.timezoneId,
+        viewport: plan.options.viewport,
+      });
+      return { browser, context, via: plan.note };
+    } catch (err) {
+      lastError = err;
+      log?.warning?.("Trình duyệt", `Không mở được bằng ${plan.note}: ${err instanceof Error ? err.message.split("\n")[0] : String(err)}`);
+    }
+  }
+  throw lastError ?? new Error("Không mở được trình duyệt bằng bất kỳ kênh nào.");
 }
 
 /** Outcome của engine → câu người đọc, và mức độ để hiện trên Hoạt động. */
@@ -615,23 +681,10 @@ export async function runCycle(deps) {
   // diện trước Cloudflare như người lạ, còn hồ sơ bền thì một lần qua cửa là những lượt sau
   // đi thẳng. Cookie phiên được site làm mới cũng nhờ vậy mà không bị chuỗi dán-tay cũ dần.
   const fingerprint = launchProfile(headless);
-  let browser = null;
-  let context;
-  if (profileDir) {
-    context = await chromium.launchPersistentContext(profileDir, fingerprint);
-  } else {
-    browser = await chromium.launch({
-      headless,
-      args: fingerprint.args,
-      ignoreDefaultArgs: fingerprint.ignoreDefaultArgs,
-    });
-    context = await browser.newContext({
-      userAgent: fingerprint.userAgent,
-      locale: fingerprint.locale,
-      timezoneId: fingerprint.timezoneId,
-      viewport: fingerprint.viewport,
-    });
-  }
+  const opened = await openBrowserPreferringFullChromium(chromium, fingerprint, profileDir, log);
+  const browser = opened.browser;
+  const context = opened.context;
+  log.debug("Trình duyệt", `Mở bằng ${opened.via}.`);
 
   let done = 0;
   let failed = 0;
