@@ -148,8 +148,9 @@ export async function wearRealBrowserIdentity(context, page) {
  * một bản dựng riêng, gọn hơn, thiếu nhiều thứ của trình duyệt thật. Cloudflare phân biệt được
  * hai thứ ấy, và nó chặn đúng cái shell.
  *
- * ĐO 20/08/2026 bằng `npm run diagnose:cf -- --walk`, chạy TRÊN VM (đúng dải IP trung tâm dữ
- * liệu mà khôi lỗi GitHub dùng), LẶP BA LƯỢT, kết quả y hệt cả ba:
+ * ĐO 20/08/2026 bằng `npm run diagnose:cf -- --walk`, chạy TRÊN VM (IP của Oracle Cloud — KHÔNG
+ * phải dải IP mà khôi lỗi GitHub dùng; phép đo này chứng minh chuyện BINARY, đừng đọc nó thành
+ * bằng chứng về IP), LẶP BA LƯỢT, kết quả y hệt cả ba:
  *
  *   chrome-headless-shell → sạch ở trang chủ, CHẶN ngay trang thứ hai (/nhiem-vu-hang-ngay)
  *   Chromium đầy đủ       → đi hết 8 trang của một vòng thật, không chặn lần nào
@@ -157,6 +158,13 @@ export async function wearRealBrowserIdentity(context, page) {
  * Chú ý cái bẫy đã giấu nó suốt năm lượt vá: TRANG CHỦ QUA ĐƯỢC Ở CẢ HAI. Mọi phép đo một
  * trang đều báo xanh, nên IP và tên miền lần lượt bị đổ oan. Chỉ phép đi bộ nhiều trang trong
  * cùng một phiên mới lộ ra — đúng thứ khôi lỗi làm mà chẩn đoán không làm.
+ *
+ * XÁC NHẬN TRÊN PRODUCTION 20/08/2026, lần này ĐÚNG dải IP GitHub, nhóm theo giờ UTC:
+ *
+ *   15h (bản cũ, shell)      4 lần bị chặn · 0 việc xong · 0 vòng đi trọn
+ *   16h (bản này, Chromium)  0 lần bị chặn · 4 việc xong · 1 vòng đi trọn
+ *
+ * Mẫu một giờ là nhỏ, nhưng vòng-đi-trọn nhảy từ 0 lên 1 là lần đầu kể từ khi lỗi bắt đầu.
  */
 const PREFERRED_CHANNEL = "chromium";
 
@@ -304,7 +312,13 @@ export async function openBrowserPreferringFullChromium(chromium, fingerprint, p
       return { browser, context, via: plan.note };
     } catch (err) {
       lastError = err;
-      log?.warning?.("Trình duyệt", `Không mở được bằng ${plan.note}: ${err instanceof Error ? err.message.split("\n")[0] : String(err)}`);
+      // DEBUG, không phải warning. Cú lui là ĐƯỜNG ĐI CÓ THIẾT KẾ, không phải sự cố: trên một
+      // máy chỉ có shell thì kế hoạch đầu hụt là chuyện bình thường của MỌI vòng, và kêu lên
+      // Hoạt động mỗi vòng là dựng một cảnh báo vĩnh viễn mà người dùng không làm gì được.
+      //
+      // Không nuốt thông tin: nếu MỌI kế hoạch đều hụt thì `lastError` được NÉM ngay dưới đây,
+      // và lỗi thật đi lên theo đường lỗi bình thường. Chỉ tiếng ồn bị bỏ, không phải sự thật.
+      log?.debug?.("Trình duyệt", `Không mở được bằng ${plan.note}: ${err instanceof Error ? err.message.split("\n")[0] : String(err)}`);
     }
   }
   throw lastError ?? new Error("Không mở được trình duyệt bằng bất kỳ kênh nào.");
@@ -684,11 +698,18 @@ export async function runCycle(deps) {
   const opened = await openBrowserPreferringFullChromium(chromium, fingerprint, profileDir, log);
   const browser = opened.browser;
   const context = opened.context;
-  // MỨC INFO, không phải debug: `log.debug` chỉ vào console của runner chứ không vào job_events,
-  // nên suốt ba lượt vá vừa rồi tôi mù đúng chỗ cần nhìn. Binary nào được mở là BẰNG CHỨNG quyết
-  // định của bản vá kênh trình duyệt — nếu một máy thiếu Chromium đầy đủ và lặng lẽ lui về shell,
-  // dòng này là thứ duy nhất nói ra, thay vì để người đọc đoán từ việc「vẫn bị chặn」.
-  await say(`Trình duyệt: mở bằng ${opened.via}.`);
+  // TẦNG KHÔI LỖI, KHÔNG phải Hoạt động. Binary nào được mở là chuyện ruột gan của bộ máy:
+  // người dùng không đọc được nó, và cũng không làm được gì với nó. Hoạt động là chỗ kể việc
+  // tu luyện chạy tới đâu — mỗi dòng kernel chen vào đó là một dòng đẩy tin thật ra khỏi màn.
+  //
+  // Vì sao KHÔNG xoá hẳn: đây vẫn là thứ duy nhất phân biệt「vẫn bị chặn vì bản vá không ăn
+  // thua」với「vẫn bị chặn vì máy này lặng lẽ lui về shell」. Console của khôi lỗi GitHub được
+  // Actions giữ nguyên, nên cần thì tra ở đó — đúng tầng, đúng người cần đọc.
+  //
+  // Lịch sử để người sau khỏi lật ngược: dòng này ĐÃ từng ở mức info (1.3.24) và bị gỡ xuống
+  // ngay sau đó vì lọt lên màn người dùng. Muốn nhìn nó lại thì đọc log khôi lỗi, đừng nâng
+  // mức — `smokeQuestEngine` có chốt canh đúng chuyện này và sẽ đỏ.
+  log.debug("Trình duyệt", `Mở bằng ${opened.via}.`);
 
   let done = 0;
   let failed = 0;
