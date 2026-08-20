@@ -684,7 +684,11 @@ export async function runCycle(deps) {
   const opened = await openBrowserPreferringFullChromium(chromium, fingerprint, profileDir, log);
   const browser = opened.browser;
   const context = opened.context;
-  log.debug("Trình duyệt", `Mở bằng ${opened.via}.`);
+  // MỨC INFO, không phải debug: `log.debug` chỉ vào console của runner chứ không vào job_events,
+  // nên suốt ba lượt vá vừa rồi tôi mù đúng chỗ cần nhìn. Binary nào được mở là BẰNG CHỨNG quyết
+  // định của bản vá kênh trình duyệt — nếu một máy thiếu Chromium đầy đủ và lặng lẽ lui về shell,
+  // dòng này là thứ duy nhất nói ra, thay vì để người đọc đoán từ việc「vẫn bị chặn」.
+  await say(`Trình duyệt: mở bằng ${opened.via}.`);
 
   let done = 0;
   let failed = 0;
