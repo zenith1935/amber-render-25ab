@@ -32,6 +32,7 @@ import { readFileSync } from "node:fs";
 import { runCycle } from "../src/lib/quest-engine/runCycle.mjs";
 import { profileDirForJob, sweepStaleProfiles } from "../src/lib/quest-engine/browserProfile.mjs";
 import { createWorkerCall } from "../src/lib/worker/controlFollow.mjs";
+import { UPDATE_EXIT_CODE, selfUpdateEnabled, shouldSelfUpdate } from "../src/lib/worker/selfUpdate.mjs";
 
 /**
  * Bản của GÓI này, khai lên server mỗi lần gõ cửa để mục Khôi Lỗi nói được「có bản mới, cài lại」.
@@ -290,6 +291,13 @@ let nextSweepAt = Date.now();
  * Chỉ chuyển pha một lần: `beginDrain` gọi lần thứ hai là no-op, nếu không thì mỗi tín hiệu
  * lại đặt lại đồng hồ chờ và hạn drain không bao giờ tới.
  */
+/**
+ * Lượt thu đàn đang chạy có phải ĐỂ THAY GÓI không — quyết định mã thoát, và mã thoát là thứ
+ * DUY NHẤT vòng nuôi đọc được. Cờ riêng chứ không suy từ `draining`: thu đàn còn có hai đường
+ * vào khác (hết hạn tuổi thọ, SIGTERM), và cả hai đều KHÔNG được xin thay gói — một lượt bấm
+ * huỷ trên Actions mà lại kích một cú thay gói là hành vi không ai ngờ tới.
+ */
+let drainingForUpdate = false;
 let draining = false;
 let drainStartedAt = 0;
 const startedAt = Date.now();
@@ -317,6 +325,12 @@ for (;;) {
   if (draining) {
     if (running.size === 0) {
       console.log("Đã thu xong — không còn đàn nào đang chạy, thoát sạch.");
+      if (drainingForUpdate) {
+        // Vòng nuôi đọc mã này rồi tự đi lấy gói mới. Nói ra thành lời vì nhật ký máy nhà là
+        // chỗ DUY NHẤT người ta soi được khi một lượt thay gói không xảy ra như mong đợi.
+        console.log(`Xin vòng nuôi thay gói (mã thoát ${UPDATE_EXIT_CODE}).`);
+        process.exitCode = UPDATE_EXIT_CODE;
+      }
       break;
     }
     if (DRAIN_TIMEOUT_MS > 0 && Date.now() - drainStartedAt >= DRAIN_TIMEOUT_MS) {
@@ -337,7 +351,7 @@ for (;;) {
 
   if (running.size < MAX_JOBS) {
     try {
-      const { job } = await call("claim", {
+      const { job, webVersion } = await call("claim", {
         workerId: WORKER_ID,
         maxJobs: MAX_JOBS,
         ...(VERSION ? { version: VERSION } : {}),
@@ -348,6 +362,23 @@ for (;;) {
         // này không bao giờ reject — Set chỉ để đếm ghế.
         const seat = handle(job).finally(() => running.delete(seat));
         running.add(seat);
+      }
+
+      // Xét thay gói SAU khi đã nhận job vừa được phát: job ấy đã được ghi tên trên máy chủ rồi,
+      // bỏ ngang là để nó nằm chờ phép dọn kết liễu — một người mất một vòng chỉ vì ta nôn nóng.
+      // `beginDrain` không cắt ngang ai cả, nó chỉ thôi nhận việc MỚI, nên nhận rồi thu là đúng.
+      const xet = shouldSelfUpdate({
+        own: VERSION,
+        web: webVersion,
+        enabled: selfUpdateEnabled(process.env),
+      });
+      if (xet.update) {
+        // Đặt cờ TRƯỚC `beginDrain`: beginDrain là no-op nếu đã thu đàn vì lý do khác, và khi ấy
+        // cờ này vẫn phải nói đúng sự thật「lượt thu đàn hiện thời KHÔNG phải để thay gói」.
+        if (!draining) {
+          drainingForUpdate = true;
+          beginDrain(xet.reason);
+        }
       }
     } catch (err) {
       console.error("claim lỗi:", err.message);
