@@ -585,6 +585,11 @@ export async function runCycle(deps) {
     headless = true,
     profileDir = process.env.BROWSER_PROFILE_DIR || "",
     dailyDone = null,
+    // Tên các nhiệm vụ ĐỘC QUYỀN — server gửi kèm job lúc phát việc, và chỉ khôi lỗi tông môn
+    // nhận (luật nhà 22/08/2026: mỗi khôi lỗi tông môn một trận Mê Cung một lúc, không phân
+    // biệt tài khoản). Danh sách sống ở server để đổi luật không phải đẩy gói mới cho các kho
+    // đông lạnh; vắng mặt (khôi lỗi riêng, server đời cũ) là không nhiệm vụ nào độc quyền.
+    soloQuestNames = [],
     // Thử tự bấm ô Turnstile khi vấp màn Cloudflare. TẮT mặc định: nó chưa đo được với
     // Cloudflare thật, và một cú bấm sai chỗ trên hạ tầng CHUNG (nhiều đàn của người khác
     // trên cùng worker) có thể làm Cloudflare nghi hơn. Bật cho từng máy bằng
@@ -613,6 +618,10 @@ export async function runCycle(deps) {
   }
 
   const deadline = budgetMs > 0 ? Date.now() + budgetMs : Infinity;
+
+  // Đọc phòng thủ: trường này băng qua ranh giới server→worker dưới dạng JSON, một giá trị
+  // rác không được phép làm hỏng cả vòng — rơi về rỗng, tức nếp cũ.
+  const soloNames = new Set(Array.isArray(soloQuestNames) ? soloQuestNames : []);
 
   // Nhật ký hai tầng, y như bản desktop. Info trở lên đi lên Hoạt động cho người đọc; Debug
   // chỉ vào console của máy đang chạy. Không có tầng này thì mỗi lượt Mê Cung đổ hàng nghìn
@@ -957,6 +966,8 @@ export async function runCycle(deps) {
         // khôi lỗi vẫn chạy cạnh bên, nên nhánh này cũng phải qua cổng toàn cục như ai.
         const slot = await acquireQuestSlot({
           dedicated: isDedicatedPageQuest(profile, quest),
+          // Độc quyền theo TÊN, server chỉ định (Mê Cung trên ghế chung) — xem đầu questGate.mjs.
+          exclusive: soloNames.has(quest.name),
           name: quest.name,
           shouldStop,
           onWait: ({ holder }) =>

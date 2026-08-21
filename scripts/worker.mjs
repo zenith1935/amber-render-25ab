@@ -147,6 +147,7 @@ async function runQuest({
   userId,
   config,
   dailyDone,
+  soloQuestNames,
   say,
   reportAccountTier,
   reportProgress,
@@ -177,6 +178,7 @@ async function runQuest({
     chromium,
     config,
     dailyDone,
+    soloQuestNames,
     say,
     reportAccountTier,
     reportProgress,
@@ -230,6 +232,7 @@ async function handle(job) {
       userId: job.userId,
       config: job.config,
       dailyDone: job.dailyDone,
+      soloQuestNames: job.soloQuestNames,
       say: (message, level) => say(job.id, message, level),
       reportAccountTier: (tier) =>
         call("accountTier", { jobId: job.id, tier }).catch((err) => {

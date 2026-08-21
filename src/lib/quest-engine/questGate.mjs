@@ -37,6 +37,20 @@
  * đối, nên nếu triệu chứng 07/08 quay lại (đòn đánh trúng bị báo thành thất bại vì tab bị bỏ
  * đói CPU), hạ `MAX_DEDICATED` về 1 là chỗ đầu tiên phải thử.
  *
+ * LÀN ĐỘC QUYỀN THEO TÊN (22/08/2026, lệnh tông chủ): nhiệm vụ mang cờ `exclusive` chỉ được
+ * MỘT chỗ cho MỖI TÊN trên cả tiến trình. Đặt ra cho Mê Cung: một khôi lỗi tông môn không được
+ * đánh hai trận Mê Cung cùng lúc, dù là của hai tài khoản khác nhau. Cổng này cố ý KHÔNG biết
+ * tên nào độc quyền — cờ do runCycle gắn theo `soloQuestNames` mà server gửi kèm job lúc phát
+ * việc, và chỉ khôi lỗi tông môn nhận danh sách ấy; khôi lỗi riêng của đạo hữu giữ nguyên nếp
+ * cũ, đúng lệ「chỉ ghế chung mới có luật chung」. Chính sách nằm ở server nên đổi luật không
+ * phải đẩy gói mới cho các kho đông lạnh.
+ *
+ * Kẻ đợi vì TÊN không chặn làn: một Mê Cung đứng chờ trận Mê Cung khác xong không có quyền bắt
+ * Hoang Vực đứng im trước một ghế trống — nó không tranh cái ghế, nó tranh cái tên. Cùng bài
+ * học với luật「hub nhường」đã gỡ ở trên: bắt ai đó chờ mà cái chờ không mở thêm chỗ cho người
+ * bị chờ là chờ vô ích. Chỉ khi kẹt GHẾ thật (làn đầy) nó mới chặn làn như mọi trang riêng
+ * khác. FIFO theo tên vẫn giữ: hai Mê Cung cùng đợi thì vào theo thứ tự xếp hàng.
+ *
  * Chờ HUỶ ĐƯỢC: Thu Đàn giữa lúc xếp hàng không được phép kẹt lại sau một trận Mê Cung 35
  * phút của người khác chỉ để nói "tôi dừng đây". Mỗi waiter mang shouldStop của vòng nó;
  * một nhịp poll 500ms (chỉ chạy khi hàng đợi có người) nhặt những waiter đã rút lui.
@@ -64,7 +78,9 @@ const state = {
   dedicatedActive: 0,
   /** Tên các nhiệm vụ trang riêng đang giữ làn, cho lời nhật ký của kẻ phải đợi. */
   dedicatedNames: [],
-  /** FIFO: { dedicated, name, shouldStop, resolve } */
+  /** Tên các nhiệm vụ ĐỘC QUYỀN đang giữ chỗ — mỗi tên tối đa một, xem khối đầu tệp. */
+  exclusiveNames: [],
+  /** FIFO: { dedicated, exclusive, name, shouldStop, resolve } */
   queue: [],
   pollTimer: null,
 };
@@ -80,6 +96,7 @@ export function _resetGate() {
   state.active = 0;
   state.dedicatedActive = 0;
   state.dedicatedNames = [];
+  state.exclusiveNames = [];
   stopPollIfIdle();
 }
 
@@ -95,17 +112,31 @@ function notifyChange() {
   onChange?.(snapshot());
 }
 
-function canAdmit(dedicated, hasDedicatedAhead) {
-  if (dedicated) {
-    // FIFO trong làn: không vượt mặt một trang-riêng đã xếp trước mà chưa vào được.
-    return state.dedicatedActive < MAX_DEDICATED && !hasDedicatedAhead;
+// Hai lý do kẹt tách làm hai phép hỏi, vì drain phải biết VÌ SAO một waiter đứng lại: kẹt GHẾ
+// thì chặn cả làn phía sau (FIFO nguyên thuỷ), kẹt TÊN thì chỉ chặn kẻ cùng tên tới sau —
+// ghế trống vẫn thuộc về người khác. Gộp làm một boolean là mất đúng phép phân loại ấy.
+
+/** Kẹt GHẾ — luật hai làn nguyên thuỷ. */
+function seatBlocked(waiter, hasDedicatedAhead) {
+  if (waiter.dedicated) {
+    // FIFO trong làn: không vượt mặt một trang-riêng đã xếp trước mà chưa vào được vì ghế.
+    return state.dedicatedActive >= MAX_DEDICATED || hasDedicatedAhead;
   }
   // Hub KHÔNG còn phải nhường trang-riêng đang đợi, và đó là hệ quả trực tiếp của việc tách
   // làn: trước kia hai loại tiêu chung một ngân sách nên hub cứ vào là bóp nghẹt trang-riêng
   // vĩnh viễn — nay trang-riêng có hai chỗ của riêng nó, hub nhường cũng chẳng mở thêm được
   // chỗ nào cho nó. Giữ lại luật nhường chỉ tổ bắt hub đứng im vô ích.
-  return state.active - state.dedicatedActive < MAX_HUB;
+  return state.active - state.dedicatedActive >= MAX_HUB;
 }
+
+/** Kẹt TÊN — một nhiệm vụ độc quyền cùng tên đang chạy, hoặc đứng trước trong hàng. */
+function exclusiveBlocked(waiter, exclusiveAheadNames) {
+  if (!waiter.exclusive) return false;
+  return state.exclusiveNames.includes(waiter.name) || exclusiveAheadNames.has(waiter.name);
+}
+
+/** Cho đường vào nhanh của acquireQuestSlot — hàng đợi rỗng thì không có ai đứng trước. */
+const NO_AHEAD = new Set();
 
 function admit(waiter) {
   state.active += 1;
@@ -113,6 +144,7 @@ function admit(waiter) {
     state.dedicatedActive += 1;
     state.dedicatedNames.push(waiter.name);
   }
+  if (waiter.exclusive) state.exclusiveNames.push(waiter.name);
   notifyChange();
 
   let released = false;
@@ -129,6 +161,10 @@ function admit(waiter) {
         const at = state.dedicatedNames.indexOf(waiter.name);
         if (at !== -1) state.dedicatedNames.splice(at, 1);
       }
+      if (waiter.exclusive) {
+        const at = state.exclusiveNames.indexOf(waiter.name);
+        if (at !== -1) state.exclusiveNames.splice(at, 1);
+      }
       notifyChange();
       drain();
     },
@@ -137,6 +173,7 @@ function admit(waiter) {
 
 function drain() {
   let hasDedicatedAhead = false;
+  const exclusiveAheadNames = new Set();
   for (let i = 0; i < state.queue.length; ) {
     const waiter = state.queue[i];
 
@@ -147,13 +184,17 @@ function drain() {
       continue;
     }
 
-    if (canAdmit(waiter.dedicated, hasDedicatedAhead)) {
+    const bySeat = seatBlocked(waiter, hasDedicatedAhead);
+    const byName = exclusiveBlocked(waiter, exclusiveAheadNames);
+    if (!bySeat && !byName) {
       state.queue.splice(i, 1);
       waiter.resolve(admit(waiter));
       continue; // cùng chỉ số i giờ là waiter kế tiếp
     }
 
-    if (waiter.dedicated) hasDedicatedAhead = true;
+    // Kẹt GHẾ mới chặn làn; kẹt TÊN chỉ chặn kẻ cùng tên tới sau — xem khối đầu tệp.
+    if (bySeat && waiter.dedicated) hasDedicatedAhead = true;
+    if (byName) exclusiveAheadNames.add(waiter.name);
     i += 1;
   }
   stopPollIfIdle();
@@ -173,17 +214,19 @@ function stopPollIfIdle() {
  *
  * @param {object} input
  * @param {boolean} input.dedicated  nhiệm vụ trang riêng?
+ * @param {boolean} [input.exclusive]  độc quyền theo tên — mỗi tên một chỗ trên cả tiến trình?
  * @param {string}  input.name       tên cho nhật ký của người khác
  * @param {() => boolean} [input.shouldStop]  cờ Thu Đàn của vòng đang xin
  * @param {(info: { holder: string | null }) => void} [input.onWait]  gọi MỘT lần nếu phải xếp hàng
  */
-export function acquireQuestSlot({ dedicated, name, shouldStop, onWait }) {
-  if (state.queue.length === 0 && canAdmit(dedicated, false)) {
-    return Promise.resolve(admit({ dedicated, name }));
+export function acquireQuestSlot({ dedicated, exclusive = false, name, shouldStop, onWait }) {
+  const waiter = { dedicated, exclusive, name, shouldStop, resolve: null };
+  if (state.queue.length === 0 && !seatBlocked(waiter, false) && !exclusiveBlocked(waiter, NO_AHEAD)) {
+    return Promise.resolve(admit(waiter));
   }
 
   return new Promise((resolve) => {
-    const waiter = { dedicated, name, shouldStop, resolve };
+    waiter.resolve = resolve;
     state.queue.push(waiter);
 
     // Drain NGAY khi vừa xếp hàng, không đợi ai buông cổng: một hub tới lúc chỗ đồng hành
