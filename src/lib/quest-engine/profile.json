@@ -1,6 +1,6 @@
 {
   "name": "Ho\u1EA1t \u0111\u1ED9ng h\u00E0ng ng\u00E0y (m\u1EB7c \u0111\u1ECBnh)",
-  "schemaVersion": 71,
+  "schemaVersion": 72,
   "dailyQuestPath": "/nhiem-vu-hang-ngay",
   "quests": [
     {
@@ -931,6 +931,102 @@
           "script": "() =\u003E { const MARK = \u0027jvz-hy-su-done\u0027; const FAILED = \u0027jvz-hy-su-all-failed\u0027; const KEY = \u0027__jvz_hy_su_seen\u0027; const LOG = \u0027__jvz_hy_su_log\u0027; const read = (k) =\u003E { try { return JSON.parse(sessionStorage.getItem(k) || \u0027[]\u0027); } catch (e) { return []; } }; const roomId = (row) =\u003E { const a = row.querySelector(\u0027a.wedding-now-btn\u0027); const href = a ? (a.getAttribute(\u0027href\u0027) || \u0027\u0027) : \u0027\u0027; const m = href.match(/[?\u0026]id=(\\d\u002B)/); return m ? m[1] : href; }; const gift = (r) =\u003E !!r.querySelector(\u0027.wedding-now-li-xi-available\u0027); if (document.body) { document.body.classList.remove(MARK); document.body.classList.remove(FAILED); } const rows = [...document.querySelectorAll(\u0027#wedding-now-body .wedding-now-item\u0027)]; const match = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027)); const gifts = rows.filter(gift); const wanted = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027) || gift(r)); const done = read(KEY); const left = wanted.filter((r) =\u003E done.indexOf(roomId(r)) \u003C 0 \u0026\u0026 r.querySelector(\u0027a.wedding-now-btn\u0027)); if (left.length === 0 \u0026\u0026 document.body) document.body.classList.add(MARK); const blessed = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status .blessed\u0027)).length; const lixi = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-li-xi-status .li-xi-sent\u0027)).length; const log = read(LOG); const ok = log.filter((e) =\u003E e.state === \u0027ok\u0027).length; const bad = log.filter((e) =\u003E e.state === \u0027fail\u0027); const got = log.filter((e) =\u003E e.gift); const missed = log.filter((e) =\u003E e.giftWhy); if (log.length \u003E 0 \u0026\u0026 ok === 0 \u0026\u0026 bad.length === log.length \u0026\u0026 document.body) document.body.classList.add(FAILED); const tail = log.length === 0 ? \u0027\u0027 : \u0027 \u2014 l\u01B0\u1EE3t n\u00E0y ch\u00FAc \u0111\u01B0\u1EE3c \u0027 \u002B ok \u002B (bad.length \u003E 0 ? \u0027, TR\u01AF\u1EE2T \u0027 \u002B bad.length \u002B \u0027: \u0027 \u002B bad.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.why \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027) \u002B (got.length \u003E 0 ? \u0027, khai \u0111\u01B0\u1EE3c \u0027 \u002B got.length \u002B \u0027 h\u1ED3ng bao: \u0027 \u002B got.map((e) =\u003E e.gift).join(\u0027 \u00B7 \u0027) : \u0027\u0027) \u002B (missed.length \u003E 0 ? \u0027, h\u1ED3ng bao TR\u01AF\u1EE2T \u0027 \u002B missed.length \u002B \u0027: \u0027 \u002B missed.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.giftWhy \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027); return \u0027!H\u1EF7 S\u1EF1 \u0110\u01B0\u1EDDng: \u0027 \u002B rows.length \u002B \u0027 ti\u1EC7c \u0111ang m\u1EDF (\u0027 \u002B blessed \u002B \u0027 \u0111\u00E3 ch\u00FAc, \u0027 \u002B (rows.length - blessed) \u002B \u0027 ch\u01B0a ch\u00FAc, \u0027 \u002B lixi \u002B \u0027 \u0111\u00E3 ph\u00E1t l\u00EC x\u00EC, \u0027 \u002B gifts.length \u002B \u0027 c\u00F2n h\u1ED3ng bao ch\u01B0a khai) \u2014 kh\u1EDBp b\u1ED9 l\u1ECDc: \u0027 \u002B match.length \u002B \u0027, c\u00F2n ch\u01B0a gh\u00E9: \u0027 \u002B left.length \u002B tail; }",
           "timeoutMs": 4000,
           "note": "\u0111\u1EBFm v\u00E0 k\u1EC3: t\u1ED5ng ti\u1EC7c, \u0111\u00E3 ch\u00FAc, kh\u1EDBp b\u1ED9 l\u1ECDc, c\u00F2n ch\u01B0a gh\u00E9 \u2014 r\u1ED3i c\u1EAFm c\u1EDD d\u1EEBng khi kh\u00F4ng c\u00F2n ph\u00F2ng n\u00E0o \u0111\u1EC3 gh\u00E9. Ch\u1EA1y sau M\u1ED6I l\u1EA7n m\u1EDF modal, n\u00EAn v\u1EEBa l\u00E0 c\u00E2u tr\u1EA3 l\u1EDDi \u0111\u1EA7u l\u01B0\u1EE3t v\u1EEBa l\u00E0 \u0111i\u1EC1u ki\u1EC7n until c\u1EE7a v\u00F2ng l\u1EB7p"
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const MARK = \u0027jvz-hy-su-quick\u0027; const body = document.body; if (!body) return \u0027m\u1EDF l\u00EC x\u00EC nhanh: trang ch\u01B0a c\u00F3 body\u0027; body.classList.remove(MARK); const shown = (el) =\u003E { if (!el) return false; const r = el.getBoundingClientRect(); if (r.width \u003C 1 || r.height \u003C 1) return false; const st = getComputedStyle(el); return st.visibility !== \u0027hidden\u0027 \u0026\u0026 st.display !== \u0027none\u0027 \u0026\u0026 st.opacity !== \u00270\u0027; }; const btn = document.querySelector(\u0027#quick-open-li-xi-btn\u0027); if (!btn || btn.disabled || !shown(btn)) { const none = document.querySelector(\u0027.wedding-quick-li-xi-section .no-li-xi-status\u0027); return none ? \u0027m\u1EDF l\u00EC x\u00EC nhanh: kh\u00F4ng c\u00F3 l\u00EC x\u00EC n\u00E0o ch\u01B0a m\u1EDF\u0027 : \u0027m\u1EDF l\u00EC x\u00EC nhanh: t\u00E0i kho\u1EA3n n\u00E0y kh\u00F4ng c\u00F3 n\u00FAt (kh\u00F4ng ph\u1EA3i VIP, ho\u1EB7c trang ch\u01B0a d\u1EF1ng xong)\u0027; } const m = (btn.textContent || \u0027\u0027).match(/\\((\\d\u002B)\\)/); const n = m ? m[1] : \u0027\u0027; body.classList.add(MARK); return \u0027!C\u00F2n \u0027 \u002B (n === \u0027\u0027 ? \u0027l\u00EC x\u00EC\u0027 : n \u002B \u0027 l\u00EC x\u00EC\u0027) \u002B \u0027 ch\u01B0a m\u1EDF \u2014 b\u1EA5m M\u1EDF L\u00EC X\u00EC Nhanh, n\u00F3 v\u00E9t c\u1EA3 nh\u1EEFng l\u00EC x\u00EC kh\u00F4ng c\u00F2n ph\u00F2ng n\u00E0o trong danh s\u00E1ch nh\u1EADn\u0027; }",
+          "timeoutMs": 4000,
+          "note": "c\u1ED5ng c\u1EE7a c\u1EE5m: c\u00F3 n\u00FAt th\u00EC c\u1EAFm c\u1EDD jvz-hy-su-quick v\u00E0 k\u1EC3 c\u00F2n m\u1EA5y l\u00EC x\u00EC; kh\u00F4ng c\u00F3 n\u00FAt (t\u00E0i kho\u1EA3n th\u01B0\u1EDDng, ho\u1EB7c \u0111\u00E3 m\u1EDF h\u1EBFt) th\u00EC c\u1EA3 c\u1EE5m d\u01B0\u1EDBi n\u1EB1m im",
+          "optional": true
+        },
+        {
+          "action": "click",
+          "selector": "#quick-open-li-xi-btn",
+          "timeoutMs": 15000,
+          "note": "b\u1EA5m M\u1EDF L\u00EC X\u00EC Nhanh \u2014 h\u1ECFi C\u1EDC ch\u1EE9 kh\u00F4ng h\u1ECFi l\u1EA1i ch\u00EDnh c\u00E1i n\u00FAt, v\u00EC c\u00FA b\u1EA5m l\u00E0 AJAX v\u00E0 trang thay h\u1EB3n n\u00FAt b\u1EB1ng d\u00F2ng \u0022Kh\u00F4ng c\u00F3 l\u00EC x\u00EC n\u00E0o ch\u01B0a m\u1EDF\u0022",
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 8000,
+          "note": "h\u1ED9p x\u00E1c nh\u1EADn d\u00F9ng chung c\u1EE7a theme: \u0022X\u00E1c nh\u1EADn m\u1EDF t\u1EA5t c\u1EA3 l\u00EC x\u00EC hi\u1EC7n c\u00F3?\u0022. Optional v\u00EC n\u1EBFu ng\u00E0y n\u00E0o site b\u1ECF b\u01B0\u1EDBc h\u1ECFi th\u00EC b\u1EA3ng k\u1EBFt qu\u1EA3 hi\u1EC7n th\u1EB3ng",
+          "optional": true,
+          "condition": {
+            "kind": "visible",
+            "selector": ".td-confirm-overlay.active"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
+        },
+        {
+          "action": "click",
+          "selector": ".td-confirm-overlay.active .td-confirm-btn-confirm",
+          "timeoutMs": 15000,
+          "note": "\u0022M\u1EDF T\u1EA5t C\u1EA3\u0022 \u2014 g\u1ECDi hh3d_quick_open_all_li_xi r\u1ED3i t\u1EF1 n\u1EA1p l\u1EA1i danh s\u00E1ch ti\u1EC7c",
+          "when": {
+            "kind": "visible",
+            "selector": ".td-confirm-overlay.active"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 15000,
+          "note": "b\u1EA3ng \u0022K\u1EBFt Qu\u1EA3 M\u1EDF L\u00EC X\u00EC\u0022. Optional: h\u1EBFt gi\u1EDD \u1EDF \u0111\u00E2y th\u00EC b\u01B0\u1EDBc ph\u00E1n x\u1EED ngay d\u01B0\u1EDBi k\u00EAu to, ch\u1EE9 kh\u00F4ng gi\u1EBFt l\u01B0\u1EE3t \u2014 l\u00EC x\u00EC ch\u01B0a m\u1EDF c\u00F2n nguy\u00EAn cho l\u01B0\u1EE3t sau",
+          "optional": true,
+          "condition": {
+            "kind": "visible",
+            "selector": ".li-xi-result-modal.active"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const modal = document.querySelector(\u0027.li-xi-result-modal.active\u0027); if (!modal) return \u0027!M\u1EDE L\u00CC X\u00CC NHANH TR\u01AF\u1EE2T \u2014 kh\u00F4ng th\u1EA5y b\u1EA3ng k\u1EBFt qu\u1EA3; s\u1ED1 l\u00EC x\u00EC \u1EA5y c\u00F2n nguy\u00EAn cho l\u01B0\u1EE3t sau, l\u01B0\u1EE3t n\u00E0y v\u1EABn \u0111i ch\u00FAc ti\u1EBFp\u0027; const txt = (el) =\u003E el ? (el.textContent || \u0027\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim() : \u0027\u0027; const msg = txt(modal.querySelector(\u0027.li-xi-result-message\u0027)); const items = [...modal.querySelectorAll(\u0027.li-xi-summary-item\u0027)].map((it) =\u003E { const name = txt(it.querySelector(\u0027.li-xi-summary-name\u0027)); const amount = txt(it.querySelector(\u0027.li-xi-summary-amount\u0027)); return (amount \u002B \u0027 \u0027 \u002B name).trim(); }).filter((s) =\u003E s !== \u0027\u0027); return \u0027!\u0027 \u002B (msg === \u0027\u0027 ? \u0027\u0110\u00E3 m\u1EDF l\u00EC x\u00EC nhanh\u0027 : msg) \u002B (items.length \u003E 0 ? \u0027 \u2014 \u0027 \u002B items.join(\u0027 \u00B7 \u0027) : \u0027\u0027); }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u1ECDc TH\u1EB2NG b\u1EA3ng k\u1EBFt qu\u1EA3 (s\u1ED1 l\u00EC x\u00EC \u0111\u00E3 m\u1EDF \u002B k\u00EA t\u1EEBng m\u00F3n), kh\u00F4ng suy t\u1EEB vi\u1EC7c c\u00E1i n\u00FAt bi\u1EBFn m\u1EA5t",
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
+        },
+        {
+          "action": "click",
+          "selector": ".li-xi-result-modal.active .li-xi-result-ok-btn",
+          "timeoutMs": 15000,
+          "note": "\u0022Tuy\u1EC7t V\u1EDDi!\u0022 \u2014 b\u1EA3ng che k\u00EDn modal s\u1EA3nh, kh\u00F4ng \u0111\u00F3ng th\u00EC m\u1ECDi b\u01B0\u1EDBc sau m\u00F9",
+          "when": {
+            "kind": "visible",
+            "selector": ".li-xi-result-modal.active"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "b\u1EA3ng \u0111\u00E3 \u0111\u00F3ng h\u1EB3n m\u1EDBi \u0111\u1ECDc l\u1EA1i danh s\u00E1ch",
+          "optional": true,
+          "condition": {
+            "kind": "hidden",
+            "selector": ".li-xi-result-modal.active"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const MARK = \u0027jvz-hy-su-done\u0027; const FAILED = \u0027jvz-hy-su-all-failed\u0027; const KEY = \u0027__jvz_hy_su_seen\u0027; const LOG = \u0027__jvz_hy_su_log\u0027; const read = (k) =\u003E { try { return JSON.parse(sessionStorage.getItem(k) || \u0027[]\u0027); } catch (e) { return []; } }; const roomId = (row) =\u003E { const a = row.querySelector(\u0027a.wedding-now-btn\u0027); const href = a ? (a.getAttribute(\u0027href\u0027) || \u0027\u0027) : \u0027\u0027; const m = href.match(/[?\u0026]id=(\\d\u002B)/); return m ? m[1] : href; }; const gift = (r) =\u003E !!r.querySelector(\u0027.wedding-now-li-xi-available\u0027); if (document.body) { document.body.classList.remove(MARK); document.body.classList.remove(FAILED); } const rows = [...document.querySelectorAll(\u0027#wedding-now-body .wedding-now-item\u0027)]; const match = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027)); const gifts = rows.filter(gift); const wanted = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027) || gift(r)); const done = read(KEY); const left = wanted.filter((r) =\u003E done.indexOf(roomId(r)) \u003C 0 \u0026\u0026 r.querySelector(\u0027a.wedding-now-btn\u0027)); if (left.length === 0 \u0026\u0026 document.body) document.body.classList.add(MARK); const blessed = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status .blessed\u0027)).length; const lixi = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-li-xi-status .li-xi-sent\u0027)).length; const log = read(LOG); const ok = log.filter((e) =\u003E e.state === \u0027ok\u0027).length; const bad = log.filter((e) =\u003E e.state === \u0027fail\u0027); const got = log.filter((e) =\u003E e.gift); const missed = log.filter((e) =\u003E e.giftWhy); if (log.length \u003E 0 \u0026\u0026 ok === 0 \u0026\u0026 bad.length === log.length \u0026\u0026 document.body) document.body.classList.add(FAILED); const tail = log.length === 0 ? \u0027\u0027 : \u0027 \u2014 l\u01B0\u1EE3t n\u00E0y ch\u00FAc \u0111\u01B0\u1EE3c \u0027 \u002B ok \u002B (bad.length \u003E 0 ? \u0027, TR\u01AF\u1EE2T \u0027 \u002B bad.length \u002B \u0027: \u0027 \u002B bad.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.why \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027) \u002B (got.length \u003E 0 ? \u0027, khai \u0111\u01B0\u1EE3c \u0027 \u002B got.length \u002B \u0027 h\u1ED3ng bao: \u0027 \u002B got.map((e) =\u003E e.gift).join(\u0027 \u00B7 \u0027) : \u0027\u0027) \u002B (missed.length \u003E 0 ? \u0027, h\u1ED3ng bao TR\u01AF\u1EE2T \u0027 \u002B missed.length \u002B \u0027: \u0027 \u002B missed.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.giftWhy \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027); return \u0027!H\u1EF7 S\u1EF1 \u0110\u01B0\u1EDDng: \u0027 \u002B rows.length \u002B \u0027 ti\u1EC7c \u0111ang m\u1EDF (\u0027 \u002B blessed \u002B \u0027 \u0111\u00E3 ch\u00FAc, \u0027 \u002B (rows.length - blessed) \u002B \u0027 ch\u01B0a ch\u00FAc, \u0027 \u002B lixi \u002B \u0027 \u0111\u00E3 ph\u00E1t l\u00EC x\u00EC, \u0027 \u002B gifts.length \u002B \u0027 c\u00F2n h\u1ED3ng bao ch\u01B0a khai) \u2014 kh\u1EDBp b\u1ED9 l\u1ECDc: \u0027 \u002B match.length \u002B \u0027, c\u00F2n ch\u01B0a gh\u00E9: \u0027 \u002B left.length \u002B tail; }",
+          "timeoutMs": 4000,
+          "note": "\u0110\u1EBEM L\u1EA0I sau khi v\u00E9t: c\u00FA \u0022M\u1EDF T\u1EA5t C\u1EA3\u0022 t\u1EF1 g\u1ECDi l\u1EA1i show_all_wedding n\u00EAn c\u00E1c d\u00F2ng .wedding-now-li-xi-available \u0111\u00E3 r\u1EE5ng. Kh\u00F4ng \u0111\u1EBFm l\u1EA1i th\u00EC hai c\u1ED5ng StopIf v\u00E0 until c\u1EE7a v\u00F2ng l\u1EB7p v\u1EABn x\u1EED theo \u1EA3nh ch\u1EE5p TR\u01AF\u1EDAC l\u00FAc v\u00E9t, v\u00E0 l\u01B0\u1EE3t ch\u1EA1y s\u1EBD gh\u00E9 l\u1EA1i nh\u1EEFng ph\u00F2ng ch\u1EC9 \u0027\u0111\u00E1ng gh\u00E9\u0027 v\u00EC c\u00E1i h\u1ED3ng bao v\u1EEBa \u0111\u01B0\u1EE3c khai m\u1EA5t",
+          "optional": true,
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
         },
         {
           "action": "stopIf",
@@ -2475,6 +2571,102 @@
           "script": "() =\u003E { const MARK = \u0027jvz-hy-su-done\u0027; const FAILED = \u0027jvz-hy-su-all-failed\u0027; const KEY = \u0027__jvz_hy_su_seen\u0027; const LOG = \u0027__jvz_hy_su_log\u0027; const read = (k) =\u003E { try { return JSON.parse(sessionStorage.getItem(k) || \u0027[]\u0027); } catch (e) { return []; } }; const roomId = (row) =\u003E { const a = row.querySelector(\u0027a.wedding-now-btn\u0027); const href = a ? (a.getAttribute(\u0027href\u0027) || \u0027\u0027) : \u0027\u0027; const m = href.match(/[?\u0026]id=(\\d\u002B)/); return m ? m[1] : href; }; const gift = (r) =\u003E !!r.querySelector(\u0027.wedding-now-li-xi-available\u0027); if (document.body) { document.body.classList.remove(MARK); document.body.classList.remove(FAILED); } const rows = [...document.querySelectorAll(\u0027#wedding-now-body .wedding-now-item\u0027)]; const match = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027)); const gifts = rows.filter(gift); const wanted = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027) || gift(r)); const done = read(KEY); const left = wanted.filter((r) =\u003E done.indexOf(roomId(r)) \u003C 0 \u0026\u0026 r.querySelector(\u0027a.wedding-now-btn\u0027)); if (left.length === 0 \u0026\u0026 document.body) document.body.classList.add(MARK); const blessed = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status .blessed\u0027)).length; const lixi = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-li-xi-status .li-xi-sent\u0027)).length; const log = read(LOG); const ok = log.filter((e) =\u003E e.state === \u0027ok\u0027).length; const bad = log.filter((e) =\u003E e.state === \u0027fail\u0027); const got = log.filter((e) =\u003E e.gift); const missed = log.filter((e) =\u003E e.giftWhy); if (log.length \u003E 0 \u0026\u0026 ok === 0 \u0026\u0026 bad.length === log.length \u0026\u0026 document.body) document.body.classList.add(FAILED); const tail = log.length === 0 ? \u0027\u0027 : \u0027 \u2014 l\u01B0\u1EE3t n\u00E0y ch\u00FAc \u0111\u01B0\u1EE3c \u0027 \u002B ok \u002B (bad.length \u003E 0 ? \u0027, TR\u01AF\u1EE2T \u0027 \u002B bad.length \u002B \u0027: \u0027 \u002B bad.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.why \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027) \u002B (got.length \u003E 0 ? \u0027, khai \u0111\u01B0\u1EE3c \u0027 \u002B got.length \u002B \u0027 h\u1ED3ng bao: \u0027 \u002B got.map((e) =\u003E e.gift).join(\u0027 \u00B7 \u0027) : \u0027\u0027) \u002B (missed.length \u003E 0 ? \u0027, h\u1ED3ng bao TR\u01AF\u1EE2T \u0027 \u002B missed.length \u002B \u0027: \u0027 \u002B missed.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.giftWhy \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027); return \u0027!H\u1EF7 S\u1EF1 \u0110\u01B0\u1EDDng: \u0027 \u002B rows.length \u002B \u0027 ti\u1EC7c \u0111ang m\u1EDF (\u0027 \u002B blessed \u002B \u0027 \u0111\u00E3 ch\u00FAc, \u0027 \u002B (rows.length - blessed) \u002B \u0027 ch\u01B0a ch\u00FAc, \u0027 \u002B lixi \u002B \u0027 \u0111\u00E3 ph\u00E1t l\u00EC x\u00EC, \u0027 \u002B gifts.length \u002B \u0027 c\u00F2n h\u1ED3ng bao ch\u01B0a khai) \u2014 kh\u1EDBp b\u1ED9 l\u1ECDc: \u0027 \u002B match.length \u002B \u0027, c\u00F2n ch\u01B0a gh\u00E9: \u0027 \u002B left.length \u002B tail; }",
           "timeoutMs": 4000,
           "note": "\u0111\u1EBFm v\u00E0 k\u1EC3: t\u1ED5ng ti\u1EC7c, \u0111\u00E3 ch\u00FAc, kh\u1EDBp b\u1ED9 l\u1ECDc, c\u00F2n ch\u01B0a gh\u00E9 \u2014 r\u1ED3i c\u1EAFm c\u1EDD d\u1EEBng khi kh\u00F4ng c\u00F2n ph\u00F2ng n\u00E0o \u0111\u1EC3 gh\u00E9. Ch\u1EA1y sau M\u1ED6I l\u1EA7n m\u1EDF modal, n\u00EAn v\u1EEBa l\u00E0 c\u00E2u tr\u1EA3 l\u1EDDi \u0111\u1EA7u l\u01B0\u1EE3t v\u1EEBa l\u00E0 \u0111i\u1EC1u ki\u1EC7n until c\u1EE7a v\u00F2ng l\u1EB7p"
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const MARK = \u0027jvz-hy-su-quick\u0027; const body = document.body; if (!body) return \u0027m\u1EDF l\u00EC x\u00EC nhanh: trang ch\u01B0a c\u00F3 body\u0027; body.classList.remove(MARK); const shown = (el) =\u003E { if (!el) return false; const r = el.getBoundingClientRect(); if (r.width \u003C 1 || r.height \u003C 1) return false; const st = getComputedStyle(el); return st.visibility !== \u0027hidden\u0027 \u0026\u0026 st.display !== \u0027none\u0027 \u0026\u0026 st.opacity !== \u00270\u0027; }; const btn = document.querySelector(\u0027#quick-open-li-xi-btn\u0027); if (!btn || btn.disabled || !shown(btn)) { const none = document.querySelector(\u0027.wedding-quick-li-xi-section .no-li-xi-status\u0027); return none ? \u0027m\u1EDF l\u00EC x\u00EC nhanh: kh\u00F4ng c\u00F3 l\u00EC x\u00EC n\u00E0o ch\u01B0a m\u1EDF\u0027 : \u0027m\u1EDF l\u00EC x\u00EC nhanh: t\u00E0i kho\u1EA3n n\u00E0y kh\u00F4ng c\u00F3 n\u00FAt (kh\u00F4ng ph\u1EA3i VIP, ho\u1EB7c trang ch\u01B0a d\u1EF1ng xong)\u0027; } const m = (btn.textContent || \u0027\u0027).match(/\\((\\d\u002B)\\)/); const n = m ? m[1] : \u0027\u0027; body.classList.add(MARK); return \u0027!C\u00F2n \u0027 \u002B (n === \u0027\u0027 ? \u0027l\u00EC x\u00EC\u0027 : n \u002B \u0027 l\u00EC x\u00EC\u0027) \u002B \u0027 ch\u01B0a m\u1EDF \u2014 b\u1EA5m M\u1EDF L\u00EC X\u00EC Nhanh, n\u00F3 v\u00E9t c\u1EA3 nh\u1EEFng l\u00EC x\u00EC kh\u00F4ng c\u00F2n ph\u00F2ng n\u00E0o trong danh s\u00E1ch nh\u1EADn\u0027; }",
+          "timeoutMs": 4000,
+          "note": "c\u1ED5ng c\u1EE7a c\u1EE5m: c\u00F3 n\u00FAt th\u00EC c\u1EAFm c\u1EDD jvz-hy-su-quick v\u00E0 k\u1EC3 c\u00F2n m\u1EA5y l\u00EC x\u00EC; kh\u00F4ng c\u00F3 n\u00FAt (t\u00E0i kho\u1EA3n th\u01B0\u1EDDng, ho\u1EB7c \u0111\u00E3 m\u1EDF h\u1EBFt) th\u00EC c\u1EA3 c\u1EE5m d\u01B0\u1EDBi n\u1EB1m im",
+          "optional": true
+        },
+        {
+          "action": "click",
+          "selector": "#quick-open-li-xi-btn",
+          "timeoutMs": 15000,
+          "note": "b\u1EA5m M\u1EDF L\u00EC X\u00EC Nhanh \u2014 h\u1ECFi C\u1EDC ch\u1EE9 kh\u00F4ng h\u1ECFi l\u1EA1i ch\u00EDnh c\u00E1i n\u00FAt, v\u00EC c\u00FA b\u1EA5m l\u00E0 AJAX v\u00E0 trang thay h\u1EB3n n\u00FAt b\u1EB1ng d\u00F2ng \u0022Kh\u00F4ng c\u00F3 l\u00EC x\u00EC n\u00E0o ch\u01B0a m\u1EDF\u0022",
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 8000,
+          "note": "h\u1ED9p x\u00E1c nh\u1EADn d\u00F9ng chung c\u1EE7a theme: \u0022X\u00E1c nh\u1EADn m\u1EDF t\u1EA5t c\u1EA3 l\u00EC x\u00EC hi\u1EC7n c\u00F3?\u0022. Optional v\u00EC n\u1EBFu ng\u00E0y n\u00E0o site b\u1ECF b\u01B0\u1EDBc h\u1ECFi th\u00EC b\u1EA3ng k\u1EBFt qu\u1EA3 hi\u1EC7n th\u1EB3ng",
+          "optional": true,
+          "condition": {
+            "kind": "visible",
+            "selector": ".td-confirm-overlay.active"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
+        },
+        {
+          "action": "click",
+          "selector": ".td-confirm-overlay.active .td-confirm-btn-confirm",
+          "timeoutMs": 15000,
+          "note": "\u0022M\u1EDF T\u1EA5t C\u1EA3\u0022 \u2014 g\u1ECDi hh3d_quick_open_all_li_xi r\u1ED3i t\u1EF1 n\u1EA1p l\u1EA1i danh s\u00E1ch ti\u1EC7c",
+          "when": {
+            "kind": "visible",
+            "selector": ".td-confirm-overlay.active"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 15000,
+          "note": "b\u1EA3ng \u0022K\u1EBFt Qu\u1EA3 M\u1EDF L\u00EC X\u00EC\u0022. Optional: h\u1EBFt gi\u1EDD \u1EDF \u0111\u00E2y th\u00EC b\u01B0\u1EDBc ph\u00E1n x\u1EED ngay d\u01B0\u1EDBi k\u00EAu to, ch\u1EE9 kh\u00F4ng gi\u1EBFt l\u01B0\u1EE3t \u2014 l\u00EC x\u00EC ch\u01B0a m\u1EDF c\u00F2n nguy\u00EAn cho l\u01B0\u1EE3t sau",
+          "optional": true,
+          "condition": {
+            "kind": "visible",
+            "selector": ".li-xi-result-modal.active"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const modal = document.querySelector(\u0027.li-xi-result-modal.active\u0027); if (!modal) return \u0027!M\u1EDE L\u00CC X\u00CC NHANH TR\u01AF\u1EE2T \u2014 kh\u00F4ng th\u1EA5y b\u1EA3ng k\u1EBFt qu\u1EA3; s\u1ED1 l\u00EC x\u00EC \u1EA5y c\u00F2n nguy\u00EAn cho l\u01B0\u1EE3t sau, l\u01B0\u1EE3t n\u00E0y v\u1EABn \u0111i ch\u00FAc ti\u1EBFp\u0027; const txt = (el) =\u003E el ? (el.textContent || \u0027\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim() : \u0027\u0027; const msg = txt(modal.querySelector(\u0027.li-xi-result-message\u0027)); const items = [...modal.querySelectorAll(\u0027.li-xi-summary-item\u0027)].map((it) =\u003E { const name = txt(it.querySelector(\u0027.li-xi-summary-name\u0027)); const amount = txt(it.querySelector(\u0027.li-xi-summary-amount\u0027)); return (amount \u002B \u0027 \u0027 \u002B name).trim(); }).filter((s) =\u003E s !== \u0027\u0027); return \u0027!\u0027 \u002B (msg === \u0027\u0027 ? \u0027\u0110\u00E3 m\u1EDF l\u00EC x\u00EC nhanh\u0027 : msg) \u002B (items.length \u003E 0 ? \u0027 \u2014 \u0027 \u002B items.join(\u0027 \u00B7 \u0027) : \u0027\u0027); }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u1ECDc TH\u1EB2NG b\u1EA3ng k\u1EBFt qu\u1EA3 (s\u1ED1 l\u00EC x\u00EC \u0111\u00E3 m\u1EDF \u002B k\u00EA t\u1EEBng m\u00F3n), kh\u00F4ng suy t\u1EEB vi\u1EC7c c\u00E1i n\u00FAt bi\u1EBFn m\u1EA5t",
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
+        },
+        {
+          "action": "click",
+          "selector": ".li-xi-result-modal.active .li-xi-result-ok-btn",
+          "timeoutMs": 15000,
+          "note": "\u0022Tuy\u1EC7t V\u1EDDi!\u0022 \u2014 b\u1EA3ng che k\u00EDn modal s\u1EA3nh, kh\u00F4ng \u0111\u00F3ng th\u00EC m\u1ECDi b\u01B0\u1EDBc sau m\u00F9",
+          "when": {
+            "kind": "visible",
+            "selector": ".li-xi-result-modal.active"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "b\u1EA3ng \u0111\u00E3 \u0111\u00F3ng h\u1EB3n m\u1EDBi \u0111\u1ECDc l\u1EA1i danh s\u00E1ch",
+          "optional": true,
+          "condition": {
+            "kind": "hidden",
+            "selector": ".li-xi-result-modal.active"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const MARK = \u0027jvz-hy-su-done\u0027; const FAILED = \u0027jvz-hy-su-all-failed\u0027; const KEY = \u0027__jvz_hy_su_seen\u0027; const LOG = \u0027__jvz_hy_su_log\u0027; const read = (k) =\u003E { try { return JSON.parse(sessionStorage.getItem(k) || \u0027[]\u0027); } catch (e) { return []; } }; const roomId = (row) =\u003E { const a = row.querySelector(\u0027a.wedding-now-btn\u0027); const href = a ? (a.getAttribute(\u0027href\u0027) || \u0027\u0027) : \u0027\u0027; const m = href.match(/[?\u0026]id=(\\d\u002B)/); return m ? m[1] : href; }; const gift = (r) =\u003E !!r.querySelector(\u0027.wedding-now-li-xi-available\u0027); if (document.body) { document.body.classList.remove(MARK); document.body.classList.remove(FAILED); } const rows = [...document.querySelectorAll(\u0027#wedding-now-body .wedding-now-item\u0027)]; const match = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027)); const gifts = rows.filter(gift); const wanted = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status {{blessFilter}}\u0027) || gift(r)); const done = read(KEY); const left = wanted.filter((r) =\u003E done.indexOf(roomId(r)) \u003C 0 \u0026\u0026 r.querySelector(\u0027a.wedding-now-btn\u0027)); if (left.length === 0 \u0026\u0026 document.body) document.body.classList.add(MARK); const blessed = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-blessing-status .blessed\u0027)).length; const lixi = rows.filter((r) =\u003E r.querySelector(\u0027.wedding-now-li-xi-status .li-xi-sent\u0027)).length; const log = read(LOG); const ok = log.filter((e) =\u003E e.state === \u0027ok\u0027).length; const bad = log.filter((e) =\u003E e.state === \u0027fail\u0027); const got = log.filter((e) =\u003E e.gift); const missed = log.filter((e) =\u003E e.giftWhy); if (log.length \u003E 0 \u0026\u0026 ok === 0 \u0026\u0026 bad.length === log.length \u0026\u0026 document.body) document.body.classList.add(FAILED); const tail = log.length === 0 ? \u0027\u0027 : \u0027 \u2014 l\u01B0\u1EE3t n\u00E0y ch\u00FAc \u0111\u01B0\u1EE3c \u0027 \u002B ok \u002B (bad.length \u003E 0 ? \u0027, TR\u01AF\u1EE2T \u0027 \u002B bad.length \u002B \u0027: \u0027 \u002B bad.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.why \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027) \u002B (got.length \u003E 0 ? \u0027, khai \u0111\u01B0\u1EE3c \u0027 \u002B got.length \u002B \u0027 h\u1ED3ng bao: \u0027 \u002B got.map((e) =\u003E e.gift).join(\u0027 \u00B7 \u0027) : \u0027\u0027) \u002B (missed.length \u003E 0 ? \u0027, h\u1ED3ng bao TR\u01AF\u1EE2T \u0027 \u002B missed.length \u002B \u0027: \u0027 \u002B missed.map((e) =\u003E e.couple \u002B \u0027 (\u0027 \u002B e.giftWhy \u002B \u0027)\u0027).join(\u0027; \u0027) : \u0027\u0027); return \u0027!H\u1EF7 S\u1EF1 \u0110\u01B0\u1EDDng: \u0027 \u002B rows.length \u002B \u0027 ti\u1EC7c \u0111ang m\u1EDF (\u0027 \u002B blessed \u002B \u0027 \u0111\u00E3 ch\u00FAc, \u0027 \u002B (rows.length - blessed) \u002B \u0027 ch\u01B0a ch\u00FAc, \u0027 \u002B lixi \u002B \u0027 \u0111\u00E3 ph\u00E1t l\u00EC x\u00EC, \u0027 \u002B gifts.length \u002B \u0027 c\u00F2n h\u1ED3ng bao ch\u01B0a khai) \u2014 kh\u1EDBp b\u1ED9 l\u1ECDc: \u0027 \u002B match.length \u002B \u0027, c\u00F2n ch\u01B0a gh\u00E9: \u0027 \u002B left.length \u002B tail; }",
+          "timeoutMs": 4000,
+          "note": "\u0110\u1EBEM L\u1EA0I sau khi v\u00E9t: c\u00FA \u0022M\u1EDF T\u1EA5t C\u1EA3\u0022 t\u1EF1 g\u1ECDi l\u1EA1i show_all_wedding n\u00EAn c\u00E1c d\u00F2ng .wedding-now-li-xi-available \u0111\u00E3 r\u1EE5ng. Kh\u00F4ng \u0111\u1EBFm l\u1EA1i th\u00EC hai c\u1ED5ng StopIf v\u00E0 until c\u1EE7a v\u00F2ng l\u1EB7p v\u1EABn x\u1EED theo \u1EA3nh ch\u1EE5p TR\u01AF\u1EDAC l\u00FAc v\u00E9t, v\u00E0 l\u01B0\u1EE3t ch\u1EA1y s\u1EBD gh\u00E9 l\u1EA1i nh\u1EEFng ph\u00F2ng ch\u1EC9 \u0027\u0111\u00E1ng gh\u00E9\u0027 v\u00EC c\u00E1i h\u1ED3ng bao v\u1EEBa \u0111\u01B0\u1EE3c khai m\u1EA5t",
+          "optional": true,
+          "when": {
+            "kind": "visible",
+            "selector": "body.jvz-hy-su-quick"
+          }
         },
         {
           "action": "stopIf",
