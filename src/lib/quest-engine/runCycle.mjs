@@ -13,6 +13,10 @@ import { computeNextDelaySeconds } from "./cooldown.mjs";
 import { DEFAULT_GAME_BASE_URL, parseCookieString } from "./cookies.mjs";
 import { isDailyQuotaQuest, peersDoneForQuota, reachedDailyQuota } from "./dailyQuota.mjs";
 import { createQuestEngine, CycleBlocked, enabledQuestsInOrder, questsForAccount, QuestAborted } from "./engine.mjs";
+import {
+  openObscuraBrowser,
+  shouldAnnounceObscuraMissing,
+} from "./obscuraBrowser.mjs";
 import { profileForConfig } from "./profile.mjs";
 import { acquireQuestSlot, isDedicatedPageQuest } from "./questGate.mjs";
 import { createReferenceQuiz, DEFAULT_QUIZ_REFERENCE_URL } from "./quizReference.mjs";
@@ -324,6 +328,58 @@ export async function openBrowserPreferringFullChromium(chromium, fingerprint, p
   throw lastError ?? new Error("Không mở được trình duyệt bằng bất kỳ kênh nào.");
 }
 
+/**
+ * Mở trình duyệt theo LỰA CHỌN của Gia chủ, và luôn có đường về.
+ *
+ * Hai đường, một cửa: `obscura` thử trình duyệt Rust trước rồi lui về Chromium nếu máy này chưa
+ * có nó; `chromium` (mặc định) đi thẳng đường cũ, không chạm một dòng nào của nhánh obscura.
+ *
+ * Vì sao LUI chứ không NGÃ: lựa chọn ấy nằm trong app_settings, tức nó áp cho MỌI khôi lỗi cùng
+ * lúc — tông môn lẫn máy nhà từng đạo hữu. Một máy chưa kịp cài binary mà làm cả đàn chết là cho
+ * một ô chọn trong trang admin cái quyền hạ cả tông môn. Lui về Chromium thì tệ nhất cũng chỉ là
+ *「chưa được như mong muốn」, và nhật ký nói rõ vì sao.
+ *
+ * Cần `profileDir`: obscura giữ cookie trong `--storage-dir`, mà cách ly cookie theo từng đàn là
+ * điều kiện KHÔNG nhân nhượng (xem obscuraBrowser.mjs). Lượt chạy không có hồ sơ bền — smoke, các
+ * lượt một-lần — vì thế đi thẳng Chromium.
+ */
+async function openBrowserForCycle({ chromium, fingerprint, profileDir, browserEngine, log, say }) {
+  if (browserEngine === "obscura" && profileDir) {
+    try {
+      const opened = await openObscuraBrowser({
+        chromium,
+        // Nằm TRONG hồ sơ của đàn: một đàn một kho cookie, và lượt quét hồ sơ cũ
+        // (`sweepStaleProfiles`) dọn luôn phần obscura mà không phải biết gì về nó.
+        storageDir: `${profileDir}/obscura-store`,
+        userAgent: fingerprint.userAgent,
+        viewport: fingerprint.viewport,
+        log,
+      });
+      if (opened) return opened;
+      // Không có binary. Nói MỘT lần cho mỗi tiến trình (xem shouldAnnounceObscuraMissing): đây là
+      // thứ Gia chủ cần biết để đi cài, nhưng nói mỗi vòng thì thành tiếng ồn vĩnh viễn.
+      if (shouldAnnounceObscuraMissing()) {
+        await say(
+          "Tông môn đã chọn trình duyệt Obscura, nhưng máy chạy auto này chưa có nó — " +
+            "vòng chạy vẫn diễn ra bình thường bằng trình duyệt cũ.",
+          "warn",
+        );
+      } else {
+        log.debug("Trình duyệt", "Chọn Obscura nhưng máy này chưa cài — dùng Chromium.");
+      }
+    } catch (err) {
+      // CÓ binary mà dựng hỏng là chuyện khác hẳn「chưa cài」: nó nghĩa là thứ đã cài đang hỏng, và
+      // nó đáng kêu mỗi lần cho tới khi có người sửa.
+      await say(
+        `Không mở được trình duyệt Obscura (${err instanceof Error ? err.message : "lỗi lạ"}) — ` +
+          "vòng chạy dùng trình duyệt cũ.",
+        "warn",
+      );
+    }
+  }
+  return openBrowserPreferringFullChromium(chromium, fingerprint, profileDir, log);
+}
+
 /** Outcome của engine → câu người đọc, và mức độ để hiện trên Hoạt động. */
 const OUTCOME_TEXT = {
   completed: { level: "success", say: (r) => r.message?.trim() || "xong" },
@@ -590,6 +646,10 @@ export async function runCycle(deps) {
     // biệt tài khoản). Danh sách sống ở server để đổi luật không phải đẩy gói mới cho các kho
     // đông lạnh; vắng mặt (khôi lỗi riêng, server đời cũ) là không nhiệm vụ nào độc quyền.
     soloQuestNames = [],
+    // Trình duyệt Gia chủ chọn trong trang Tông Môn: "chromium" (mặc định, nếp cũ) hoặc
+    // "obscura". Đi kèm job ở cửa phát việc, cùng đường với `gameBaseUrl` — nên đổi lựa chọn
+    // là có hiệu lực từ vòng KẾ, không phải đợi một lượt phát hành gói.
+    browserEngine = "chromium",
     // Thử tự bấm ô Turnstile khi vấp màn Cloudflare. TẮT mặc định: nó chưa đo được với
     // Cloudflare thật, và một cú bấm sai chỗ trên hạ tầng CHUNG (nhiều đàn của người khác
     // trên cùng worker) có thể làm Cloudflare nghi hơn. Bật cho từng máy bằng
@@ -704,7 +764,7 @@ export async function runCycle(deps) {
   // diện trước Cloudflare như người lạ, còn hồ sơ bền thì một lần qua cửa là những lượt sau
   // đi thẳng. Cookie phiên được site làm mới cũng nhờ vậy mà không bị chuỗi dán-tay cũ dần.
   const fingerprint = launchProfile(headless);
-  const opened = await openBrowserPreferringFullChromium(chromium, fingerprint, profileDir, log);
+  const opened = await openBrowserForCycle({ chromium, fingerprint, profileDir, browserEngine, log, say });
   const browser = opened.browser;
   const context = opened.context;
   // TẦNG KHÔI LỖI, KHÔNG phải Hoạt động. Binary nào được mở là chuyện ruột gan của bộ máy:
@@ -1062,6 +1122,9 @@ export async function runCycle(deps) {
     // Đóng trong finally, có HẠN GIỜ, và không bao giờ ném: một trình duyệt không đóng được
     // không được phép ghi đè lên kết quả thật của lượt chạy — mà cũng không được phép treo
     // luôn cả cái ghế của worker. Xem browserShutdown.mjs cho lý do đầy đủ.
-    await closeBrowserWithin({ context, browser, profileDir, log });
+    // Obscura tự mang phép dọn của nó (đóng CDP + hạ tiến trình `serve`), vì `closeBrowserWithin`
+    // đi tìm tiến trình theo dấu `--user-data-dir` của Chromium — một dấu mà obscura không có.
+    if (opened.dispose) await opened.dispose();
+    else await closeBrowserWithin({ context, browser, profileDir, log });
   }
 }

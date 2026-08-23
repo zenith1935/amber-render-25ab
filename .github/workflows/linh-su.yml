@@ -89,6 +89,35 @@ jobs:
       # thống mà Chromium cần trên runner sạch.
       - run: npx playwright install --with-deps chromium
 
+      # ── OBSCURA: trình duyệt thứ hai, dùng khi trang Tông Môn chọn nó ─────────────────────
+      #
+      # Tải mỗi lượt thay vì đóng vào kho: kho khôi lỗi là bản sao ĐÔNG LẠNH của mã nguồn, nhét
+      # 82 MB binary vào đó là mỗi lượt `github:deploy` phải đẩy lại từng ấy byte qua Git Data API.
+      # Runner tải nó trong khoảng chục giây, một lần cho cả ca trực 290 phút.
+      #
+      # `continue-on-error` KHÔNG phải sự cẩu thả: lựa chọn trình duyệt nằm ở app_settings và có
+      # thể đang là「chromium」, lúc ấy binary này không ai dùng tới. Một lượt tải trượt (GitHub
+      # release đứt mạng, đổi tag) mà giết cả ca trực là đổi một tiện nghi lấy nguyên một đội hình.
+      # Thiếu nó thì engine tự lui về Chromium và nói rõ trong nhật ký.
+      - name: Lấy Obscura
+        continue-on-error: true
+        env:
+          # Ghim tag: một bản mới lặng lẽ đổi cờ dòng lệnh sẽ làm mọi khôi lỗi hỏng cùng lúc, ở
+          # chỗ không ai nhìn. Nâng bản là một lượt sửa có chủ ý, đi kèm một lượt đo.
+          OBSCURA_VERSION: v0.2.1
+        run: |
+          set -eu
+          # Runner GitHub là x86_64; VM tông môn thì aarch64 — hai kiến trúc khác nhau, và tải
+          # nhầm thì binary nằm im cho tới lúc chạy mới nổ「Exec format error」.
+          asset="obscura-x86_64-linux-stealth.tar.gz"
+          dir="$RUNNER_TEMP/obscura"
+          mkdir -p "$dir"
+          curl -fsSL --retry 3 --retry-delay 2 -o "$dir/obscura.tar.gz"             "https://github.com/h4ckf0r0day/obscura/releases/download/$OBSCURA_VERSION/$asset"
+          tar -xzf "$dir/obscura.tar.gz" -C "$dir"
+          # Hỏi chính nó một câu trước khi tin: tệp đúng tên mà sai kiến trúc vẫn giải nén ngon lành.
+          "$dir/obscura" --version
+          echo "OBSCURA_BIN=$dir/obscura" >> "$GITHUB_ENV"
+
       - name: Trực ca
         env:
           WEB_URL: ${{ vars.WEB_URL || 'https://auto-hh3d-4.vercel.app' }}
