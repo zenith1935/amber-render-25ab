@@ -153,7 +153,7 @@ async function runQuest({
   reportProgress,
   shouldStop,
 }) {
-  await say("Khôi lỗi đã nhận ngọc giản, đang khởi lư…");
+  await say("Khôi lỗi đã nhận ngọc giản, đang khởi động tế đàn...");
 
   // Nạp Playwright TẠI ĐÂY chứ không ở đầu tệp: một máy chỉ dùng worker để canh việc vẫn
   // chạy được `node scripts/worker.mjs` mà không cần cài Chromium, và lỗi thiếu thư viện
