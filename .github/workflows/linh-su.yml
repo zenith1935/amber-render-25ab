@@ -43,6 +43,14 @@ on:
     # Xem điều 3 ở trên: dày hơn tuổi thọ để lượt kế đã chờ sẵn khi lượt cũ rút lui.
     - cron: "0 */4 * * *"
   workflow_dispatch:
+    inputs:
+      tuoi_tho_ms:
+        # CHỈ để nghiệm phép nối chuỗi: bước cuối nằm sau worker, nên muốn thấy chuỗi chạy
+        # thật thì phải cho lượt kết thúc sớm. Lượt theo cron KHÔNG bao giờ nhận input nên
+        # luôn rơi về mặc định — hạ nó không chạm được production.
+        description: "Tuổi thọ (ms) — để trống là dùng mặc định 290 phút"
+        required: false
+        default: ""
 
 # Đúng MỘT khôi lỗi GitHub tại một thời điểm. `cancel-in-progress: false` là bắt buộc: huỷ lượt
 # đang chạy nghĩa là cắt ngang đàn đang cày, đúng thứ cả thiết kế này sinh ra để tránh.
@@ -52,6 +60,8 @@ concurrency:
 
 permissions:
   contents: read
+  # Đủ để POST .../actions/workflows/<tệp>/dispatches — xem bước「Phát lượt kế」ở cuối.
+  actions: write
 
 jobs:
   linh-su:
@@ -60,6 +70,11 @@ jobs:
     # bằng một dòng đỏ đọc được thay vì biến mất không lời giải thích.
     timeout-minutes: 350
     steps:
+      # Mốc giờ cho phanh chống vòng lặp ở bước cuối. Đặt TRƯỚC mọi thứ để nó tính cả thời
+      # gian cài đặt — một lượt chết ngay lúc `npm ci` cũng phải bị phanh giữ lại.
+      - name: Đánh dấu giờ bắt đầu
+        run: echo "BAT_DAU_LUC=$(date +%s)" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -83,7 +98,7 @@ jobs:
           WORKER_MAX_JOBS: "2"
           WORKER_QUEST_TABS: "3"
           # 290 phút / 50 phút — xem điều 2. Viết bằng mili giây vì worker.mjs đọc thẳng.
-          WORKER_MAX_LIFETIME_MS: "17400000"
+          WORKER_MAX_LIFETIME_MS: ${{ inputs.tuoi_tho_ms || '17400000' }}
           WORKER_DRAIN_TIMEOUT_MS: "3000000"
           # Tự bấm ô Turnstile khi vấp màn kiểm tra. Bật ở ĐÂY (chứ không đổi mặc định trong mã)
           # vì cân nhắc đã đổi: đo 20/08/2026 thì cả bốn khôi lỗi tông môn đều bị chặn, `việc
@@ -97,3 +112,62 @@ jobs:
             exit 1
           fi
           node scripts/worker.mjs
+      # ── NỐI CHUỖI: lượt này tự phát lượt kế ────────────────────────────────────────────────
+      #
+      # Vì sao có bước này. Cron của GitHub KHÔNG mất nhịp (đo 22/08/2026: đủ 6 lượt/ngày) nhưng
+      # trễ 52–211 phút, tức dao động 159 phút. Ngân sách gối đầu chỉ là `tuổi thọ − chu kỳ cron`
+      # = 290 − 240 = 50 phút. Một dao động 159 phút không thể lọt qua khe 50 phút, nên đội hở
+      # lỗ đều đặn — đo được một lỗ 84 phút hôm 22/08.
+      #
+      # `GITHUB_TOKEN` DÙNG ĐƯỢC, không cần PAT. Luật chống đệ quy của GitHub chừa đúng hai cửa:
+      # "events triggered by the GITHUB_TOKEN will not create a new workflow run, with the
+      # following exceptions: workflow_dispatch and repository_dispatch events always create
+      # workflow runs". Nhờ vậy không phải nhét chìa `repo`+`workflow`+`delete_repo` vào kho.
+      #
+      # PHANH CHỐNG VÒNG LẶP — phần quan trọng nhất của bước này. Luật chống đệ quy kia sinh ra
+      # để chặn cảnh một lượt chết yểu lại phát lượt kế, chết yểu tiếp, đốt sạch phút Actions.
+      # Ta tự đi vòng qua luật ấy thì phải tự dựng phanh: CHỈ nối chuỗi khi lượt đã sống quá NỬA
+      # tuổi thọ. Ngưỡng suy từ chính `WORKER_MAX_LIFETIME_MS` chứ không gõ tay, nên hạ tuổi thọ
+      # xuống để thử là phanh tự hạ theo — không có hằng số nào trôi khỏi cấu hình.
+      #
+      # Cron ở trên GIỮ NGUYÊN làm lưới đỡ: chuỗi đứt (phát hỏng, lượt bị huỷ, lượt chết yểu) thì
+      # tối đa 4 giờ sau cron dựng lại đội. Bỏ cron đi là đổi một lỗ 84 phút lấy một lỗ vĩnh viễn.
+      - name: Phát lượt kế
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Cùng biểu thức với bước trên — hai chỗ phải cùng đọc một con số, bằng không phanh
+          # canh theo tuổi thọ này mà worker sống theo tuổi thọ khác.
+          TUOI_THO_MS: ${{ inputs.tuoi_tho_ms || '17400000' }}
+        run: |
+          set -eu
+          troi=$(( $(date +%s) - BAT_DAU_LUC ))
+
+          if [ "${TUOI_THO_MS:-0}" -le 0 ]; then
+            echo "::warning::Không đọc được tuổi thọ (TUOI_THO_MS='${TUOI_THO_MS:-}') — không nối chuỗi, để cron đỡ."
+            exit 0
+          fi
+
+          nguong=$(( TUOI_THO_MS / 2000 ))
+          if [ "$troi" -lt "$nguong" ]; then
+            echo "Lượt này mới sống ${troi}s, chưa quá nửa tuổi thọ (${nguong}s) — KHÔNG nối chuỗi."
+            echo "Đây là phanh: một lượt chết yểu mà vẫn phát lượt kế là đốt phút Actions vô tận."
+            echo "Cron sẽ dựng lại đội trong tối đa 4 giờ."
+            exit 0
+          fi
+
+          # Tệp workflow trong kho khôi lỗi — khớp WORKFLOW_TARGET_PATH của scripts/githubKhoiloi.mts.
+          ma=$(curl -sS -o /tmp/noi-chuoi.out -w '%{http_code}' -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/linh-su.yml/dispatches" \
+            -d "{\"ref\":\"$GITHUB_REF_NAME\"}") || ma=000
+
+          if [ "$ma" = "204" ]; then
+            echo "Đã phát lượt kế trên nhánh $GITHUB_REF_NAME (lượt này sống ${troi}s)."
+          else
+            echo "::error::Phát lượt kế HỎNG (HTTP $ma): $(head -c 300 /tmp/noi-chuoi.out 2>/dev/null || true)"
+            echo "::error::Chuỗi đứt — đội phải chờ cron tới 4 giờ. Soi quyền actions:write của GITHUB_TOKEN."
+            exit 1
+          fi
