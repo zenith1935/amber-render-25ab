@@ -1,6 +1,6 @@
 {
   "name": "Ho\u1EA1t \u0111\u1ED9ng h\u00E0ng ng\u00E0y (m\u1EB7c \u0111\u1ECBnh)",
-  "schemaVersion": 73,
+  "schemaVersion": 74,
   "dailyQuestPath": "/nhiem-vu-hang-ngay",
   "quests": [
     {
@@ -1819,6 +1819,82 @@
             "selector": "#countdown-timer",
             "text": ":"
           }
+        },
+        {
+          "action": "click",
+          "selector": "#pl-claim-close-btn",
+          "timeoutMs": 6000,
+          "note": "\u0022\u0110\u1EBFn nh\u1EADn th\u01B0\u1EDFng\u0022 \u2014 \u0111\u00F3ng t\u1EA5m che tr\u01B0\u1EDBc \u0111\u00E3; c\u00F2n n\u00F3 th\u00EC kh\u00F4ng b\u1EA5m \u0111\u01B0\u1EE3c g\u00EC tr\u00EAn trang, k\u1EC3 c\u1EA3 b\u1ED1n r\u01B0\u01A1ng ng\u00E0y",
+          "optional": true,
+          "when": {
+            "kind": "visible",
+            "selector": "#pl-claim-overlay.is-open"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "t\u1EA5m che \u0111\u00E3 r\u1EDDi h\u1EB3n m\u1EDBi \u0111\u1EE5ng v\u00E0o h\u00E0ng m\u1ED1c",
+          "optional": true,
+          "condition": {
+            "kind": "hidden",
+            "selector": "#pl-claim-overlay.is-open"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const MARK = \u0027jvz-pl-bonus\u0027; const PICK = \u0027jarvis-bonus\u0027; const body = document.body; if (!body) return \u0027r\u01B0\u01A1ng m\u1ED1c: trang ch\u01B0a c\u00F3 body\u0027; body.classList.remove(MARK); for (const el of document.querySelectorAll(\u0027.gift-box.\u0027 \u002B PICK)) el.classList.remove(PICK); const row = document.querySelector(\u0027.reward-progress-container\u0027); if (!row) return \u0027r\u01B0\u01A1ng m\u1ED1c: trang kh\u00F4ng c\u00F3 h\u00E0ng m\u1ED1c n\u00E0o\u0027; const done = row.querySelectorAll(\u0027.gift-box.received-reward\u0027).length; const S = window.__jvzPl = window.__jvzPl || {}; if (typeof S.base !== \u0027number\u0027) S.base = done; const boxes = [...row.querySelectorAll(\u0027.gift-box.active\u0027)]; if (boxes.length === 0) { return row.classList.contains(\u0027has-pending-claim\u0027) ? \u0027!H\u00E0ng r\u01B0\u01A1ng m\u1ED1c c\u00F2n d\u1EA5u ch\u1EDD nh\u1EADn m\u00E0 kh\u00F4ng r\u01B0\u01A1ng n\u00E0o b\u1EA5m \u0111\u01B0\u1EE3c \u2014 b\u1ECF qua ph\u1EA7n m\u1ED1c, v\u1EABn m\u1EDF r\u01B0\u01A1ng ng\u00E0y nh\u01B0 th\u01B0\u1EDDng\u0027 : \u0027r\u01B0\u01A1ng m\u1ED1c: kh\u00F4ng m\u1ED1c n\u00E0o \u0111ang ch\u1EDD (\u0027 \u002B done \u002B \u0027 \u0111\u00E3 nh\u1EADn)\u0027; } const box = boxes[0]; box.classList.add(PICK); body.classList.add(MARK); const cell = box.closest(\u0027.milestone\u0027); const label = cell ? (cell.querySelector(\u0027.milestone-text\u0027) || {}).textContent : \u0027\u0027; const at = label ? String(label).replace(/\\s\u002B/g, \u0027 \u0027).trim() : \u0027?\u0027; return \u0027!R\u01B0\u01A1ng m\u1ED1c \u0027 \u002B at \u002B \u0027 \u0111\u00E3 \u0111\u1EE7 \u0111i\u1EC3m \u2014 nh\u1EADn tr\u01B0\u1EDBc khi m\u1EDF r\u01B0\u01A1ng ng\u00E0y (c\u00F2n \u0027 \u002B boxes.length \u002B \u0027 m\u1ED1c ch\u1EDD)\u0027; }",
+          "timeoutMs": 4000,
+          "note": "ch\u1ECDn M\u1ED8T m\u1ED1c \u0111ang ch\u1EDD, \u0111\u00E1nh d\u1EA5u n\u00F3 v\u00E0 c\u1EAFm c\u1EDD cho v\u00F2ng d\u01B0\u1EDBi; kh\u00F4ng m\u1ED1c n\u00E0o ch\u1EDD th\u00EC c\u1EA3 v\u00F2ng n\u1EB1m im",
+          "optional": true
+        },
+        {
+          "action": "repeat",
+          "timeoutMs": 15000,
+          "note": "m\u1ED7i v\u00F2ng m\u1ED9t r\u01B0\u01A1ng m\u1ED1c. Tr\u1EA7n 6 v\u00F2ng ~ g\u1EA5p r\u01B0\u1EE1i s\u1ED1 m\u1ED1c h\u00E0ng t\u1EEBng c\u00F3 (4), v\u00E0 90 gi\u00E2y l\u00E0 tr\u1EA7n th\u1EADt; h\u1EBFt v\u00F2ng m\u00E0 ch\u01B0a s\u1EA1ch th\u00EC b\u01B0\u1EDBc ph\u00E1n x\u1EED ngay d\u01B0\u1EDBi k\u00EAu l\u00EAn",
+          "steps": [
+            {
+              "action": "click",
+              "selector": ".reward-progress-container .gift-box.jarvis-bonus",
+              "timeoutMs": 6000,
+              "note": "b\u1EA5m \u0111\u00FAng \u00F4 \u0111\u00E3 \u0111\u00E1nh d\u1EA5u. forceClick v\u00EC \u00F4 n\u00E0y \u0111ang ch\u1EA1y animation \u0060pl-claim-pulse\u0060 (scale 1\u21921.12) \u2014 c\u00F9ng l\u00FD do b\u1ED1n r\u01B0\u01A1ng ng\u00E0y c\u0169ng \u00E9p b\u1EA5m",
+              "when": {
+                "kind": "visible",
+                "selector": "body.jvz-pl-bonus"
+              },
+              "forceClick": true
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 10000,
+              "note": "ch\u1EDD m\u00E1y ch\u1EE7 nh\u1EADn: DOM ch\u1EC9 r\u1EE5ng \u0060active\u0060 SAU khi AJAX v\u1EC1 \u2014 \u0111o \u0111\u01B0\u1EE3c \u1EDF ch\u00EDnh b\u1EA3n ghi, dom/03 ch\u1EE5p ngay sau c\u00FA b\u1EA5m v\u1EABn c\u00F2n active=1",
+              "optional": true,
+              "condition": {
+                "kind": "hidden",
+                "selector": ".reward-progress-container .gift-box.jarvis-bonus.active"
+              }
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const MARK = \u0027jvz-pl-bonus\u0027; const PICK = \u0027jarvis-bonus\u0027; const body = document.body; if (!body) return \u0027r\u01B0\u01A1ng m\u1ED1c: trang ch\u01B0a c\u00F3 body\u0027; body.classList.remove(MARK); for (const el of document.querySelectorAll(\u0027.gift-box.\u0027 \u002B PICK)) el.classList.remove(PICK); const row = document.querySelector(\u0027.reward-progress-container\u0027); if (!row) return \u0027r\u01B0\u01A1ng m\u1ED1c: trang kh\u00F4ng c\u00F3 h\u00E0ng m\u1ED1c n\u00E0o\u0027; const done = row.querySelectorAll(\u0027.gift-box.received-reward\u0027).length; const S = window.__jvzPl = window.__jvzPl || {}; if (typeof S.base !== \u0027number\u0027) S.base = done; const boxes = [...row.querySelectorAll(\u0027.gift-box.active\u0027)]; if (boxes.length === 0) { return row.classList.contains(\u0027has-pending-claim\u0027) ? \u0027!H\u00E0ng r\u01B0\u01A1ng m\u1ED1c c\u00F2n d\u1EA5u ch\u1EDD nh\u1EADn m\u00E0 kh\u00F4ng r\u01B0\u01A1ng n\u00E0o b\u1EA5m \u0111\u01B0\u1EE3c \u2014 b\u1ECF qua ph\u1EA7n m\u1ED1c, v\u1EABn m\u1EDF r\u01B0\u01A1ng ng\u00E0y nh\u01B0 th\u01B0\u1EDDng\u0027 : \u0027r\u01B0\u01A1ng m\u1ED1c: kh\u00F4ng m\u1ED1c n\u00E0o \u0111ang ch\u1EDD (\u0027 \u002B done \u002B \u0027 \u0111\u00E3 nh\u1EADn)\u0027; } const box = boxes[0]; box.classList.add(PICK); body.classList.add(MARK); const cell = box.closest(\u0027.milestone\u0027); const label = cell ? (cell.querySelector(\u0027.milestone-text\u0027) || {}).textContent : \u0027\u0027; const at = label ? String(label).replace(/\\s\u002B/g, \u0027 \u0027).trim() : \u0027?\u0027; return \u0027!R\u01B0\u01A1ng m\u1ED1c \u0027 \u002B at \u002B \u0027 \u0111\u00E3 \u0111\u1EE7 \u0111i\u1EC3m \u2014 nh\u1EADn tr\u01B0\u1EDBc khi m\u1EDF r\u01B0\u01A1ng ng\u00E0y (c\u00F2n \u0027 \u002B boxes.length \u002B \u0027 m\u1ED1c ch\u1EDD)\u0027; }",
+              "timeoutMs": 4000,
+              "note": "\u0111\u00E1nh d\u1EA5u m\u1ED1c k\u1EBF, ho\u1EB7c h\u1EA1 c\u1EDD khi \u0111\u00E3 s\u1EA1ch \u2014 \u0111\u00E2y l\u00E0 \u0111i\u1EC1u ki\u1EC7n d\u1EEBng c\u1EE7a v\u00F2ng",
+              "optional": true
+            }
+          ],
+          "until": {
+            "kind": "hidden",
+            "selector": "body.jvz-pl-bonus"
+          },
+          "maxIterations": 6,
+          "maxSeconds": 90
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const row = document.querySelector(\u0027.reward-progress-container\u0027); if (!row) return \u0027r\u01B0\u01A1ng m\u1ED1c: trang kh\u00F4ng c\u00F3 h\u00E0ng m\u1ED1c n\u00E0o\u0027; const S = window.__jvzPl || {}; const done = row.querySelectorAll(\u0027.gift-box.received-reward\u0027).length; const got = typeof S.base === \u0027number\u0027 ? done - S.base : 0; const pending = row.classList.contains(\u0027has-pending-claim\u0027); const left = row.querySelectorAll(\u0027.gift-box.active\u0027).length; if (got \u003E 0) return \u0027!\u0110\u00E3 nh\u1EADn \u0027 \u002B got \u002B \u0027 r\u01B0\u01A1ng m\u1ED1c\u0027 \u002B (pending ? \u0027 \u2014 v\u1EABn c\u00F2n \u0027 \u002B left \u002B \u0027 m\u1ED1c ch\u1EDD, \u0111\u1EC3 l\u01B0\u1EE3t sau\u0027 : \u0027 \u2014 h\u00E0ng m\u1ED1c \u0111\u00E3 s\u1EA1ch\u0027); if (pending || left \u003E 0) return \u0027!KH\u00D4NG nh\u1EADn \u0111\u01B0\u1EE3c r\u01B0\u01A1ng m\u1ED1c n\u00E0o d\u00F9 h\u00E0ng \u0111ang b\u00E1o ch\u1EDD (\u0027 \u002B left \u002B \u0027 m\u1ED1c) \u2014 r\u01B0\u01A1ng c\u00F2n nguy\u00EAn cho l\u01B0\u1EE3t sau, l\u01B0\u1EE3t n\u00E0y v\u1EABn m\u1EDF r\u01B0\u01A1ng ng\u00E0y\u0027; return \u0027r\u01B0\u01A1ng m\u1ED1c: kh\u00F4ng c\u00F3 g\u00EC \u0111\u1EC3 nh\u1EADn l\u01B0\u1EE3t n\u00E0y\u0027; }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u1EBFm b\u1EB1ng \u0060.received-reward\u0060 so v\u1EDBi m\u1ED1c chu\u1EA9n l\u00FAc qu\u00E9t \u0111\u1EA7u, kh\u00F4ng tin s\u1ED1 l\u1EA7n b\u1EA5m: m\u1ED9t c\u00FA b\u1EA5m b\u1ECB m\u00E1y ch\u1EE7 t\u1EEB ch\u1ED1i v\u1EABn l\u00E0 m\u1ED9t c\u00FA b\u1EA5m",
+          "optional": true
         },
         {
           "action": "readCooldownSeconds",
