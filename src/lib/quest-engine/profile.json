@@ -1,6 +1,6 @@
 {
   "name": "Ho\u1EA1t \u0111\u1ED9ng h\u00E0ng ng\u00E0y (m\u1EB7c \u0111\u1ECBnh)",
-  "schemaVersion": 74,
+  "schemaVersion": 75,
   "dailyQuestPath": "/nhiem-vu-hang-ngay",
   "quests": [
     {
@@ -2171,7 +2171,7 @@
           "action": "stopIf",
           "text": "h\u1EBFt 5 l\u01B0\u1EE3t h\u00F4m nay",
           "timeoutMs": 15000,
-          "note": "h\u00E0ng quest xong \u0111\u1ED5i n\u00FAt \u0022\u0110\u1EBFn \u0110\u00E1nh\u0022 th\u00E0nh \u003Cspan class=\u0022btn-done-label\u0022\u003EXong (b\u1EA3n ghi 18/08 ch\u1EE5p \u0111\u00FAng h\u00ECnh d\u1EA1ng \u1EA5y \u1EDF h\u00E0ng T\u1EBF L\u1EC5 \u0111\u00E3 xong) \u2014 c\u00F9ng t\u00EDn hi\u1EC7u n\u00FAt-bi\u1EBFn-m\u1EA5t m\u00E0 Th\u00ED Luy\u1EC7n/Ph\u00FAc L\u1EE3i v\u1EABn d\u1EEBng theo. L\u1ECDc b\u1EB1ng `a.btn-go` ch\u1EE9 \u0111\u1EEBng b\u1EB1ng href tr\u01A1n: menu \u0111\u1EA7u trang c\u0169ng c\u00F3 m\u1ED9t \u003Ca href=\u0022/bi-canh-tong-mon\u0022\u003E",
+          "note": "h\u00E0ng quest xong \u0111\u1ED5i n\u00FAt \u0022\u0110\u1EBFn \u0110\u00E1nh\u0022 th\u00E0nh \u003Cspan class=\u0022btn-done-label\u0022\u003EXong (b\u1EA3n ghi 18/08 ch\u1EE5p \u0111\u00FAng h\u00ECnh d\u1EA1ng \u1EA5y \u1EDF h\u00E0ng T\u1EBF L\u1EC5 \u0111\u00E3 xong) \u2014 c\u00F9ng t\u00EDn hi\u1EC7u n\u00FAt-bi\u1EBFn-m\u1EA5t m\u00E0 Th\u00ED Luy\u1EC7n/Ph\u00FAc L\u1EE3i v\u1EABn d\u1EEBng theo. L\u1ECDc b\u1EB1ng \u0060a.btn-go\u0060 ch\u1EE9 \u0111\u1EEBng b\u1EB1ng href tr\u01A1n: menu \u0111\u1EA7u trang c\u0169ng c\u00F3 m\u1ED9t \u003Ca href=\u0022/bi-canh-tong-mon\u0022\u003E",
           "condition": {
             "kind": "hidden",
             "selector": "a.btn-go[href*=\u0027bi-canh-tong-mon\u0027]"
@@ -2220,7 +2220,7 @@
           "action": "stopIf",
           "text": "\u0111ang ch\u1EDD l\u01B0\u1EE3t k\u1EBF (7 ph\u00FAt gi\u1EEFa hai \u0111\u00F2n)",
           "timeoutMs": 15000,
-          "note": "d\u1EA5u hai ch\u1EA5m ch\u1EC9 c\u00F3 trong \u0022C\u00F2n M:SS\u0022 \u2014 h\u1ECFi ch\u1EEF ch\u1EE9 kh\u00F4ng h\u1ECFi `disabled`, v\u00EC `disabled` c\u0169ng \u0111\u00FAng cho m\u1ED9t n\u00FAt KH\u00D4NG \u0111\u01B0\u1EE3c v\u1EBD ra",
+          "note": "d\u1EA5u hai ch\u1EA5m ch\u1EC9 c\u00F3 trong \u0022C\u00F2n M:SS\u0022 \u2014 h\u1ECFi ch\u1EEF ch\u1EE9 kh\u00F4ng h\u1ECFi \u0060disabled\u0060, v\u00EC \u0060disabled\u0060 c\u0169ng \u0111\u00FAng cho m\u1ED9t n\u00FAt KH\u00D4NG \u0111\u01B0\u1EE3c v\u1EBD ra",
           "condition": {
             "kind": "textMatches",
             "selector": "#challenge-boss-btn",
@@ -4579,6 +4579,79 @@
         },
         {
           "action": "evaluateJavaScript",
+          "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const t = b.innerText || \u0027\u0027; const s = t.match(/D\u01B0\u1EE3c kh\u00ED\\s*([1-4])\\s*sao/i); const c = t.match(/\u0110an trong t\u00FAi[^0-9]*(\\d\u002B)\\s*\\//); return \u0027!T\u00FAi \u0111\u00E3 c\u00F3 \u0027 \u002B (c ? c[1] : \u0027?\u0027) \u002B \u0027 vi\u00EAn \u2014 v\u01B0\u1EE3t h\u1EA1n m\u1EE9c gi\u1EEF, ph\u00E2n gi\u1EA3i vi\u00EAn\u0027 \u002B (s ? \u0027 \u0027 \u002B s[1] \u002B \u0027 sao\u0027 : \u0027\u0027) \u002B \u0027 \u0111ang m\u1EDF\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: vi\u00EAn \u0111an b\u1ECB ph\u00E2n gi\u1EA3i v\u00EC t\u00FAi \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c",
+          "optional": true,
+          "when": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capOver}}"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldModalDecompose",
+          "timeoutMs": 4000,
+          "note": "PH\u00C2N GI\u1EA2I vi\u00EAn v\u01B0\u1EE3t h\u1EA1n m\u1EE9c \u2014 nh\u00E1nh n\u00E0y \u0111i tr\u1ECDn c\u1EE5m x\u00E1c nh\u1EADn c\u1EE7a ri\u00EAng n\u00F3",
+          "optional": true,
+          "when": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capOver}}"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "h\u1ED9p x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i c\u1EE7a nh\u00E1nh h\u1EA1n m\u1EE9c",
+          "optional": true,
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldConfirmOk"
+          },
+          "when": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capOver}}"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldConfirmOk",
+          "timeoutMs": 4000,
+          "note": "x\u00E1c nh\u1EADn \u2014 xong c\u00FA n\u00E0y th\u00EC h\u1ED9p \u0111an \u0111\u00F3ng, nh\u00E1nh sao b\u00EAn d\u01B0\u1EDBi kh\u00F4ng c\u00F2n g\u00EC \u0111\u1EC3 gi\u1EEF",
+          "optional": true,
+          "when": {
+            "kind": "visible",
+            "selector": "#ldConfirmOk"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const c = (b.innerText || \u0027\u0027).match(/\u0110an trong t\u00FAi[^0-9]*(\\d\u002B)\\s*\\//); return \u0027!Trong t\u00FAi \u0111\u00E3 c\u00F3 \u0027 \u002B (c ? c[1] : \u0027\u0111\u1EE7\u0027) \u002B \u0027 vi\u00EAn \u2014 gi\u1EEF nguy\u00EAn v\u00E0 th\u00F4i khai l\u00F4 m\u1EDBi\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c, d\u1EEBng luy\u1EC7n",
+          "optional": true,
+          "when": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capFull}}"
+          }
+        },
+        {
+          "action": "stopIf",
+          "text": "\u0111\u00E3 gi\u1EEF \u0111\u1EE7 s\u1ED1 \u0111an \u0111\u1EB7t ra \u2014 th\u00F4i khai l\u00F4 m\u1EDBi",
+          "timeoutMs": 15000,
+          "note": "d\u1EEBng TR\u01AF\u1EDAC c\u1EE5m khai l\u00F4, n\u00EAn m\u1ED7i l\u01B0\u1EE3t gh\u00E9 \u0111\u1EC1u \u0111\u1EBFm l\u1EA1i ch\u1EE9 kh\u00F4ng luy\u1EC7n th\u1EEBa",
+          "condition": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capFull}}"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
           "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const m = (b.innerText || \u0027\u0027).match(/D\u01B0\u1EE3c kh\u00ED\\s*([1-4])\\s*sao/i); return m ? \u0027!Gi\u1EEF l\u1EA1i vi\u00EAn \u0111an \u0027 \u002B m[1] \u002B \u0027 sao \u2014 m\u1EE9c ph\u00E2n gi\u1EA3i \u0111\u00E3 ch\u1ECDn kh\u00F4ng \u0111\u1EE5ng t\u1EDBi n\u00F3\u0027 : \u0027!Gi\u1EEF l\u1EA1i vi\u00EAn \u0111an \u2014 m\u1EE9c ph\u00E2n gi\u1EA3i \u0111\u00E3 ch\u1ECDn kh\u00F4ng \u0111\u1EE5ng t\u1EDBi n\u00F3\u0027; }",
           "timeoutMs": 4000,
           "note": "k\u1EC3 chuy\u1EC7n: vi\u00EAn \u0111an \u0111\u01B0\u1EE3c GI\u1EEE, kh\u00F4ng ph\u00E2n gi\u1EA3i",
@@ -4914,6 +4987,54 @@
           ],
           "allowCustom": false,
           "selectedValue": "\u00ABlu\u00F4n ph\u00E2n gi\u1EA3i\u00BB"
+        },
+        {
+          "key": "capOver",
+          "label": "Ph\u00E2n gi\u1EA3i vi\u00EAn v\u01B0\u1EE3t h\u1EA1n m\u1EE9c",
+          "choices": [
+            {
+              "value": "\u00ABkh\u00F4ng h\u1EA1n m\u1EE9c\u00BB",
+              "label": "Kh\u00F4ng h\u1EA1n m\u1EE9c"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 4/|\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 3 vi\u00EAn"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 5 vi\u00EAn"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 10 vi\u00EAn"
+            }
+          ],
+          "allowCustom": false,
+          "selectedValue": "\u00ABkh\u00F4ng h\u1EA1n m\u1EE9c\u00BB"
+        },
+        {
+          "key": "capFull",
+          "label": "Th\u00F4i khai l\u00F4 khi \u0111\u1EE7 h\u1EA1n m\u1EE9c",
+          "choices": [
+            {
+              "value": "\u00ABkh\u00F4ng h\u1EA1n m\u1EE9c\u00BB",
+              "label": "Kh\u00F4ng h\u1EA1n m\u1EE9c"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 3/|\u0111an trong t\u00FAi (ph\u1EA9m) 4/|\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "D\u1EEBng khi \u0111\u1EE7 3 vi\u00EAn"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "D\u1EEBng khi \u0111\u1EE7 5 vi\u00EAn"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "D\u1EEBng khi \u0111\u1EE7 10 vi\u00EAn"
+            }
+          ],
+          "allowCustom": false,
+          "selectedValue": "\u00ABkh\u00F4ng h\u1EA1n m\u1EE9c\u00BB"
         }
       ],
       "fallbackCooldownSeconds": 2700,
@@ -6317,6 +6438,79 @@
         },
         {
           "action": "evaluateJavaScript",
+          "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const t = b.innerText || \u0027\u0027; const s = t.match(/D\u01B0\u1EE3c kh\u00ED\\s*([1-4])\\s*sao/i); const c = t.match(/\u0110an trong t\u00FAi[^0-9]*(\\d\u002B)\\s*\\//); return \u0027!T\u00FAi \u0111\u00E3 c\u00F3 \u0027 \u002B (c ? c[1] : \u0027?\u0027) \u002B \u0027 vi\u00EAn \u2014 v\u01B0\u1EE3t h\u1EA1n m\u1EE9c gi\u1EEF, ph\u00E2n gi\u1EA3i vi\u00EAn\u0027 \u002B (s ? \u0027 \u0027 \u002B s[1] \u002B \u0027 sao\u0027 : \u0027\u0027) \u002B \u0027 \u0111ang m\u1EDF\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: vi\u00EAn \u0111an b\u1ECB ph\u00E2n gi\u1EA3i v\u00EC t\u00FAi \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c",
+          "optional": true,
+          "when": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capOver}}"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldModalDecompose",
+          "timeoutMs": 4000,
+          "note": "PH\u00C2N GI\u1EA2I vi\u00EAn v\u01B0\u1EE3t h\u1EA1n m\u1EE9c \u2014 nh\u00E1nh n\u00E0y \u0111i tr\u1ECDn c\u1EE5m x\u00E1c nh\u1EADn c\u1EE7a ri\u00EAng n\u00F3",
+          "optional": true,
+          "when": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capOver}}"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "h\u1ED9p x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i c\u1EE7a nh\u00E1nh h\u1EA1n m\u1EE9c",
+          "optional": true,
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldConfirmOk"
+          },
+          "when": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capOver}}"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldConfirmOk",
+          "timeoutMs": 4000,
+          "note": "x\u00E1c nh\u1EADn \u2014 xong c\u00FA n\u00E0y th\u00EC h\u1ED9p \u0111an \u0111\u00F3ng, nh\u00E1nh sao b\u00EAn d\u01B0\u1EDBi kh\u00F4ng c\u00F2n g\u00EC \u0111\u1EC3 gi\u1EEF",
+          "optional": true,
+          "when": {
+            "kind": "visible",
+            "selector": "#ldConfirmOk"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const c = (b.innerText || \u0027\u0027).match(/\u0110an trong t\u00FAi[^0-9]*(\\d\u002B)\\s*\\//); return \u0027!Trong t\u00FAi \u0111\u00E3 c\u00F3 \u0027 \u002B (c ? c[1] : \u0027\u0111\u1EE7\u0027) \u002B \u0027 vi\u00EAn \u2014 gi\u1EEF nguy\u00EAn v\u00E0 th\u00F4i khai l\u00F4 m\u1EDBi\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c, d\u1EEBng luy\u1EC7n",
+          "optional": true,
+          "when": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capFull}}"
+          }
+        },
+        {
+          "action": "stopIf",
+          "text": "\u0111\u00E3 gi\u1EEF \u0111\u1EE7 s\u1ED1 \u0111an \u0111\u1EB7t ra \u2014 th\u00F4i khai l\u00F4 m\u1EDBi",
+          "timeoutMs": 15000,
+          "note": "d\u1EEBng TR\u01AF\u1EDAC c\u1EE5m khai l\u00F4, n\u00EAn m\u1ED7i l\u01B0\u1EE3t gh\u00E9 \u0111\u1EC1u \u0111\u1EBFm l\u1EA1i ch\u1EE9 kh\u00F4ng luy\u1EC7n th\u1EEBa",
+          "condition": {
+            "kind": "textMatches",
+            "selector": "#ldModalBody",
+            "text": "{{capFull}}"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
           "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const m = (b.innerText || \u0027\u0027).match(/D\u01B0\u1EE3c kh\u00ED\\s*([1-4])\\s*sao/i); return m ? \u0027!Gi\u1EEF l\u1EA1i vi\u00EAn \u0111an \u0027 \u002B m[1] \u002B \u0027 sao \u2014 m\u1EE9c ph\u00E2n gi\u1EA3i \u0111\u00E3 ch\u1ECDn kh\u00F4ng \u0111\u1EE5ng t\u1EDBi n\u00F3\u0027 : \u0027!Gi\u1EEF l\u1EA1i vi\u00EAn \u0111an \u2014 m\u1EE9c ph\u00E2n gi\u1EA3i \u0111\u00E3 ch\u1ECDn kh\u00F4ng \u0111\u1EE5ng t\u1EDBi n\u00F3\u0027; }",
           "timeoutMs": 4000,
           "note": "k\u1EC3 chuy\u1EC7n: vi\u00EAn \u0111an \u0111\u01B0\u1EE3c GI\u1EEE, kh\u00F4ng ph\u00E2n gi\u1EA3i",
@@ -6652,6 +6846,54 @@
           ],
           "allowCustom": false,
           "selectedValue": "\u00ABlu\u00F4n ph\u00E2n gi\u1EA3i\u00BB"
+        },
+        {
+          "key": "capOver",
+          "label": "Ph\u00E2n gi\u1EA3i vi\u00EAn v\u01B0\u1EE3t h\u1EA1n m\u1EE9c",
+          "choices": [
+            {
+              "value": "\u00ABkh\u00F4ng h\u1EA1n m\u1EE9c\u00BB",
+              "label": "Kh\u00F4ng h\u1EA1n m\u1EE9c"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 4/|\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 3 vi\u00EAn"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 5 vi\u00EAn"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 10 vi\u00EAn"
+            }
+          ],
+          "allowCustom": false,
+          "selectedValue": "\u00ABkh\u00F4ng h\u1EA1n m\u1EE9c\u00BB"
+        },
+        {
+          "key": "capFull",
+          "label": "Th\u00F4i khai l\u00F4 khi \u0111\u1EE7 h\u1EA1n m\u1EE9c",
+          "choices": [
+            {
+              "value": "\u00ABkh\u00F4ng h\u1EA1n m\u1EE9c\u00BB",
+              "label": "Kh\u00F4ng h\u1EA1n m\u1EE9c"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 3/|\u0111an trong t\u00FAi (ph\u1EA9m) 4/|\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "D\u1EEBng khi \u0111\u1EE7 3 vi\u00EAn"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "D\u1EEBng khi \u0111\u1EE7 5 vi\u00EAn"
+            },
+            {
+              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "label": "D\u1EEBng khi \u0111\u1EE7 10 vi\u00EAn"
+            }
+          ],
+          "allowCustom": false,
+          "selectedValue": "\u00ABkh\u00F4ng h\u1EA1n m\u1EE9c\u00BB"
         }
       ],
       "fallbackCooldownSeconds": 2700,

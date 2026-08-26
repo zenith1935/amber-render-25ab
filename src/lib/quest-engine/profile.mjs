@@ -39,21 +39,27 @@ const findOption = (quest, key) => quest?.options?.find((o) => o.key === key);
  * một lượt chạy không trục xuất ai. Nên giá trị lạ được nhận NGUYÊN VĂN qua `allowCustom`,
  * và việc đó được ghi lại.
  */
-function setOption(quest, key, value, { allowFreeform = false, log } = {}) {
+function setOption(quest, key, value, { allowFreeform = false, log, describe } = {}) {
   const option = findOption(quest, key);
   if (!option) {
     log?.(`Hồ sơ không có option '${key}' của「${quest?.name}」— bỏ qua.`);
     return;
   }
 
+  // `describe` chỉ đổi LỜI KỂ, không đổi giá trị đặt vào. Có mặt vì mấy dòng này đi thẳng ra
+  // màn hình người dùng (runCycle kể chúng ở mức `warn`), mà một vài giá trị tự nhập không
+  // phải thứ để đọc: danh sách hạn mức giữ đan là gần ba nghìn ký tự máy sinh ra. Kể nguyên
+  // văn là biến bảng hoạt động thành bãi rác; giấu hẳn thì mất luôn tiếng nói của
+  // `allowCustom` — thứ ghi chú ngay trên giải thích vì sao phải có.
+  const spoken = describe ?? `'${value}'`;
   const known = (option.choices ?? []).some((c) => c.value === value);
   if (!known) {
     if (!allowFreeform) {
-      log?.(`Giá trị '${value}' không có trong option '${key}' của「${quest.name}」— giữ mặc định '${option.selectedValue}'.`);
+      log?.(`Giá trị ${spoken} không có trong option '${key}' của「${quest.name}」— giữ mặc định '${option.selectedValue}'.`);
       return;
     }
     option.allowCustom = true;
-    log?.(`Option '${key}' của「${quest.name}」nhận giá trị tự nhập: '${value}'.`);
+    log?.(`Option '${key}' của「${quest.name}」nhận giá trị tự nhập: ${spoken}.`);
   }
 
   option.selectedValue = value;
@@ -71,6 +77,38 @@ function keepLevelOf(choiceValue) {
   if (choiceValue.includes("«")) return 0; // «luôn phân giải»
   const stars = [...choiceValue.matchAll(/(\d+)\s*sao/g)].map((m) => Number(m[1]));
   return stars.length > 0 ? Math.min(...stars) : 1; // không có số nào = "dược khí" = giữ tất cả
+}
+
+/**
+ * Trần khi rải danh sách「đan trong túi」. Bản chụp DOM ngày 12/08/2026 cho thấy sức chứa là
+ * `x/10 viên` mỗi phẩm, nên 30 đã rộng gấp ba — và một cái trần là bắt buộc, vì phép so của
+ * `conditionProbe` là SO CHUỖI chứ không phải so số, tức mỗi con số hợp lệ phải được viết ra.
+ *
+ * Túi vượt qua trần này thì hạn mức thôi nhận ra — và đó là phía AN TOÀN có chủ ý: cửa không
+ * khớp nghĩa là GIỮ NGUYÊN đan, chứ không phải phân giải nhầm. Phải trùng với `BagCountCeiling`
+ * bên `DefaultQuestProfile.cs`, và phải lớn hơn trần của `keepCap` trong `configs.ts`.
+ */
+const BAG_COUNT_CEILING = 30;
+
+/**
+ * Danh sách chặn cho câu hỏi「trong túi đang có TỪ `from` viên trở lên」.
+ *
+ * Hộp thông tin viên đan viết số ấy thành `Đan trong túi (phẩm)` / `5/10 viên` — hai khối `dt`
+ * và `dd` liền nhau, nên `innerText` gộp lại thành một chuỗi mà `norm()` bỏ dấu rồi ghép bằng
+ * dấu cách. Mỗi mảnh dưới đây vì thế kết thúc bằng ĐÚNG dấu `/`, và cái dấu ấy làm cả phép so
+ * thành chính xác chứ không phải gần đúng: thiếu nó thì mảnh「… 1」sẽ khớp luôn cả「… 11/10」
+ * (so chuỗi là so chứa, không có ranh giới từ), tức một túi 11 viên bị đọc thành 1 viên.
+ *
+ * Rải từng số thay vì so số vì cửa chặn của engine chỉ biết `textMatches` trên một danh sách
+ * `a|b|c`. Đổi lại, cửa ấy đã được đo bằng Chromium thật (`verify:luyen-dan-stars`) và không
+ * phải thêm một hình dạng điều kiện mới nào vào hồ sơ.
+ */
+function bagCountAtLeast(from) {
+  const parts = [];
+  for (let n = Math.max(1, from); n <= BAG_COUNT_CEILING; n += 1) {
+    parts.push(`đan trong túi (phẩm) ${n}/`);
+  }
+  return parts.join("|");
 }
 
 /**
@@ -207,6 +245,39 @@ export function profileForConfig(config, say, marksToday) {
         setOption(luyenDan, "decompose", match.value, { log });
       } else {
         log?.(`Không có mức phân giải nào ứng với "giữ từ ${keepFrom} sao" — giữ mặc định.`);
+      }
+
+      // HẠN MỨC GIỮ ĐAN. Hai chế độ là hai option KHÁC NHAU trong hồ sơ, và mỗi lượt dịch chỉ
+      // thắp lên đúng một cái: `capOver` mở nhánh phân giải viên dư, `capFull` mở nhánh dừng
+      // khai lô. Cái không được thắp giữ nguyên giá trị mặc định «không hạn mức» — một chuỗi
+      // không lời văn nào của trang chứa nổi, nên nhánh của nó câm hẳn. Cùng mẹo với
+      // «luôn phân giải» ở trên: một danh sách chặn tắt hẳn bằng cách không khớp gì cả.
+      //
+      // `keepFrom === 0` là「Phân giải tất cả」— không giữ viên nào thì hạn mức giữ đan không
+      // có gì để đếm. Form đã khoá công tắc ở mức đó; đây là lớp gác thứ hai cho những ngọc
+      // giản lưu từ trước, và cho cả đường API.
+      const capOn = ld.keepCapEnabled === true && keepFrom !== 0;
+      if (capOn) {
+        const cap = Number(ld.keepCap);
+        if (!Number.isInteger(cap) || cap < 1) {
+          log?.(`Hạn mức giữ đan '${ld.keepCap}' không phải một số viên hợp lệ — bỏ qua hạn mức.`);
+        } else {
+          // stop  → dừng NGAY KHI đủ hạn mức, nên đếm từ chính `cap`.
+          // decompose → chỉ đụng tới viên VƯỢT hạn mức, nên đếm từ `cap + 1`.
+          const stop = ld.keepCapMode === "stop";
+          const list = bagCountAtLeast(stop ? cap : cap + 1);
+          if (list) {
+            setOption(luyenDan, stop ? "capFull" : "capOver", list, {
+              allowFreeform: true,
+              log,
+              describe: stop
+                ? `hạn mức giữ đan ${cap} viên — đủ thì thôi khai lô`
+                : `hạn mức giữ đan ${cap} viên — dư thì phân giải`,
+            });
+          } else {
+            log?.(`Hạn mức giữ đan ${cap} viên vượt trần ${BAG_COUNT_CEILING} — bỏ qua hạn mức.`);
+          }
+        }
       }
     }
   }
