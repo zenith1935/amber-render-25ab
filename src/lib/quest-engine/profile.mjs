@@ -31,6 +31,20 @@ const findQuests = (profile, name) => profile.quests.filter((q) => q.name === na
 const findOption = (quest, key) => quest?.options?.find((o) => o.key === key);
 
 /**
+ * Tên NGƯỜI ĐỌC của một mục cài đặt, và của một lựa chọn.
+ *
+ * Hồ sơ đã mang sẵn `label` cho mọi option lẫn mọi choice — thứ chính giao diện Ngọc Giản
+ * đang hiện. Những câu dưới đây từng gọi option bằng KHOÁ nội bộ (`kickIdle`, `minBonus`),
+ * mà khoá ấy chỉ có nghĩa với người viết mã: người dùng đọc「Option 'kickIdle'」thì không
+ * biết mình vừa đặt cái gì. Nhãn có sẵn ngay trong dữ liệu, chỉ là chưa ai dùng tới.
+ *
+ * Rơi về khoá (có nháy) khi thiếu nhãn: thà lộ khoá còn hơn để câu cụt mất chủ ngữ.
+ */
+const tenMuc = (option, key) => option?.label?.trim() || `'${key}'`;
+const tenLuaChon = (option, value) =>
+  (option?.choices ?? []).find((c) => c.value === value)?.label?.trim() || value;
+
+/**
  * Đặt giá trị cho một option, và nói thật khi giá trị không nằm trong danh sách.
  *
  * Đây là chỗ dễ mất tiếng nhất trong cả lớp dịch: `buildOptionValues` của engine, gặp một
@@ -42,7 +56,7 @@ const findOption = (quest, key) => quest?.options?.find((o) => o.key === key);
 function setOption(quest, key, value, { allowFreeform = false, log, describe } = {}) {
   const option = findOption(quest, key);
   if (!option) {
-    log?.(`Hồ sơ không có option '${key}' của「${quest?.name}」— bỏ qua.`);
+    log?.(`「${quest?.name}」· không có mục cài đặt '${key}' trong gói nhiệm vụ này — bỏ qua mục ấy.`);
     return;
   }
 
@@ -55,11 +69,21 @@ function setOption(quest, key, value, { allowFreeform = false, log, describe } =
   const known = (option.choices ?? []).some((c) => c.value === value);
   if (!known) {
     if (!allowFreeform) {
-      log?.(`Giá trị ${spoken} không có trong option '${key}' của「${quest.name}」— giữ mặc định '${option.selectedValue}'.`);
+      log?.(
+        `「${quest.name}」· ${tenMuc(option, key)}: không dùng được giá trị ${spoken}, ` +
+          `giữ nguyên mức "${tenLuaChon(option, option.selectedValue)}".`,
+      );
       return;
     }
     option.allowCustom = true;
-    log?.(`Option '${key}' của「${quest.name}」nhận giá trị tự nhập: ${spoken}.`);
+    // Giá trị RỖNG là「chưa đặt」, không phải「đạo hữu tự đặt」— nên nhận thì vẫn nhận, nhưng
+    // đừng kể. Đo 25/08/2026: `mineName` của Khoáng Mạch mặc định rỗng, nên MỌI người dùng chỉ
+    // bật nhiệm vụ rồi không gõ gì cũng ăn một dòng vàng「dùng giá trị đạo hữu tự đặt ''」—
+    // vừa sai nghĩa vừa sai màu. Rỗng ở đây có nghĩa riêng của nó (tên mỏ rỗng = đào tiếp mỏ
+    // đang ở), và cái nghĩa ấy là MẶC ĐỊNH, tức không phải tin.
+    if (String(value).trim().length > 0) {
+      log?.(`「${quest.name}」· ${tenMuc(option, key)}: dùng giá trị đạo hữu tự đặt ${spoken}.`);
+    }
   }
 
   option.selectedValue = value;
@@ -170,7 +194,8 @@ export function profileForConfig(config, say, marksToday) {
    * Từ schema 45 mỗi tên nhiệm vụ là một CẶP flow (VIP + thường) dùng chung cấu hình, nên mọi
    * vòng dịch bên dưới chạy hai lượt và `setOption` kể lại y hệt hai lần. Nhật ký của đàn vì
    * thế mang từng đôi một: đo trên bản ghi thật 19/08/2026 là 414 dòng thừa trong ba ngày,
-   * kiểu「Option 'kickIdle' của「Mê Cung」nhận giá trị tự nhập: '20'.」cách nhau 156ms.
+   * kiểu「「Mê Cung」· Trục xuất nếu không sẵn sàng sau (giây): dùng giá trị đạo hữu tự đặt
+   * '20'.」cách nhau 156ms.
    *
    * Lọc được ở đây mà không mất mát gì, vì TÊN NHIỆM VỤ nằm sẵn trong mọi câu: trùng chữ
    * nghĩa là trùng cả nhiệm vụ lẫn option, tức đúng một sự thật được nói hai lần. Đặt ở cửa
