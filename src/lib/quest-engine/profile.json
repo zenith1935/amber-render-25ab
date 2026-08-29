@@ -1,6 +1,6 @@
 {
   "name": "Ho\u1EA1t \u0111\u1ED9ng h\u00E0ng ng\u00E0y (m\u1EB7c \u0111\u1ECBnh)",
-  "schemaVersion": 76,
+  "schemaVersion": 77,
   "dailyQuestPath": "/nhiem-vu-hang-ngay",
   "quests": [
     {
@@ -4085,6 +4085,23 @@
           }
         },
         {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const MARK = \u0027jvz-mc-beq\u0027; const b = document.body; if (b) b.classList.remove(MARK); const stop = document.querySelector(\u0027#btn-tro-chien-ngung\u0027); const go = document.querySelector(\u0027#btn-tro-chien-vao\u0027); if (!stop || !go) return \u0027tr\u1EE3 chi\u1EBFn: trang kh\u00F4ng c\u00F3 kh\u1ED1i n\u00E0y \u2014 b\u1ECF qua\u0027; const shown = (el) =\u003E { const r = el.getBoundingClientRect(); return r.width \u003E 0 || r.height \u003E 0; }; if (!shown(stop) || shown(go)) return \u0027tr\u1EE3 chi\u1EBFn: \u0111ang \u1EDF ngo\u00E0i, m\u1EDF ph\u00F2ng nh\u01B0 th\u01B0\u1EDDng\u0027; if (b) b.classList.add(MARK); return \u0027tr\u1EE3 chi\u1EBFn: \u0111ang b\u1EBF quan \u2014 trang c\u1EA5m L\u1EADp \u0110\u1ED9i, d\u1EEBng l\u01B0\u1EE3t n\u00E0y\u0027; }",
+          "timeoutMs": 4000,
+          "note": "\u0111o xem t\u00E0i kho\u1EA3n c\u00F3 \u0111ang b\u1EBF quan Tr\u1EE3 Chi\u1EBFn kh\u00F4ng",
+          "optional": true
+        },
+        {
+          "action": "stopIf",
+          "text": "\u0111ang b\u1EBF quan Tr\u1EE3 Chi\u1EBFn \u2014 kh\u00F4ng l\u1EADp \u0111\u01B0\u1EE3c ph\u00F2ng, gh\u00E9 l\u1EA1i sau",
+          "timeoutMs": 15000,
+          "note": "\u0111ang b\u1EBF quan Tr\u1EE3 Chi\u1EBFn th\u00EC trang c\u1EA5m L\u1EADp \u0110\u1ED9i/V\u00E0o Ph\u00F2ng \u2014 d\u1EEBng \u00EAm thay v\u00EC ch\u1EBFt \u1EDF b\u01B0\u1EDBc ch\u1EDD form \u0111\u1ED9 kh\u00F3",
+          "condition": {
+            "kind": "visible",
+            "selector": "body.jvz-mc-beq"
+          }
+        },
+        {
           "action": "waitForSelector",
           "selector": ".mc-ht-daily-text",
           "timeoutMs": 8000,
@@ -4414,6 +4431,23 @@
               "timeoutMs": 4000,
               "note": "k\u1EC3 l\u1EA1i l\u01B0\u1EE3t v\u1EEBa \u0111\u00E1nh b\u1EB1ng s\u1ED1 c\u1EE7a m\u00E1y ch\u1EE7 (t\u1EEB ph\u1EA3n h\u1ED3i r\u01B0\u01A1ng) r\u1ED3i c\u1EAFm c\u1EDD n\u1EBFu \u0111\u00E3 \u0111\u1EA7y tr\u1EA7n",
               "optional": true
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 20000,
+              "note": "ch\u1EDD h\u1ED9p \u0022CHINH PH\u1EE4C M\u00CA CUNG\u0022 t\u1EF1 t\u1EAFt \u2014 b\u1EA3n ghi 29/08 n\u00F3 t\u1EAFt sau ~9 gi\u00E2y; l\u01B0\u1EE3t thua ho\u1EB7c l\u01B0\u1EE3t kh\u00F4ng \u0111\u00E1nh th\u00EC h\u1ED9p v\u1ED1n \u0111\u00E3 t\u1EAFt n\u00EAn qua ngay",
+              "optional": true,
+              "condition": {
+                "kind": "hidden",
+                "selector": "#modal-b5-reward"
+              }
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const el = document.querySelector(\u0027#modal-b5-reward\u0027); if (!el) return \u0027\u0027; const r = el.getBoundingClientRect ? el.getBoundingClientRect() : null; if (!r || (r.width === 0 \u0026\u0026 r.height === 0)) return \u0027\u0027; el.classList.add(\u0027hidden\u0027); return \u0027r\u01B0\u01A1ng: h\u1ED9p th\u1EAFng tr\u1EADn kh\u00F4ng t\u1EF1 t\u1EAFt, \u0111\u00E3 \u0111\u00F3ng h\u1ED9 \u0111\u1EC3 v\u00F2ng sau b\u1EA5m \u0111\u01B0\u1EE3c B\u1EAET \u0110\u1EA6U\u0027; }",
+              "timeoutMs": 4000,
+              "note": "site kh\u00F4ng t\u1EF1 t\u1EAFt th\u00EC \u0111\u00F3ng h\u1ED9 b\u1EB1ng ch\u00EDnh class .hidden c\u1EE7a trang \u2014 kh\u00F4ng b\u1EA5m \u0022Quay V\u1EC1 S\u1EA3nh\u0022 v\u00EC n\u00FAt \u1EA5y n\u1EA1p l\u1EA1i trang v\u00E0 cu\u1ED1n theo c\u1EDD \u0111\u1EA7y tr\u1EA7n",
+              "optional": true
             }
           ],
           "until": {
@@ -4451,15 +4485,15 @@
           "choices": [
             {
               "value": "is-normal",
-              "label": "Th\u01B0\u1EDDng"
+              "label": "Th\u01B0\u1EDDng \u2014 \u0111i tr\u01B0\u1EDBc l\u00E0 m\u1EA5t ph\u1EA7n th\u01B0\u1EDFng th\u00EAm c\u1EE7a Kh\u00F3/\u00C1c M\u1ED9ng h\u00F4m nay"
             },
             {
               "value": "is-hard",
-              "label": "Kh\u00F3"
+              "label": "Kh\u00F3 \u2014 c\u00F3 th\u01B0\u1EDFng th\u00EAm, v\u1EDBi \u0111i\u1EC1u ki\u1EC7n h\u00F4m nay ch\u01B0a \u0111i Th\u01B0\u1EDDng"
             },
             {
               "value": "is-nightmare",
-              "label": "\u00C1c M\u1ED9ng"
+              "label": "\u00C1c M\u1ED9ng \u2014 th\u01B0\u1EDFng th\u00EAm cao nh\u1EA5t, v\u1EDBi \u0111i\u1EC1u ki\u1EC7n h\u00F4m nay ch\u01B0a \u0111i Th\u01B0\u1EDDng/Kh\u00F3"
             }
           ],
           "allowCustom": false,
@@ -4569,7 +4603,7 @@
       "fallbackCooldownSeconds": 3600,
       "requiresVip": true,
       "order": 110,
-      "notes": "\u0110\u00E1nh M\u00EA Cung theo \u0111\u1ED9i 5 ng\u01B0\u1EDDi th\u1EADt l\u1EA5y huy\u1EC1n tinh m\u1ED7i ng\u00E0y."
+      "notes": "\u0110\u00E1nh M\u00EA Cung theo \u0111\u1ED9i 5 ng\u01B0\u1EDDi th\u1EADt l\u1EA5y huy\u1EC1n tinh m\u1ED7i ng\u00E0y. M\u1ED7i \u1EA3i v\u00E0 r\u01B0\u01A1ng \u1EA3i 5 ch\u1EC9 th\u01B0\u1EDFng M\u1ED8T l\u1EA7n trong ng\u00E0y, v\u00E0 \u0111i Th\u01B0\u1EDDng tr\u01B0\u1EDBc l\u00E0 m\u1EA5t ph\u1EA7n th\u01B0\u1EDFng th\u00EAm c\u1EE7a Kh\u00F3/\u00C1c M\u1ED9ng \u2014 ch\u1ECDn \u0111\u1ED9 kh\u00F3 tr\u01B0\u1EDBc l\u01B0\u1EE3t \u0111\u00E1nh \u0111\u1EA7u ti\u00EAn c\u1EE7a ng\u00E0y."
     },
     {
       "id": "luyen-dan-duong",
@@ -5944,6 +5978,23 @@
           }
         },
         {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const MARK = \u0027jvz-mc-beq\u0027; const b = document.body; if (b) b.classList.remove(MARK); const stop = document.querySelector(\u0027#btn-tro-chien-ngung\u0027); const go = document.querySelector(\u0027#btn-tro-chien-vao\u0027); if (!stop || !go) return \u0027tr\u1EE3 chi\u1EBFn: trang kh\u00F4ng c\u00F3 kh\u1ED1i n\u00E0y \u2014 b\u1ECF qua\u0027; const shown = (el) =\u003E { const r = el.getBoundingClientRect(); return r.width \u003E 0 || r.height \u003E 0; }; if (!shown(stop) || shown(go)) return \u0027tr\u1EE3 chi\u1EBFn: \u0111ang \u1EDF ngo\u00E0i, m\u1EDF ph\u00F2ng nh\u01B0 th\u01B0\u1EDDng\u0027; if (b) b.classList.add(MARK); return \u0027tr\u1EE3 chi\u1EBFn: \u0111ang b\u1EBF quan \u2014 trang c\u1EA5m L\u1EADp \u0110\u1ED9i, d\u1EEBng l\u01B0\u1EE3t n\u00E0y\u0027; }",
+          "timeoutMs": 4000,
+          "note": "\u0111o xem t\u00E0i kho\u1EA3n c\u00F3 \u0111ang b\u1EBF quan Tr\u1EE3 Chi\u1EBFn kh\u00F4ng",
+          "optional": true
+        },
+        {
+          "action": "stopIf",
+          "text": "\u0111ang b\u1EBF quan Tr\u1EE3 Chi\u1EBFn \u2014 kh\u00F4ng l\u1EADp \u0111\u01B0\u1EE3c ph\u00F2ng, gh\u00E9 l\u1EA1i sau",
+          "timeoutMs": 15000,
+          "note": "\u0111ang b\u1EBF quan Tr\u1EE3 Chi\u1EBFn th\u00EC trang c\u1EA5m L\u1EADp \u0110\u1ED9i/V\u00E0o Ph\u00F2ng \u2014 d\u1EEBng \u00EAm thay v\u00EC ch\u1EBFt \u1EDF b\u01B0\u1EDBc ch\u1EDD form \u0111\u1ED9 kh\u00F3",
+          "condition": {
+            "kind": "visible",
+            "selector": "body.jvz-mc-beq"
+          }
+        },
+        {
           "action": "waitForSelector",
           "selector": ".mc-ht-daily-text",
           "timeoutMs": 8000,
@@ -6273,6 +6324,23 @@
               "timeoutMs": 4000,
               "note": "k\u1EC3 l\u1EA1i l\u01B0\u1EE3t v\u1EEBa \u0111\u00E1nh b\u1EB1ng s\u1ED1 c\u1EE7a m\u00E1y ch\u1EE7 (t\u1EEB ph\u1EA3n h\u1ED3i r\u01B0\u01A1ng) r\u1ED3i c\u1EAFm c\u1EDD n\u1EBFu \u0111\u00E3 \u0111\u1EA7y tr\u1EA7n",
               "optional": true
+            },
+            {
+              "action": "waitForCondition",
+              "timeoutMs": 20000,
+              "note": "ch\u1EDD h\u1ED9p \u0022CHINH PH\u1EE4C M\u00CA CUNG\u0022 t\u1EF1 t\u1EAFt \u2014 b\u1EA3n ghi 29/08 n\u00F3 t\u1EAFt sau ~9 gi\u00E2y; l\u01B0\u1EE3t thua ho\u1EB7c l\u01B0\u1EE3t kh\u00F4ng \u0111\u00E1nh th\u00EC h\u1ED9p v\u1ED1n \u0111\u00E3 t\u1EAFt n\u00EAn qua ngay",
+              "optional": true,
+              "condition": {
+                "kind": "hidden",
+                "selector": "#modal-b5-reward"
+              }
+            },
+            {
+              "action": "evaluateJavaScript",
+              "script": "() =\u003E { const el = document.querySelector(\u0027#modal-b5-reward\u0027); if (!el) return \u0027\u0027; const r = el.getBoundingClientRect ? el.getBoundingClientRect() : null; if (!r || (r.width === 0 \u0026\u0026 r.height === 0)) return \u0027\u0027; el.classList.add(\u0027hidden\u0027); return \u0027r\u01B0\u01A1ng: h\u1ED9p th\u1EAFng tr\u1EADn kh\u00F4ng t\u1EF1 t\u1EAFt, \u0111\u00E3 \u0111\u00F3ng h\u1ED9 \u0111\u1EC3 v\u00F2ng sau b\u1EA5m \u0111\u01B0\u1EE3c B\u1EAET \u0110\u1EA6U\u0027; }",
+              "timeoutMs": 4000,
+              "note": "site kh\u00F4ng t\u1EF1 t\u1EAFt th\u00EC \u0111\u00F3ng h\u1ED9 b\u1EB1ng ch\u00EDnh class .hidden c\u1EE7a trang \u2014 kh\u00F4ng b\u1EA5m \u0022Quay V\u1EC1 S\u1EA3nh\u0022 v\u00EC n\u00FAt \u1EA5y n\u1EA1p l\u1EA1i trang v\u00E0 cu\u1ED1n theo c\u1EDD \u0111\u1EA7y tr\u1EA7n",
+              "optional": true
             }
           ],
           "until": {
@@ -6310,15 +6378,15 @@
           "choices": [
             {
               "value": "is-normal",
-              "label": "Th\u01B0\u1EDDng"
+              "label": "Th\u01B0\u1EDDng \u2014 \u0111i tr\u01B0\u1EDBc l\u00E0 m\u1EA5t ph\u1EA7n th\u01B0\u1EDFng th\u00EAm c\u1EE7a Kh\u00F3/\u00C1c M\u1ED9ng h\u00F4m nay"
             },
             {
               "value": "is-hard",
-              "label": "Kh\u00F3"
+              "label": "Kh\u00F3 \u2014 c\u00F3 th\u01B0\u1EDFng th\u00EAm, v\u1EDBi \u0111i\u1EC1u ki\u1EC7n h\u00F4m nay ch\u01B0a \u0111i Th\u01B0\u1EDDng"
             },
             {
               "value": "is-nightmare",
-              "label": "\u00C1c M\u1ED9ng"
+              "label": "\u00C1c M\u1ED9ng \u2014 th\u01B0\u1EDFng th\u00EAm cao nh\u1EA5t, v\u1EDBi \u0111i\u1EC1u ki\u1EC7n h\u00F4m nay ch\u01B0a \u0111i Th\u01B0\u1EDDng/Kh\u00F3"
             }
           ],
           "allowCustom": false,
@@ -6428,7 +6496,7 @@
       "fallbackCooldownSeconds": 3600,
       "requiresVip": false,
       "order": 110,
-      "notes": "\u0110\u00E1nh M\u00EA Cung theo \u0111\u1ED9i 5 ng\u01B0\u1EDDi th\u1EADt l\u1EA5y huy\u1EC1n tinh m\u1ED7i ng\u00E0y."
+      "notes": "\u0110\u00E1nh M\u00EA Cung theo \u0111\u1ED9i 5 ng\u01B0\u1EDDi th\u1EADt l\u1EA5y huy\u1EC1n tinh m\u1ED7i ng\u00E0y. M\u1ED7i \u1EA3i v\u00E0 r\u01B0\u01A1ng \u1EA3i 5 ch\u1EC9 th\u01B0\u1EDFng M\u1ED8T l\u1EA7n trong ng\u00E0y, v\u00E0 \u0111i Th\u01B0\u1EDDng tr\u01B0\u1EDBc l\u00E0 m\u1EA5t ph\u1EA7n th\u01B0\u1EDFng th\u00EAm c\u1EE7a Kh\u00F3/\u00C1c M\u1ED9ng \u2014 ch\u1ECDn \u0111\u1ED9 kh\u00F3 tr\u01B0\u1EDBc l\u01B0\u1EE3t \u0111\u00E1nh \u0111\u1EA7u ti\u00EAn c\u1EE7a ng\u00E0y."
     },
     {
       "id": "luyen-dan-duong-thuong",
