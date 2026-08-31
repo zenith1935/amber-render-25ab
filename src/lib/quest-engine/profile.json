@@ -1,6 +1,6 @@
 {
   "name": "Ho\u1EA1t \u0111\u1ED9ng h\u00E0ng ng\u00E0y (m\u1EB7c \u0111\u1ECBnh)",
-  "schemaVersion": 78,
+  "schemaVersion": 79,
   "dailyQuestPath": "/nhiem-vu-hang-ngay",
   "quests": [
     {
@@ -4251,11 +4251,11 @@
         {
           "action": "repeat",
           "timeoutMs": 15000,
-          "note": "m\u1ED7i v\u00F2ng l\u00E0 m\u1ED9t l\u01B0\u1EE3t ch\u1EA1y 5 \u1EA3i; d\u1EEBng khi \u0111\u1EA7y tr\u1EA7n huy\u1EC1n tinh ng\u00E0y (b\u01B0\u1EDBc \u0111\u1ECDc tr\u1EA7n cu\u1ED1i th\u00E2n v\u00F2ng c\u1EAFm c\u1EDD) ho\u1EB7c h\u1EBFt 35 ph\u00FAt. Sau m\u1ED7i l\u01B0\u1EE3t (th\u1EAFng hay b\u1EA1i) site t\u1EF1 reload v\u1EC1 ph\u00F2ng, c\u1EA3 \u0111\u1ED9i v\u1EABn \u1EDF nguy\u00EAn \u0111\u00F3 (b\u1EA3n ghi 20:10). Tr\u1EA7n 18 v\u00F2ng ch\u1EC9 l\u00E0 l\u01B0\u1EDBi ch\u1EB7n v\u00F2ng l\u1EB7p \u0111i\u00EAn, KH\u00D4NG ph\u1EA3i h\u1EA1n m\u1EE9c \u2014 th\u1EDDi gian m\u1EDBi l\u00E0 h\u1EA1n m\u1EE9c.",
+          "note": "m\u1ED7i v\u00F2ng l\u00E0 m\u1ED9t l\u01B0\u1EE3t ch\u1EA1y 5 \u1EA3i; d\u1EEBng khi \u0111\u1EA7y tr\u1EA7n huy\u1EC1n tinh ng\u00E0y (b\u01B0\u1EDBc \u0111\u1ECDc tr\u1EA7n cu\u1ED1i th\u00E2n v\u00F2ng c\u1EAFm c\u1EDD) ho\u1EB7c h\u1EBFt 35 ph\u00FAt. Sau m\u1ED7i l\u01B0\u1EE3t (th\u1EAFng hay b\u1EA1i) site t\u1EF1 reload v\u1EC1 ph\u00F2ng, c\u1EA3 \u0111\u1ED9i v\u1EABn \u1EDF nguy\u00EAn \u0111\u00F3 (b\u1EA3n ghi 20:10). Tr\u1EA7n 18 v\u00F2ng ch\u1EC9 l\u00E0 l\u01B0\u1EDBi ch\u1EB7n v\u00F2ng l\u1EB7p \u0111i\u00EAn, KH\u00D4NG ph\u1EA3i h\u1EA1n m\u1EE9c \u2014 th\u1EDDi gian m\u1EDBi l\u00E0 h\u1EA1n m\u1EE9c. C\u00F2n m\u1ED9t l\u1ED1i v\u1EC1 n\u1EEFa: ph\u00F2ng b\u1ECB xo\u00E1 gi\u1EEFa l\u01B0\u1EE3t \u0111\u00E1nh th\u00EC kh\u00F4ng hi\u1EC7p n\u00E0o sau \u0111\u00F3 l\u1EADp \u0111\u01B0\u1EE3c \u0111\u1ED9i, n\u00EAn b\u01B0\u1EDBc d\u00F2 cu\u1ED1i v\u00F2ng l\u00E1i c\u1EAFm c\u1EDD v\u00E0 l\u01B0\u1EE3t gh\u00E9 k\u1EBFt th\u00FAc ngay \u0111\u1EC3 l\u01B0\u1EE3t sau l\u1EADp ph\u00F2ng m\u1EDBi, thay v\u00EC \u0111\u1EE9ng g\u1ECDi ng\u01B0\u1EDDi v\u00E0o m\u1ED9t c\u0103n ph\u00F2ng \u0111\u00E3 m\u1EA5t.",
           "steps": [
             {
               "action": "evaluateJavaScript",
-              "script": "() =\u003E { const KEY = \u0027__jvz_mc_chest\u0027; try { sessionStorage.removeItem(KEY); } catch (e) { } const S0 = window.__jvz = window.__jvz || { roster: null, told: [] }; S0.battle = false; S0.since = {}; S0.told = []; if (window.__jvzChestHook) return \u0027\u0027; const orig = window.fetch; if (typeof orig !== \u0027function\u0027) return \u0027r\u01B0\u01A1ng: trang kh\u00F4ng d\u00F9ng fetch, kh\u00F4ng g\u1EAFn \u0111\u01B0\u1EE3c tai nghe\u0027; window.__jvzChestHook = true; window.fetch = function (input) { const out = orig.apply(this, arguments); try { const url = String((input \u0026\u0026 input.url) ? input.url : (input || \u0027\u0027)); if (url.indexOf(\u0027claim-boss5-chest\u0027) \u003C 0) return out; return out.then((res) =\u003E { try { res.clone().json().then((d) =\u003E { const r = d \u0026\u0026 d.reward; if (!r) return; sessionStorage.setItem(KEY, JSON.stringify({ total: Number(r.huyen_tinh_daily_total) || 0, cap: Number(r.huyen_tinh_daily_cap) || 0, gain: Number(r.huyen_tinh) || 0, already: !!r.already_got_items, at: Date.now() })); }).catch(() =\u003E {}); } catch (e) { } return res; }); } catch (e) { return out; } }; return \u0027r\u01B0\u01A1ng: \u0111\u00E3 g\u1EAFn tai nghe ph\u1EA3n h\u1ED3i\u0027; }",
+              "script": "() =\u003E { const KEY = \u0027__jvz_mc_chest\u0027; try { sessionStorage.removeItem(KEY); } catch (e) { } const S0 = window.__jvz = window.__jvz || { roster: null, told: [] }; S0.battle = false; S0.since = {}; S0.told = []; S0.watch = \u0027\u0027; S0.quiet = 0; S0.out = 0; if (document.body) document.body.classList.remove(\u0027jvz-mc-round-over\u0027); if (window.__jvzChestHook) return \u0027\u0027; const orig = window.fetch; if (typeof orig !== \u0027function\u0027) return \u0027r\u01B0\u01A1ng: trang kh\u00F4ng d\u00F9ng fetch, kh\u00F4ng g\u1EAFn \u0111\u01B0\u1EE3c tai nghe\u0027; window.__jvzChestHook = true; window.fetch = function (input) { const out = orig.apply(this, arguments); try { const url = String((input \u0026\u0026 input.url) ? input.url : (input || \u0027\u0027)); if (url.indexOf(\u0027claim-boss5-chest\u0027) \u003C 0) return out; return out.then((res) =\u003E { try { res.clone().json().then((d) =\u003E { const r = d \u0026\u0026 d.reward; if (!r) return; sessionStorage.setItem(KEY, JSON.stringify({ total: Number(r.huyen_tinh_daily_total) || 0, cap: Number(r.huyen_tinh_daily_cap) || 0, gain: Number(r.huyen_tinh) || 0, already: !!r.already_got_items, at: Date.now() })); }).catch(() =\u003E {}); } catch (e) { } return res; }); } catch (e) { return out; } }; return \u0027r\u01B0\u01A1ng: \u0111\u00E3 g\u1EAFn tai nghe ph\u1EA3n h\u1ED3i\u0027; }",
               "timeoutMs": 4000,
               "note": "g\u1EAFn tai nghe ph\u1EA3n h\u1ED3i r\u01B0\u01A1ng \u2014 xong l\u01B0\u1EE3t l\u00E0 trang t\u1EF1 n\u1EA1p l\u1EA1i n\u00EAn hi\u1EC7p n\u00E0o c\u0169ng ph\u1EA3i g\u1EAFn l\u1EA1i",
               "optional": true
@@ -4263,7 +4263,7 @@
             {
               "action": "repeat",
               "timeoutMs": 15000,
-              "note": "ch\u1EDD ph\u00F2ng \u0111\u1EE7 5 s\u1EB5n s\u00E0ng, m\u1ED7i nh\u1ECBp ~20s c\u00F3 k\u00E8m l\u01B0\u1EE3t x\u00E9t tr\u1EE5c xu\u1EA5t",
+              "note": "ch\u1EDD ph\u00F2ng \u0111\u1EE7 s\u1ED1 s\u1EB5n s\u00E0ng \u0111\u00E3 \u0111\u1EB7t, m\u1ED7i nh\u1ECBp ~20s c\u00F3 k\u00E8m l\u01B0\u1EE3t x\u00E9t tr\u1EE5c xu\u1EA5t",
               "steps": [
                 {
                   "action": "evaluateJavaScript",
@@ -4297,19 +4297,19 @@
                 {
                   "action": "waitForCondition",
                   "timeoutMs": 20000,
-                  "note": "nh\u1ECBp ch\u1EDD ~20s \u2014 tho\u00E1t s\u1EDBm ngay khi #lobby-ready \u0111\u1EA1t 5",
+                  "note": "nh\u1ECBp ch\u1EDD ~20s \u2014 tho\u00E1t s\u1EDBm ngay khi #lobby-ready \u0111\u1EA1t ng\u01B0\u1EE1ng",
                   "optional": true,
                   "condition": {
                     "kind": "textMatches",
                     "selector": "#lobby-ready",
-                    "text": "5"
+                    "text": "{{minPlayers}}"
                   }
                 }
               ],
               "until": {
                 "kind": "textMatches",
                 "selector": "#lobby-ready",
-                "text": "5"
+                "text": "{{minPlayers}}"
               },
               "maxIterations": 15,
               "maxSeconds": 300
@@ -4351,24 +4351,24 @@
                 {
                   "action": "waitForCondition",
                   "timeoutMs": 15000,
-                  "note": "\u0111\u1EE3i s\u1ED1 s\u1EB5n s\u00E0ng v\u1EC1 l\u1EA1i 5 tr\u01B0\u1EDBc m\u1ED7i nh\u1ECBp b\u1EA5m",
+                  "note": "\u0111\u1EE3i s\u1ED1 s\u1EB5n s\u00E0ng v\u1EC1 l\u1EA1i ng\u01B0\u1EE1ng tr\u01B0\u1EDBc m\u1ED7i nh\u1ECBp b\u1EA5m",
                   "optional": true,
                   "condition": {
                     "kind": "textMatches",
                     "selector": "#lobby-ready",
-                    "text": "5"
+                    "text": "{{minPlayers}}"
                   }
                 },
                 {
                   "action": "click",
                   "selector": "#btn-start:not(.blocked-start)",
                   "timeoutMs": 6000,
-                  "note": "B\u1EAET \u0110\u1EA6U \u2014 ch\u1EC9 khi \u0111\u1EE7 5 s\u1EB5n s\u00E0ng V\u00C0 n\u00FAt kh\u00F4ng mang blocked-start; forceClick v\u00EC n\u00FAt c\u00F3 animation, kh\u00F4ng bao gi\u1EDD \u0111\u1EE9ng y\u00EAn \u0111\u1EE7 l\u00E2u cho Playwright",
+                  "note": "B\u1EAET \u0110\u1EA6U \u2014 ch\u1EC9 khi \u0111\u1EE7 s\u1ED1 s\u1EB5n s\u00E0ng \u0111\u00E3 \u0111\u1EB7t V\u00C0 n\u00FAt kh\u00F4ng mang blocked-start; forceClick v\u00EC n\u00FAt c\u00F3 animation, kh\u00F4ng bao gi\u1EDD \u0111\u1EE9ng y\u00EAn \u0111\u1EE7 l\u00E2u cho Playwright",
                   "optional": true,
                   "when": {
                     "kind": "textMatches",
                     "selector": "#lobby-ready",
-                    "text": "5"
+                    "text": "{{minPlayers}}"
                   },
                   "forceClick": true
                 },
@@ -4429,7 +4429,7 @@
             {
               "action": "repeat",
               "timeoutMs": 15000,
-              "note": "l\u00E1i m\u1ED9t l\u01B0\u1EE3t \u0111\u00E1nh: b\u1EA5m h\u1ED9 \u0022\u0110\u1EBFn \u1EA3i k\u1EBF ti\u1EBFp\u0022 khi c\u1EA7n, ch\u1EDD v\u1EC1 ph\u00F2ng",
+              "note": "l\u00E1i m\u1ED9t l\u01B0\u1EE3t \u0111\u00E1nh: b\u1EA5m h\u1ED9 \u0022\u0110\u1EBFn \u1EA3i k\u1EBF ti\u1EBFp\u0022 khi c\u1EA7n, ch\u1EDD v\u1EC1 ph\u00F2ng \u2014 ho\u1EB7c ch\u1EDD t\u1EDBi l\u00FAc bi\u1EBFt ch\u1EAFc l\u01B0\u1EE3t \u0111\u00E1nh \u0111\u00E3 t\u00E0n theo l\u1ED1i kh\u00E1c",
               "steps": [
                 {
                   "action": "click",
@@ -4442,18 +4442,25 @@
                   "action": "waitMilliseconds",
                   "timeoutMs": 4000,
                   "note": "nh\u1ECBp th\u0103m d\u00F2 gi\u1EEFa hai l\u1EA7n nh\u00ECn"
+                },
+                {
+                  "action": "evaluateJavaScript",
+                  "script": "() =\u003E { const S = window.__jvz = window.__jvz || {}; const b = document.body; const OVER = \u0027jvz-mc-round-over\u0027; const NOROOM = \u0027jvz-mc-noroom\u0027; if (b) b.classList.remove(OVER); const at = (sel) =\u003E document.querySelector(sel); const marked = (sel, cls) =\u003E { const e = at(sel); return !!e \u0026\u0026 e.classList.contains(cls); }; const live = (sel) =\u003E { const e = at(sel); return !!e \u0026\u0026 !e.classList.contains(\u0027hidden\u0027); }; const txt = (sel) =\u003E { const e = at(sel); return ((e \u0026\u0026 e.textContent) || \u0027\u0027).trim().replace(/\\s\u002B/g, \u0027 \u0027); }; const battle = marked(\u0027#screen-battle\u0027, \u0027active\u0027); const atLobby = marked(\u0027#screen-lobby\u0027, \u0027active\u0027); const inRoom = live(\u0027#room-panel\u0027); const failed = live(\u0027#modal-fail\u0027); const stage = txt(\u0027#current-stage-num\u0027); const where = failed ? \u0027trang b\u00E1o TH\u1EA4T B\u1EA0I\u0027 : (battle ? \u0027c\u00F2n trong tr\u1EADn\u0027 : (atLobby ? (inRoom ? \u0027\u0111\u00E3 v\u1EC1 ph\u00F2ng\u0027 : \u0027\u1EDF s\u1EA3nh, ph\u00F2ng kh\u00F4ng c\u00F2n\u0027) : \u0027trang \u0111ang chuy\u1EC3n m\u00E0n\u0027)); const speak = (key, line) =\u003E { S.quiet = 0; if (S.watch === key) return \u0027\u0027; S.watch = key; return line; }; const hush = () =\u003E { S.quiet = (S.quiet || 0) \u002B 1; return S.quiet % 30 === 0 ? \u0027!L\u01B0\u1EE3t \u0111\u00E1nh v\u1EABn ch\u01B0a xong \u2014 \u0027 \u002B where \u002B (battle \u0026\u0026 stage ? \u0027 (\u1EA3i \u0027 \u002B stage \u002B \u0027/5)\u0027 : \u0027\u0027) \u002B \u0027; \u0111\u00E3 d\u00F2 \u0027 \u002B S.quiet \u002B \u0027 nh\u1ECBp\u0027 : \u0027\u0027; }; if (battle \u0026\u0026 !failed) { S.out = 0; if (!/^\\d\u002B$/.test(stage)) return hush(); if (S.watch === \u0027stage:\u0027 \u002B stage) return hush(); const boss = txt(\u0027#boss-name-text\u0027); return speak(\u0027stage:\u0027 \u002B stage, \u0027!\u0110ang \u0111\u00E1nh \u1EA3i \u0027 \u002B stage \u002B \u0027/5\u0027 \u002B (boss \u0026\u0026 boss !== \u0027---\u0027 ? \u0027 \u2014 \u00AB\u0027 \u002B boss \u002B \u0027\u00BB\u0027 : \u0027\u0027)); } if (inRoom \u0026\u0026 atLobby \u0026\u0026 !failed) { S.out = 0; S.watch = \u0027room\u0027; return hush(); } if (!failed \u0026\u0026 !atLobby) return hush(); S.out = (S.out || 0) \u002B 1; if (S.out \u003C 2) return hush(); if (b) b.classList.add(OVER); if (!inRoom \u0026\u0026 b) b.classList.add(NOROOM); if (failed) { const why = txt(\u0027#modal-fail-message\u0027); return speak(\u0027fail\u0027, \u0027!L\u01B0\u1EE3t \u0111\u00E1nh d\u1EEBng \u2014 trang b\u00E1o TH\u1EA4T B\u1EA0I\u0027 \u002B (why ? \u0027:\u300C\u0027 \u002B why \u002B \u0027\u300D\u0027 : \u0027\u0027) \u002B (inRoom ? \u0027\u0027 : \u0027; ph\u00F2ng c\u0169ng kh\u00F4ng c\u00F2n\u0027)); } return speak(\u0027left\u0027, \u0027!\u0110\u00E3 ra kh\u1ECFi ph\u00F2ng \u2014 s\u1EA3nh M\u00EA Cung hi\u1EC7n ra m\u00E0 ph\u00F2ng th\u00EC kh\u00F4ng c\u00F2n; l\u01B0\u1EE3t \u0111\u00E1nh d\u1EEBng \u1EDF \u0111\u00E2y\u0027); }",
+                  "timeoutMs": 4000,
+                  "note": "nh\u00ECn m\u1ED9t c\u00E1i: \u0111ang \u1EDF \u1EA3i m\u1EA5y, hay l\u01B0\u1EE3t \u0111\u00E1nh \u0111\u00E3 t\u00E0n (thua, ho\u1EB7c ph\u00F2ng kh\u00F4ng c\u00F2n)",
+                  "optional": true
                 }
               ],
               "until": {
                 "kind": "visible",
-                "selector": "#btn-start"
+                "selector": "#btn-start, body.jvz-mc-round-over"
               },
               "maxIterations": 60,
               "maxSeconds": 1080
             },
             {
               "action": "evaluateJavaScript",
-              "script": "() =\u003E { const MARK = \u0027jvz-cap-full\u0027; const NOTEAM = \u0027jvz-mc-noteam\u0027; const KEY = \u0027__jvz_mc_chest\u0027; const els = document.querySelectorAll(\u0027.mc-ht-daily-text\u0027); if (document.body) document.body.classList.remove(MARK); for (const el of els) el.classList.remove(MARK); const off = \u0027{{capCheck}}\u0027.indexOf(\u0027\\u00AB\u0027) \u003E= 0; const mark = () =\u003E { if (document.body) document.body.classList.add(MARK); if (els[0]) els[0].classList.add(MARK); }; const S = window.__jvz = window.__jvz || { roster: null, told: [] }; const fought = !!S.battle; if (fought) S.noTeam = 0; else { S.noTeam = (S.noTeam || 0) \u002B 1; if (S.noTeam \u003E= 2) { if (document.body) document.body.classList.add(NOTEAM); try { sessionStorage.setItem(\u0027__jvz_mc_noteam\u0027, \u00271\u0027); } catch (e) { } } } let d = null; try { d = JSON.parse(sessionStorage.getItem(KEY) || \u0027null\u0027); } catch (e) { } if (d \u0026\u0026 d.cap \u003E 0) { const full = d.total \u003E= d.cap; if (full \u0026\u0026 !off) mark(); const got = d.gain \u003E 0 ? \u0027 (\u002B\u0027 \u002B d.gain \u002B \u0027)\u0027 : (d.already ? \u0027 (r\u01B0\u01A1ng r\u1ED7ng \u2014 h\u00F4m nay \u0111\u00E3 l\u1EA5y h\u1EBFt v\u1EADt ph\u1EA9m)\u0027 : \u0027 (kh\u00F4ng \u0111\u01B0\u1EE3c c\u1ED9ng \u2014 \u0111\u1ED9i thua \u1EA3i?)\u0027); const tail = full ? (off ? \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y TR\u1EA6N, nh\u01B0ng tu\u1EF3 ch\u1ECDn ki\u1EC3m tra \u0111ang t\u1EAFt n\u00EAn \u0111\u00E1nh ti\u1EBFp\u0027 : \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y TR\u1EA6N, d\u1EEBng \u1EDF \u0111\u00E2y\u0027) : \u0027\u0027; return \u0027!Xong l\u01B0\u1EE3t \u0111\u00E1nh \u2014 huy\u1EC1n tinh h\u00F4m nay \u0027 \u002B d.total \u002B \u0027/\u0027 \u002B d.cap \u002B got \u002B tail; } const m = els.length \u003E 0 ? (els[0].textContent || \u0027\u0027).match(/(\\d[\\d.,\\u00A0 ]*)\\s*\\/\\s*(\\d[\\d.,\\u00A0 ]*)/) : null; const now = m ? parseInt(m[1].replace(/\\D/g, \u0027\u0027), 10) : -1; const cap = m ? parseInt(m[2].replace(/\\D/g, \u0027\u0027), 10) : -1; if (cap \u003E 0 \u0026\u0026 now \u003E= cap \u0026\u0026 !off) mark(); if (!fought) { const board = cap \u003E 0 ? \u0027 (huy\u1EC1n tinh h\u00F4m nay \u0027 \u002B now \u002B \u0027/\u0027 \u002B cap \u002B \u0027)\u0027 : \u0027\u0027; return \u0027!V\u00F2ng n\u00E0y kh\u00F4ng l\u1EADp \u0111\u01B0\u1EE3c \u0111\u1ED9i n\u00EAn kh\u00F4ng \u0111\u00E1nh \u1EA3i n\u00E0o\u0027 \u002B board \u002B (S.noTeam \u003E= 2 ? \u0027 \u2014 hai v\u00F2ng li\u1EC1n nh\u01B0 v\u1EADy, th\u00F4i gi\u1EEF ph\u00F2ng v\u00E0 gh\u00E9 l\u1EA1i sau\u0027 : \u0027 \u2014 th\u1EED th\u00EAm m\u1ED9t v\u00F2ng n\u1EEFa\u0027); } if (off) return \u0027cap: t\u1EAFt ki\u1EC3m tra\u0027; if (els.length === 0) return \u0027cap: hi\u1EC7p n\u00E0y kh\u00F4ng m\u1EDF \u0111\u01B0\u1EE3c r\u01B0\u01A1ng, v\u00E0 trang c\u0169ng kh\u00F4ng c\u00F3 \u00F4 huy\u1EC1n tinh\u0027; if (!m) return \u0027cap: \u00F4 huy\u1EC1n tinh kh\u00F4ng c\u00F3 d\u1EA1ng x/y\u0027; if (!(cap \u003E 0)) return \u0027cap: tr\u1EA7n ng\u00E0y = 0, kh\u00F4ng tin \u0111\u01B0\u1EE3c\u0027; return \u0027!V\u1EC1 ph\u00F2ng sau l\u01B0\u1EE3t \u0111\u00E1nh \u2014 ch\u01B0a l\u0129nh \u0111\u01B0\u1EE3c r\u01B0\u01A1ng, \u0111\u1ECDc t\u1EA1m tr\u00EAn trang: \u0027 \u002B now \u002B \u0027/\u0027 \u002B cap \u002B (now \u003E= cap ? \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y\u0027 : \u0027\u0027); }",
+              "script": "() =\u003E { const MARK = \u0027jvz-cap-full\u0027; const NOTEAM = \u0027jvz-mc-noteam\u0027; const KEY = \u0027__jvz_mc_chest\u0027; const els = document.querySelectorAll(\u0027.mc-ht-daily-text\u0027); if (document.body) document.body.classList.remove(MARK); for (const el of els) el.classList.remove(MARK); const off = \u0027{{capCheck}}\u0027.indexOf(\u0027\\u00AB\u0027) \u003E= 0; const mark = () =\u003E { if (document.body) document.body.classList.add(MARK); if (els[0]) els[0].classList.add(MARK); }; const S = window.__jvz = window.__jvz || { roster: null, told: [] }; const fought = !!S.battle; if (fought) S.noTeam = 0; else { S.noTeam = (S.noTeam || 0) \u002B 1; if (S.noTeam \u003E= 2) { if (document.body) document.body.classList.add(NOTEAM); try { sessionStorage.setItem(\u0027__jvz_mc_noteam\u0027, \u00271\u0027); } catch (e) { } } } let d = null; try { d = JSON.parse(sessionStorage.getItem(KEY) || \u0027null\u0027); } catch (e) { } if (d \u0026\u0026 d.cap \u003E 0) { const full = d.total \u003E= d.cap; if (full \u0026\u0026 !off) mark(); const got = d.gain \u003E 0 ? \u0027 (\u002B\u0027 \u002B d.gain \u002B \u0027)\u0027 : (d.already ? \u0027 (r\u01B0\u01A1ng r\u1ED7ng \u2014 h\u00F4m nay \u0111\u00E3 l\u1EA5y h\u1EBFt v\u1EADt ph\u1EA9m)\u0027 : \u0027 (kh\u00F4ng \u0111\u01B0\u1EE3c c\u1ED9ng \u2014 \u0111\u1ED9i thua \u1EA3i?)\u0027); const tail = full ? (off ? \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y TR\u1EA6N, nh\u01B0ng tu\u1EF3 ch\u1ECDn ki\u1EC3m tra \u0111ang t\u1EAFt n\u00EAn \u0111\u00E1nh ti\u1EBFp\u0027 : \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y TR\u1EA6N, d\u1EEBng \u1EDF \u0111\u00E2y\u0027) : \u0027\u0027; return \u0027!Xong l\u01B0\u1EE3t \u0111\u00E1nh \u2014 huy\u1EC1n tinh h\u00F4m nay \u0027 \u002B d.total \u002B \u0027/\u0027 \u002B d.cap \u002B got \u002B tail; } const m = els.length \u003E 0 ? (els[0].textContent || \u0027\u0027).match(/(\\d[\\d.,\\u00A0 ]*)\\s*\\/\\s*(\\d[\\d.,\\u00A0 ]*)/) : null; const now = m ? parseInt(m[1].replace(/\\D/g, \u0027\u0027), 10) : -1; const cap = m ? parseInt(m[2].replace(/\\D/g, \u0027\u0027), 10) : -1; if (cap \u003E 0 \u0026\u0026 now \u003E= cap \u0026\u0026 !off) mark(); if (!fought) { const board = cap \u003E 0 ? \u0027 (huy\u1EC1n tinh h\u00F4m nay \u0027 \u002B now \u002B \u0027/\u0027 \u002B cap \u002B \u0027)\u0027 : \u0027\u0027; return \u0027!V\u00F2ng n\u00E0y kh\u00F4ng l\u1EADp \u0111\u01B0\u1EE3c \u0111\u1ED9i n\u00EAn kh\u00F4ng \u0111\u00E1nh \u1EA3i n\u00E0o\u0027 \u002B board \u002B (S.noTeam \u003E= 2 ? \u0027 \u2014 hai v\u00F2ng li\u1EC1n nh\u01B0 v\u1EADy, th\u00F4i gi\u1EEF ph\u00F2ng v\u00E0 gh\u00E9 l\u1EA1i sau\u0027 : \u0027 \u2014 th\u1EED th\u00EAm m\u1ED9t v\u00F2ng n\u1EEFa\u0027); } if (off) return \u0027cap: t\u1EAFt ki\u1EC3m tra\u0027; if (els.length === 0) return \u0027cap: hi\u1EC7p n\u00E0y kh\u00F4ng m\u1EDF \u0111\u01B0\u1EE3c r\u01B0\u01A1ng, v\u00E0 trang c\u0169ng kh\u00F4ng c\u00F3 \u00F4 huy\u1EC1n tinh\u0027; if (!m) return \u0027cap: \u00F4 huy\u1EC1n tinh kh\u00F4ng c\u00F3 d\u1EA1ng x/y\u0027; if (!(cap \u003E 0)) return \u0027cap: tr\u1EA7n ng\u00E0y = 0, kh\u00F4ng tin \u0111\u01B0\u1EE3c\u0027; const room = document.querySelector(\u0027#room-panel\u0027); const back = !!room \u0026\u0026 !room.classList.contains(\u0027hidden\u0027); return \u0027!\u0027 \u002B (back ? \u0027V\u1EC1 ph\u00F2ng sau l\u01B0\u1EE3t \u0111\u00E1nh\u0027 : \u0027H\u1EBFt l\u01B0\u1EE3t \u0111\u00E1nh m\u00E0 KH\u00D4NG v\u1EC1 \u0111\u01B0\u1EE3c ph\u00F2ng\u0027) \u002B \u0027 \u2014 ch\u01B0a l\u0129nh \u0111\u01B0\u1EE3c r\u01B0\u01A1ng, \u0111\u1ECDc t\u1EA1m tr\u00EAn trang: \u0027 \u002B now \u002B \u0027/\u0027 \u002B cap \u002B (now \u003E= cap ? \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y\u0027 : \u0027\u0027); }",
               "timeoutMs": 4000,
               "note": "k\u1EC3 l\u1EA1i l\u01B0\u1EE3t v\u1EEBa \u0111\u00E1nh b\u1EB1ng s\u1ED1 c\u1EE7a m\u00E1y ch\u1EE7 (t\u1EEB ph\u1EA3n h\u1ED3i r\u01B0\u01A1ng) r\u1ED3i c\u1EAFm c\u1EDD n\u1EBFu \u0111\u00E3 \u0111\u1EA7y tr\u1EA7n",
               "optional": true
@@ -4478,7 +4485,7 @@
           ],
           "until": {
             "kind": "visible",
-            "selector": "body.jvz-cap-full, .mc-ht-daily-text.jvz-cap-full, body.jvz-mc-noteam"
+            "selector": "body.jvz-cap-full, .mc-ht-daily-text.jvz-cap-full, body.jvz-mc-noteam, body.jvz-mc-noroom"
           },
           "maxIterations": 18,
           "maxSeconds": 2100
@@ -4600,6 +4607,34 @@
           ],
           "allowCustom": true,
           "selectedValue": "0"
+        },
+        {
+          "key": "minPlayers",
+          "label": "\u0110\u1EE7 bao nhi\u00EAu ng\u01B0\u1EDDi s\u1EB5n s\u00E0ng th\u00EC \u0111\u00E1nh",
+          "choices": [
+            {
+              "value": "5",
+              "label": "\u0110\u1EE7 5 ng\u01B0\u1EDDi"
+            },
+            {
+              "value": "4|5",
+              "label": "T\u1EEB 4 ng\u01B0\u1EDDi tr\u1EDF l\u00EAn"
+            },
+            {
+              "value": "3|4|5",
+              "label": "T\u1EEB 3 ng\u01B0\u1EDDi tr\u1EDF l\u00EAn"
+            },
+            {
+              "value": "2|3|4|5",
+              "label": "T\u1EEB 2 ng\u01B0\u1EDDi tr\u1EDF l\u00EAn"
+            },
+            {
+              "value": "1|2|3|4|5",
+              "label": "M\u1ED9t m\u00ECnh c\u0169ng \u0111\u00E1nh"
+            }
+          ],
+          "allowCustom": true,
+          "selectedValue": "5"
         },
         {
           "key": "chatLobby",
@@ -6144,11 +6179,11 @@
         {
           "action": "repeat",
           "timeoutMs": 15000,
-          "note": "m\u1ED7i v\u00F2ng l\u00E0 m\u1ED9t l\u01B0\u1EE3t ch\u1EA1y 5 \u1EA3i; d\u1EEBng khi \u0111\u1EA7y tr\u1EA7n huy\u1EC1n tinh ng\u00E0y (b\u01B0\u1EDBc \u0111\u1ECDc tr\u1EA7n cu\u1ED1i th\u00E2n v\u00F2ng c\u1EAFm c\u1EDD) ho\u1EB7c h\u1EBFt 35 ph\u00FAt. Sau m\u1ED7i l\u01B0\u1EE3t (th\u1EAFng hay b\u1EA1i) site t\u1EF1 reload v\u1EC1 ph\u00F2ng, c\u1EA3 \u0111\u1ED9i v\u1EABn \u1EDF nguy\u00EAn \u0111\u00F3 (b\u1EA3n ghi 20:10). Tr\u1EA7n 18 v\u00F2ng ch\u1EC9 l\u00E0 l\u01B0\u1EDBi ch\u1EB7n v\u00F2ng l\u1EB7p \u0111i\u00EAn, KH\u00D4NG ph\u1EA3i h\u1EA1n m\u1EE9c \u2014 th\u1EDDi gian m\u1EDBi l\u00E0 h\u1EA1n m\u1EE9c.",
+          "note": "m\u1ED7i v\u00F2ng l\u00E0 m\u1ED9t l\u01B0\u1EE3t ch\u1EA1y 5 \u1EA3i; d\u1EEBng khi \u0111\u1EA7y tr\u1EA7n huy\u1EC1n tinh ng\u00E0y (b\u01B0\u1EDBc \u0111\u1ECDc tr\u1EA7n cu\u1ED1i th\u00E2n v\u00F2ng c\u1EAFm c\u1EDD) ho\u1EB7c h\u1EBFt 35 ph\u00FAt. Sau m\u1ED7i l\u01B0\u1EE3t (th\u1EAFng hay b\u1EA1i) site t\u1EF1 reload v\u1EC1 ph\u00F2ng, c\u1EA3 \u0111\u1ED9i v\u1EABn \u1EDF nguy\u00EAn \u0111\u00F3 (b\u1EA3n ghi 20:10). Tr\u1EA7n 18 v\u00F2ng ch\u1EC9 l\u00E0 l\u01B0\u1EDBi ch\u1EB7n v\u00F2ng l\u1EB7p \u0111i\u00EAn, KH\u00D4NG ph\u1EA3i h\u1EA1n m\u1EE9c \u2014 th\u1EDDi gian m\u1EDBi l\u00E0 h\u1EA1n m\u1EE9c. C\u00F2n m\u1ED9t l\u1ED1i v\u1EC1 n\u1EEFa: ph\u00F2ng b\u1ECB xo\u00E1 gi\u1EEFa l\u01B0\u1EE3t \u0111\u00E1nh th\u00EC kh\u00F4ng hi\u1EC7p n\u00E0o sau \u0111\u00F3 l\u1EADp \u0111\u01B0\u1EE3c \u0111\u1ED9i, n\u00EAn b\u01B0\u1EDBc d\u00F2 cu\u1ED1i v\u00F2ng l\u00E1i c\u1EAFm c\u1EDD v\u00E0 l\u01B0\u1EE3t gh\u00E9 k\u1EBFt th\u00FAc ngay \u0111\u1EC3 l\u01B0\u1EE3t sau l\u1EADp ph\u00F2ng m\u1EDBi, thay v\u00EC \u0111\u1EE9ng g\u1ECDi ng\u01B0\u1EDDi v\u00E0o m\u1ED9t c\u0103n ph\u00F2ng \u0111\u00E3 m\u1EA5t.",
           "steps": [
             {
               "action": "evaluateJavaScript",
-              "script": "() =\u003E { const KEY = \u0027__jvz_mc_chest\u0027; try { sessionStorage.removeItem(KEY); } catch (e) { } const S0 = window.__jvz = window.__jvz || { roster: null, told: [] }; S0.battle = false; S0.since = {}; S0.told = []; if (window.__jvzChestHook) return \u0027\u0027; const orig = window.fetch; if (typeof orig !== \u0027function\u0027) return \u0027r\u01B0\u01A1ng: trang kh\u00F4ng d\u00F9ng fetch, kh\u00F4ng g\u1EAFn \u0111\u01B0\u1EE3c tai nghe\u0027; window.__jvzChestHook = true; window.fetch = function (input) { const out = orig.apply(this, arguments); try { const url = String((input \u0026\u0026 input.url) ? input.url : (input || \u0027\u0027)); if (url.indexOf(\u0027claim-boss5-chest\u0027) \u003C 0) return out; return out.then((res) =\u003E { try { res.clone().json().then((d) =\u003E { const r = d \u0026\u0026 d.reward; if (!r) return; sessionStorage.setItem(KEY, JSON.stringify({ total: Number(r.huyen_tinh_daily_total) || 0, cap: Number(r.huyen_tinh_daily_cap) || 0, gain: Number(r.huyen_tinh) || 0, already: !!r.already_got_items, at: Date.now() })); }).catch(() =\u003E {}); } catch (e) { } return res; }); } catch (e) { return out; } }; return \u0027r\u01B0\u01A1ng: \u0111\u00E3 g\u1EAFn tai nghe ph\u1EA3n h\u1ED3i\u0027; }",
+              "script": "() =\u003E { const KEY = \u0027__jvz_mc_chest\u0027; try { sessionStorage.removeItem(KEY); } catch (e) { } const S0 = window.__jvz = window.__jvz || { roster: null, told: [] }; S0.battle = false; S0.since = {}; S0.told = []; S0.watch = \u0027\u0027; S0.quiet = 0; S0.out = 0; if (document.body) document.body.classList.remove(\u0027jvz-mc-round-over\u0027); if (window.__jvzChestHook) return \u0027\u0027; const orig = window.fetch; if (typeof orig !== \u0027function\u0027) return \u0027r\u01B0\u01A1ng: trang kh\u00F4ng d\u00F9ng fetch, kh\u00F4ng g\u1EAFn \u0111\u01B0\u1EE3c tai nghe\u0027; window.__jvzChestHook = true; window.fetch = function (input) { const out = orig.apply(this, arguments); try { const url = String((input \u0026\u0026 input.url) ? input.url : (input || \u0027\u0027)); if (url.indexOf(\u0027claim-boss5-chest\u0027) \u003C 0) return out; return out.then((res) =\u003E { try { res.clone().json().then((d) =\u003E { const r = d \u0026\u0026 d.reward; if (!r) return; sessionStorage.setItem(KEY, JSON.stringify({ total: Number(r.huyen_tinh_daily_total) || 0, cap: Number(r.huyen_tinh_daily_cap) || 0, gain: Number(r.huyen_tinh) || 0, already: !!r.already_got_items, at: Date.now() })); }).catch(() =\u003E {}); } catch (e) { } return res; }); } catch (e) { return out; } }; return \u0027r\u01B0\u01A1ng: \u0111\u00E3 g\u1EAFn tai nghe ph\u1EA3n h\u1ED3i\u0027; }",
               "timeoutMs": 4000,
               "note": "g\u1EAFn tai nghe ph\u1EA3n h\u1ED3i r\u01B0\u01A1ng \u2014 xong l\u01B0\u1EE3t l\u00E0 trang t\u1EF1 n\u1EA1p l\u1EA1i n\u00EAn hi\u1EC7p n\u00E0o c\u0169ng ph\u1EA3i g\u1EAFn l\u1EA1i",
               "optional": true
@@ -6156,7 +6191,7 @@
             {
               "action": "repeat",
               "timeoutMs": 15000,
-              "note": "ch\u1EDD ph\u00F2ng \u0111\u1EE7 5 s\u1EB5n s\u00E0ng, m\u1ED7i nh\u1ECBp ~20s c\u00F3 k\u00E8m l\u01B0\u1EE3t x\u00E9t tr\u1EE5c xu\u1EA5t",
+              "note": "ch\u1EDD ph\u00F2ng \u0111\u1EE7 s\u1ED1 s\u1EB5n s\u00E0ng \u0111\u00E3 \u0111\u1EB7t, m\u1ED7i nh\u1ECBp ~20s c\u00F3 k\u00E8m l\u01B0\u1EE3t x\u00E9t tr\u1EE5c xu\u1EA5t",
               "steps": [
                 {
                   "action": "evaluateJavaScript",
@@ -6190,19 +6225,19 @@
                 {
                   "action": "waitForCondition",
                   "timeoutMs": 20000,
-                  "note": "nh\u1ECBp ch\u1EDD ~20s \u2014 tho\u00E1t s\u1EDBm ngay khi #lobby-ready \u0111\u1EA1t 5",
+                  "note": "nh\u1ECBp ch\u1EDD ~20s \u2014 tho\u00E1t s\u1EDBm ngay khi #lobby-ready \u0111\u1EA1t ng\u01B0\u1EE1ng",
                   "optional": true,
                   "condition": {
                     "kind": "textMatches",
                     "selector": "#lobby-ready",
-                    "text": "5"
+                    "text": "{{minPlayers}}"
                   }
                 }
               ],
               "until": {
                 "kind": "textMatches",
                 "selector": "#lobby-ready",
-                "text": "5"
+                "text": "{{minPlayers}}"
               },
               "maxIterations": 15,
               "maxSeconds": 300
@@ -6244,24 +6279,24 @@
                 {
                   "action": "waitForCondition",
                   "timeoutMs": 15000,
-                  "note": "\u0111\u1EE3i s\u1ED1 s\u1EB5n s\u00E0ng v\u1EC1 l\u1EA1i 5 tr\u01B0\u1EDBc m\u1ED7i nh\u1ECBp b\u1EA5m",
+                  "note": "\u0111\u1EE3i s\u1ED1 s\u1EB5n s\u00E0ng v\u1EC1 l\u1EA1i ng\u01B0\u1EE1ng tr\u01B0\u1EDBc m\u1ED7i nh\u1ECBp b\u1EA5m",
                   "optional": true,
                   "condition": {
                     "kind": "textMatches",
                     "selector": "#lobby-ready",
-                    "text": "5"
+                    "text": "{{minPlayers}}"
                   }
                 },
                 {
                   "action": "click",
                   "selector": "#btn-start:not(.blocked-start)",
                   "timeoutMs": 6000,
-                  "note": "B\u1EAET \u0110\u1EA6U \u2014 ch\u1EC9 khi \u0111\u1EE7 5 s\u1EB5n s\u00E0ng V\u00C0 n\u00FAt kh\u00F4ng mang blocked-start; forceClick v\u00EC n\u00FAt c\u00F3 animation, kh\u00F4ng bao gi\u1EDD \u0111\u1EE9ng y\u00EAn \u0111\u1EE7 l\u00E2u cho Playwright",
+                  "note": "B\u1EAET \u0110\u1EA6U \u2014 ch\u1EC9 khi \u0111\u1EE7 s\u1ED1 s\u1EB5n s\u00E0ng \u0111\u00E3 \u0111\u1EB7t V\u00C0 n\u00FAt kh\u00F4ng mang blocked-start; forceClick v\u00EC n\u00FAt c\u00F3 animation, kh\u00F4ng bao gi\u1EDD \u0111\u1EE9ng y\u00EAn \u0111\u1EE7 l\u00E2u cho Playwright",
                   "optional": true,
                   "when": {
                     "kind": "textMatches",
                     "selector": "#lobby-ready",
-                    "text": "5"
+                    "text": "{{minPlayers}}"
                   },
                   "forceClick": true
                 },
@@ -6322,7 +6357,7 @@
             {
               "action": "repeat",
               "timeoutMs": 15000,
-              "note": "l\u00E1i m\u1ED9t l\u01B0\u1EE3t \u0111\u00E1nh: b\u1EA5m h\u1ED9 \u0022\u0110\u1EBFn \u1EA3i k\u1EBF ti\u1EBFp\u0022 khi c\u1EA7n, ch\u1EDD v\u1EC1 ph\u00F2ng",
+              "note": "l\u00E1i m\u1ED9t l\u01B0\u1EE3t \u0111\u00E1nh: b\u1EA5m h\u1ED9 \u0022\u0110\u1EBFn \u1EA3i k\u1EBF ti\u1EBFp\u0022 khi c\u1EA7n, ch\u1EDD v\u1EC1 ph\u00F2ng \u2014 ho\u1EB7c ch\u1EDD t\u1EDBi l\u00FAc bi\u1EBFt ch\u1EAFc l\u01B0\u1EE3t \u0111\u00E1nh \u0111\u00E3 t\u00E0n theo l\u1ED1i kh\u00E1c",
               "steps": [
                 {
                   "action": "click",
@@ -6335,18 +6370,25 @@
                   "action": "waitMilliseconds",
                   "timeoutMs": 4000,
                   "note": "nh\u1ECBp th\u0103m d\u00F2 gi\u1EEFa hai l\u1EA7n nh\u00ECn"
+                },
+                {
+                  "action": "evaluateJavaScript",
+                  "script": "() =\u003E { const S = window.__jvz = window.__jvz || {}; const b = document.body; const OVER = \u0027jvz-mc-round-over\u0027; const NOROOM = \u0027jvz-mc-noroom\u0027; if (b) b.classList.remove(OVER); const at = (sel) =\u003E document.querySelector(sel); const marked = (sel, cls) =\u003E { const e = at(sel); return !!e \u0026\u0026 e.classList.contains(cls); }; const live = (sel) =\u003E { const e = at(sel); return !!e \u0026\u0026 !e.classList.contains(\u0027hidden\u0027); }; const txt = (sel) =\u003E { const e = at(sel); return ((e \u0026\u0026 e.textContent) || \u0027\u0027).trim().replace(/\\s\u002B/g, \u0027 \u0027); }; const battle = marked(\u0027#screen-battle\u0027, \u0027active\u0027); const atLobby = marked(\u0027#screen-lobby\u0027, \u0027active\u0027); const inRoom = live(\u0027#room-panel\u0027); const failed = live(\u0027#modal-fail\u0027); const stage = txt(\u0027#current-stage-num\u0027); const where = failed ? \u0027trang b\u00E1o TH\u1EA4T B\u1EA0I\u0027 : (battle ? \u0027c\u00F2n trong tr\u1EADn\u0027 : (atLobby ? (inRoom ? \u0027\u0111\u00E3 v\u1EC1 ph\u00F2ng\u0027 : \u0027\u1EDF s\u1EA3nh, ph\u00F2ng kh\u00F4ng c\u00F2n\u0027) : \u0027trang \u0111ang chuy\u1EC3n m\u00E0n\u0027)); const speak = (key, line) =\u003E { S.quiet = 0; if (S.watch === key) return \u0027\u0027; S.watch = key; return line; }; const hush = () =\u003E { S.quiet = (S.quiet || 0) \u002B 1; return S.quiet % 30 === 0 ? \u0027!L\u01B0\u1EE3t \u0111\u00E1nh v\u1EABn ch\u01B0a xong \u2014 \u0027 \u002B where \u002B (battle \u0026\u0026 stage ? \u0027 (\u1EA3i \u0027 \u002B stage \u002B \u0027/5)\u0027 : \u0027\u0027) \u002B \u0027; \u0111\u00E3 d\u00F2 \u0027 \u002B S.quiet \u002B \u0027 nh\u1ECBp\u0027 : \u0027\u0027; }; if (battle \u0026\u0026 !failed) { S.out = 0; if (!/^\\d\u002B$/.test(stage)) return hush(); if (S.watch === \u0027stage:\u0027 \u002B stage) return hush(); const boss = txt(\u0027#boss-name-text\u0027); return speak(\u0027stage:\u0027 \u002B stage, \u0027!\u0110ang \u0111\u00E1nh \u1EA3i \u0027 \u002B stage \u002B \u0027/5\u0027 \u002B (boss \u0026\u0026 boss !== \u0027---\u0027 ? \u0027 \u2014 \u00AB\u0027 \u002B boss \u002B \u0027\u00BB\u0027 : \u0027\u0027)); } if (inRoom \u0026\u0026 atLobby \u0026\u0026 !failed) { S.out = 0; S.watch = \u0027room\u0027; return hush(); } if (!failed \u0026\u0026 !atLobby) return hush(); S.out = (S.out || 0) \u002B 1; if (S.out \u003C 2) return hush(); if (b) b.classList.add(OVER); if (!inRoom \u0026\u0026 b) b.classList.add(NOROOM); if (failed) { const why = txt(\u0027#modal-fail-message\u0027); return speak(\u0027fail\u0027, \u0027!L\u01B0\u1EE3t \u0111\u00E1nh d\u1EEBng \u2014 trang b\u00E1o TH\u1EA4T B\u1EA0I\u0027 \u002B (why ? \u0027:\u300C\u0027 \u002B why \u002B \u0027\u300D\u0027 : \u0027\u0027) \u002B (inRoom ? \u0027\u0027 : \u0027; ph\u00F2ng c\u0169ng kh\u00F4ng c\u00F2n\u0027)); } return speak(\u0027left\u0027, \u0027!\u0110\u00E3 ra kh\u1ECFi ph\u00F2ng \u2014 s\u1EA3nh M\u00EA Cung hi\u1EC7n ra m\u00E0 ph\u00F2ng th\u00EC kh\u00F4ng c\u00F2n; l\u01B0\u1EE3t \u0111\u00E1nh d\u1EEBng \u1EDF \u0111\u00E2y\u0027); }",
+                  "timeoutMs": 4000,
+                  "note": "nh\u00ECn m\u1ED9t c\u00E1i: \u0111ang \u1EDF \u1EA3i m\u1EA5y, hay l\u01B0\u1EE3t \u0111\u00E1nh \u0111\u00E3 t\u00E0n (thua, ho\u1EB7c ph\u00F2ng kh\u00F4ng c\u00F2n)",
+                  "optional": true
                 }
               ],
               "until": {
                 "kind": "visible",
-                "selector": "#btn-start"
+                "selector": "#btn-start, body.jvz-mc-round-over"
               },
               "maxIterations": 60,
               "maxSeconds": 1080
             },
             {
               "action": "evaluateJavaScript",
-              "script": "() =\u003E { const MARK = \u0027jvz-cap-full\u0027; const NOTEAM = \u0027jvz-mc-noteam\u0027; const KEY = \u0027__jvz_mc_chest\u0027; const els = document.querySelectorAll(\u0027.mc-ht-daily-text\u0027); if (document.body) document.body.classList.remove(MARK); for (const el of els) el.classList.remove(MARK); const off = \u0027{{capCheck}}\u0027.indexOf(\u0027\\u00AB\u0027) \u003E= 0; const mark = () =\u003E { if (document.body) document.body.classList.add(MARK); if (els[0]) els[0].classList.add(MARK); }; const S = window.__jvz = window.__jvz || { roster: null, told: [] }; const fought = !!S.battle; if (fought) S.noTeam = 0; else { S.noTeam = (S.noTeam || 0) \u002B 1; if (S.noTeam \u003E= 2) { if (document.body) document.body.classList.add(NOTEAM); try { sessionStorage.setItem(\u0027__jvz_mc_noteam\u0027, \u00271\u0027); } catch (e) { } } } let d = null; try { d = JSON.parse(sessionStorage.getItem(KEY) || \u0027null\u0027); } catch (e) { } if (d \u0026\u0026 d.cap \u003E 0) { const full = d.total \u003E= d.cap; if (full \u0026\u0026 !off) mark(); const got = d.gain \u003E 0 ? \u0027 (\u002B\u0027 \u002B d.gain \u002B \u0027)\u0027 : (d.already ? \u0027 (r\u01B0\u01A1ng r\u1ED7ng \u2014 h\u00F4m nay \u0111\u00E3 l\u1EA5y h\u1EBFt v\u1EADt ph\u1EA9m)\u0027 : \u0027 (kh\u00F4ng \u0111\u01B0\u1EE3c c\u1ED9ng \u2014 \u0111\u1ED9i thua \u1EA3i?)\u0027); const tail = full ? (off ? \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y TR\u1EA6N, nh\u01B0ng tu\u1EF3 ch\u1ECDn ki\u1EC3m tra \u0111ang t\u1EAFt n\u00EAn \u0111\u00E1nh ti\u1EBFp\u0027 : \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y TR\u1EA6N, d\u1EEBng \u1EDF \u0111\u00E2y\u0027) : \u0027\u0027; return \u0027!Xong l\u01B0\u1EE3t \u0111\u00E1nh \u2014 huy\u1EC1n tinh h\u00F4m nay \u0027 \u002B d.total \u002B \u0027/\u0027 \u002B d.cap \u002B got \u002B tail; } const m = els.length \u003E 0 ? (els[0].textContent || \u0027\u0027).match(/(\\d[\\d.,\\u00A0 ]*)\\s*\\/\\s*(\\d[\\d.,\\u00A0 ]*)/) : null; const now = m ? parseInt(m[1].replace(/\\D/g, \u0027\u0027), 10) : -1; const cap = m ? parseInt(m[2].replace(/\\D/g, \u0027\u0027), 10) : -1; if (cap \u003E 0 \u0026\u0026 now \u003E= cap \u0026\u0026 !off) mark(); if (!fought) { const board = cap \u003E 0 ? \u0027 (huy\u1EC1n tinh h\u00F4m nay \u0027 \u002B now \u002B \u0027/\u0027 \u002B cap \u002B \u0027)\u0027 : \u0027\u0027; return \u0027!V\u00F2ng n\u00E0y kh\u00F4ng l\u1EADp \u0111\u01B0\u1EE3c \u0111\u1ED9i n\u00EAn kh\u00F4ng \u0111\u00E1nh \u1EA3i n\u00E0o\u0027 \u002B board \u002B (S.noTeam \u003E= 2 ? \u0027 \u2014 hai v\u00F2ng li\u1EC1n nh\u01B0 v\u1EADy, th\u00F4i gi\u1EEF ph\u00F2ng v\u00E0 gh\u00E9 l\u1EA1i sau\u0027 : \u0027 \u2014 th\u1EED th\u00EAm m\u1ED9t v\u00F2ng n\u1EEFa\u0027); } if (off) return \u0027cap: t\u1EAFt ki\u1EC3m tra\u0027; if (els.length === 0) return \u0027cap: hi\u1EC7p n\u00E0y kh\u00F4ng m\u1EDF \u0111\u01B0\u1EE3c r\u01B0\u01A1ng, v\u00E0 trang c\u0169ng kh\u00F4ng c\u00F3 \u00F4 huy\u1EC1n tinh\u0027; if (!m) return \u0027cap: \u00F4 huy\u1EC1n tinh kh\u00F4ng c\u00F3 d\u1EA1ng x/y\u0027; if (!(cap \u003E 0)) return \u0027cap: tr\u1EA7n ng\u00E0y = 0, kh\u00F4ng tin \u0111\u01B0\u1EE3c\u0027; return \u0027!V\u1EC1 ph\u00F2ng sau l\u01B0\u1EE3t \u0111\u00E1nh \u2014 ch\u01B0a l\u0129nh \u0111\u01B0\u1EE3c r\u01B0\u01A1ng, \u0111\u1ECDc t\u1EA1m tr\u00EAn trang: \u0027 \u002B now \u002B \u0027/\u0027 \u002B cap \u002B (now \u003E= cap ? \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y\u0027 : \u0027\u0027); }",
+              "script": "() =\u003E { const MARK = \u0027jvz-cap-full\u0027; const NOTEAM = \u0027jvz-mc-noteam\u0027; const KEY = \u0027__jvz_mc_chest\u0027; const els = document.querySelectorAll(\u0027.mc-ht-daily-text\u0027); if (document.body) document.body.classList.remove(MARK); for (const el of els) el.classList.remove(MARK); const off = \u0027{{capCheck}}\u0027.indexOf(\u0027\\u00AB\u0027) \u003E= 0; const mark = () =\u003E { if (document.body) document.body.classList.add(MARK); if (els[0]) els[0].classList.add(MARK); }; const S = window.__jvz = window.__jvz || { roster: null, told: [] }; const fought = !!S.battle; if (fought) S.noTeam = 0; else { S.noTeam = (S.noTeam || 0) \u002B 1; if (S.noTeam \u003E= 2) { if (document.body) document.body.classList.add(NOTEAM); try { sessionStorage.setItem(\u0027__jvz_mc_noteam\u0027, \u00271\u0027); } catch (e) { } } } let d = null; try { d = JSON.parse(sessionStorage.getItem(KEY) || \u0027null\u0027); } catch (e) { } if (d \u0026\u0026 d.cap \u003E 0) { const full = d.total \u003E= d.cap; if (full \u0026\u0026 !off) mark(); const got = d.gain \u003E 0 ? \u0027 (\u002B\u0027 \u002B d.gain \u002B \u0027)\u0027 : (d.already ? \u0027 (r\u01B0\u01A1ng r\u1ED7ng \u2014 h\u00F4m nay \u0111\u00E3 l\u1EA5y h\u1EBFt v\u1EADt ph\u1EA9m)\u0027 : \u0027 (kh\u00F4ng \u0111\u01B0\u1EE3c c\u1ED9ng \u2014 \u0111\u1ED9i thua \u1EA3i?)\u0027); const tail = full ? (off ? \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y TR\u1EA6N, nh\u01B0ng tu\u1EF3 ch\u1ECDn ki\u1EC3m tra \u0111ang t\u1EAFt n\u00EAn \u0111\u00E1nh ti\u1EBFp\u0027 : \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y TR\u1EA6N, d\u1EEBng \u1EDF \u0111\u00E2y\u0027) : \u0027\u0027; return \u0027!Xong l\u01B0\u1EE3t \u0111\u00E1nh \u2014 huy\u1EC1n tinh h\u00F4m nay \u0027 \u002B d.total \u002B \u0027/\u0027 \u002B d.cap \u002B got \u002B tail; } const m = els.length \u003E 0 ? (els[0].textContent || \u0027\u0027).match(/(\\d[\\d.,\\u00A0 ]*)\\s*\\/\\s*(\\d[\\d.,\\u00A0 ]*)/) : null; const now = m ? parseInt(m[1].replace(/\\D/g, \u0027\u0027), 10) : -1; const cap = m ? parseInt(m[2].replace(/\\D/g, \u0027\u0027), 10) : -1; if (cap \u003E 0 \u0026\u0026 now \u003E= cap \u0026\u0026 !off) mark(); if (!fought) { const board = cap \u003E 0 ? \u0027 (huy\u1EC1n tinh h\u00F4m nay \u0027 \u002B now \u002B \u0027/\u0027 \u002B cap \u002B \u0027)\u0027 : \u0027\u0027; return \u0027!V\u00F2ng n\u00E0y kh\u00F4ng l\u1EADp \u0111\u01B0\u1EE3c \u0111\u1ED9i n\u00EAn kh\u00F4ng \u0111\u00E1nh \u1EA3i n\u00E0o\u0027 \u002B board \u002B (S.noTeam \u003E= 2 ? \u0027 \u2014 hai v\u00F2ng li\u1EC1n nh\u01B0 v\u1EADy, th\u00F4i gi\u1EEF ph\u00F2ng v\u00E0 gh\u00E9 l\u1EA1i sau\u0027 : \u0027 \u2014 th\u1EED th\u00EAm m\u1ED9t v\u00F2ng n\u1EEFa\u0027); } if (off) return \u0027cap: t\u1EAFt ki\u1EC3m tra\u0027; if (els.length === 0) return \u0027cap: hi\u1EC7p n\u00E0y kh\u00F4ng m\u1EDF \u0111\u01B0\u1EE3c r\u01B0\u01A1ng, v\u00E0 trang c\u0169ng kh\u00F4ng c\u00F3 \u00F4 huy\u1EC1n tinh\u0027; if (!m) return \u0027cap: \u00F4 huy\u1EC1n tinh kh\u00F4ng c\u00F3 d\u1EA1ng x/y\u0027; if (!(cap \u003E 0)) return \u0027cap: tr\u1EA7n ng\u00E0y = 0, kh\u00F4ng tin \u0111\u01B0\u1EE3c\u0027; const room = document.querySelector(\u0027#room-panel\u0027); const back = !!room \u0026\u0026 !room.classList.contains(\u0027hidden\u0027); return \u0027!\u0027 \u002B (back ? \u0027V\u1EC1 ph\u00F2ng sau l\u01B0\u1EE3t \u0111\u00E1nh\u0027 : \u0027H\u1EBFt l\u01B0\u1EE3t \u0111\u00E1nh m\u00E0 KH\u00D4NG v\u1EC1 \u0111\u01B0\u1EE3c ph\u00F2ng\u0027) \u002B \u0027 \u2014 ch\u01B0a l\u0129nh \u0111\u01B0\u1EE3c r\u01B0\u01A1ng, \u0111\u1ECDc t\u1EA1m tr\u00EAn trang: \u0027 \u002B now \u002B \u0027/\u0027 \u002B cap \u002B (now \u003E= cap ? \u0027 \u2014 \u0110\u00C3 \u0110\u1EA6Y\u0027 : \u0027\u0027); }",
               "timeoutMs": 4000,
               "note": "k\u1EC3 l\u1EA1i l\u01B0\u1EE3t v\u1EEBa \u0111\u00E1nh b\u1EB1ng s\u1ED1 c\u1EE7a m\u00E1y ch\u1EE7 (t\u1EEB ph\u1EA3n h\u1ED3i r\u01B0\u01A1ng) r\u1ED3i c\u1EAFm c\u1EDD n\u1EBFu \u0111\u00E3 \u0111\u1EA7y tr\u1EA7n",
               "optional": true
@@ -6371,7 +6413,7 @@
           ],
           "until": {
             "kind": "visible",
-            "selector": "body.jvz-cap-full, .mc-ht-daily-text.jvz-cap-full, body.jvz-mc-noteam"
+            "selector": "body.jvz-cap-full, .mc-ht-daily-text.jvz-cap-full, body.jvz-mc-noteam, body.jvz-mc-noroom"
           },
           "maxIterations": 18,
           "maxSeconds": 2100
@@ -6493,6 +6535,34 @@
           ],
           "allowCustom": true,
           "selectedValue": "0"
+        },
+        {
+          "key": "minPlayers",
+          "label": "\u0110\u1EE7 bao nhi\u00EAu ng\u01B0\u1EDDi s\u1EB5n s\u00E0ng th\u00EC \u0111\u00E1nh",
+          "choices": [
+            {
+              "value": "5",
+              "label": "\u0110\u1EE7 5 ng\u01B0\u1EDDi"
+            },
+            {
+              "value": "4|5",
+              "label": "T\u1EEB 4 ng\u01B0\u1EDDi tr\u1EDF l\u00EAn"
+            },
+            {
+              "value": "3|4|5",
+              "label": "T\u1EEB 3 ng\u01B0\u1EDDi tr\u1EDF l\u00EAn"
+            },
+            {
+              "value": "2|3|4|5",
+              "label": "T\u1EEB 2 ng\u01B0\u1EDDi tr\u1EDF l\u00EAn"
+            },
+            {
+              "value": "1|2|3|4|5",
+              "label": "M\u1ED9t m\u00ECnh c\u0169ng \u0111\u00E1nh"
+            }
+          ],
+          "allowCustom": true,
+          "selectedValue": "5"
         },
         {
           "key": "chatLobby",

@@ -135,6 +135,33 @@ function bagCountAtLeast(from) {
   return parts.join("|");
 }
 
+/** Sức chứa một phòng mê cung. Song sinh với trần `minPlayers` trong `configs.ts`. */
+const MAZE_PARTY_SIZE = 5;
+
+/**
+ * Danh sách chặn cho câu hỏi「đã có TỪ `from` người bấm sẵn sàng」.
+ *
+ * Cùng lối với `bagCountAtLeast` và cùng lý do: cửa chặn của engine chỉ biết `textMatches` trên
+ * một danh sách `a|b|c`, không biết so số. Nhưng ở đây phép rải CHÍNH XÁC tuyệt đối chứ không
+ * cần mẹo dấu `/` như bên viên đan: `#lobby-ready` chứa ĐÚNG một chữ số và không gì khác — bản
+ * ghi 29/08 chụp được nguyên văn `✓ <span id="lobby-ready">4</span> Sẵn Sàng`, tức phần tử chỉ
+ * ôm con số, còn chữ「Sẵn Sàng」nằm ngoài nó. Đội tối đa năm người nên danh sách dài nhất là năm
+ * mảnh một ký tự.
+ *
+ * Vì sao KHÔNG viết thẳng số `from`: `textMatches "3"` hỏi「có chứa chữ 3 không」, nên một phòng
+ * đã đủ 4 người sẽ KHÔNG khớp và cứ thế đứng chờ mãi. Ngưỡng phải là「3 hoặc 4 hoặc 5」.
+ */
+function mazeReadyGate(from) {
+  // Mọi thứ không phải một ngưỡng hợp lệ đều về ĐỦ ĐỘI, kể cả số âm và số quá trần. Ngả rác
+  // phải đi về phía THẬN TRỌNG: đoán nhầm thành 5 chỉ khiến đội chờ lâu như trước, còn đoán
+  // nhầm thành 1 là lẳng lặng cho một người đi đánh ải năm người.
+  const n = Math.trunc(Number(from));
+  if (!Number.isFinite(n) || n < 1 || n > MAZE_PARTY_SIZE) return String(MAZE_PARTY_SIZE);
+  const parts = [];
+  for (let step = n; step <= MAZE_PARTY_SIZE; step += 1) parts.push(String(step));
+  return parts.join("|");
+}
+
 /**
  * Nhiệm vụ "một công tắc": key trong config web ↔ tên nhiệm vụ trong hồ sơ. Một tên có thể
  * có hai flow theo hạng tài khoản (VIP chạy nút nhanh ở hub, tài khoản thường chạy trang
@@ -229,6 +256,10 @@ export function profileForConfig(config, say, marksToday) {
 
       // Ngưỡng "chưa sẵn sàng sau N giây" — cùng luật tự-nhập như kickHp.
       setOption(meCung, "kickIdle", String(mc.kickIdleSec ?? 0), { allowFreeform: true, log });
+
+      // Số người sẵn sàng tối thiểu → điều kiện dò. Con số đi vào hồ sơ ở dạng DANH SÁCH, không
+      // phải số — lý do ở `mazeReadyGate`.
+      setOption(meCung, "minPlayers", mazeReadyGate(mc.minPlayers), { allowFreeform: true, log });
 
       // Hai lời nhắn Trò Chuyện Đội (recording 08/08) — chuỗi tự do đã được configs.ts làm
       // sạch (sanitizeChatMessage) trước khi tới đây; rỗng là「không nhắn」và hợp lệ.
