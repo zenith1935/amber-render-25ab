@@ -64,7 +64,8 @@ function setOption(quest, key, value, { allowFreeform = false, log, describe } =
   // màn hình người dùng (runCycle kể chúng ở mức `warn`), mà một vài giá trị tự nhập không
   // phải thứ để đọc: danh sách hạn mức giữ đan là gần ba nghìn ký tự máy sinh ra. Kể nguyên
   // văn là biến bảng hoạt động thành bãi rác; giấu hẳn thì mất luôn tiếng nói của
-  // `allowCustom` — thứ ghi chú ngay trên giải thích vì sao phải có.
+  // `allowCustom` — thứ ghi chú ngay trên giải thích vì sao phải có. Hạn mức Luyện Đan nay
+  // chỉ là một số ngắn, nhưng vẫn dùng `describe` để kể rõ đó là số của PHẨM ĐANG CHỌN.
   const spoken = describe ?? `'${value}'`;
   const known = (option.choices ?? []).some((c) => c.value === value);
   if (!known) {
@@ -103,47 +104,14 @@ function keepLevelOf(choiceValue) {
   return stars.length > 0 ? Math.min(...stars) : 1; // không có số nào = "dược khí" = giữ tất cả
 }
 
-/**
- * Trần khi rải danh sách「đan trong túi」. Bản chụp DOM ngày 12/08/2026 cho thấy sức chứa là
- * `x/10 viên` mỗi phẩm, nên 30 đã rộng gấp ba — và một cái trần là bắt buộc, vì phép so của
- * `conditionProbe` là SO CHUỖI chứ không phải so số, tức mỗi con số hợp lệ phải được viết ra.
- *
- * Túi vượt qua trần này thì hạn mức thôi nhận ra — và đó là phía AN TOÀN có chủ ý: cửa không
- * khớp nghĩa là GIỮ NGUYÊN đan, chứ không phải phân giải nhầm. Phải trùng với `BagCountCeiling`
- * bên `DefaultQuestProfile.cs`, và phải lớn hơn trần của `keepCap` trong `configs.ts`.
- */
-const BAG_COUNT_CEILING = 30;
-
-/**
- * Danh sách chặn cho câu hỏi「trong túi đang có TỪ `from` viên trở lên」.
- *
- * Hộp thông tin viên đan viết số ấy thành `Đan trong túi (phẩm)` / `5/10 viên` — hai khối `dt`
- * và `dd` liền nhau, nên `innerText` gộp lại thành một chuỗi mà `norm()` bỏ dấu rồi ghép bằng
- * dấu cách. Mỗi mảnh dưới đây vì thế kết thúc bằng ĐÚNG dấu `/`, và cái dấu ấy làm cả phép so
- * thành chính xác chứ không phải gần đúng: thiếu nó thì mảnh「… 1」sẽ khớp luôn cả「… 11/10」
- * (so chuỗi là so chứa, không có ranh giới từ), tức một túi 11 viên bị đọc thành 1 viên.
- *
- * Rải từng số thay vì so số vì cửa chặn của engine chỉ biết `textMatches` trên một danh sách
- * `a|b|c`. Đổi lại, cửa ấy đã được đo bằng Chromium thật (`verify:luyen-dan-stars`) và không
- * phải thêm một hình dạng điều kiện mới nào vào hồ sơ.
- */
-function bagCountAtLeast(from) {
-  const parts = [];
-  for (let n = Math.max(1, from); n <= BAG_COUNT_CEILING; n += 1) {
-    parts.push(`đan trong túi (phẩm) ${n}/`);
-  }
-  return parts.join("|");
-}
-
 /** Sức chứa một phòng mê cung. Song sinh với trần `minPlayers` trong `configs.ts`. */
 const MAZE_PARTY_SIZE = 5;
 
 /**
  * Danh sách chặn cho câu hỏi「đã có TỪ `from` người bấm sẵn sàng」.
  *
- * Cùng lối với `bagCountAtLeast` và cùng lý do: cửa chặn của engine chỉ biết `textMatches` trên
- * một danh sách `a|b|c`, không biết so số. Nhưng ở đây phép rải CHÍNH XÁC tuyệt đối chứ không
- * cần mẹo dấu `/` như bên viên đan: `#lobby-ready` chứa ĐÚNG một chữ số và không gì khác — bản
+ * Cửa chặn của engine chỉ biết `textMatches` trên một danh sách `a|b|c`, không biết so số.
+ * Nhưng ở đây phép rải CHÍNH XÁC tuyệt đối: `#lobby-ready` chứa ĐÚNG một chữ số và không gì khác — bản
  * ghi 29/08 chụp được nguyên văn `✓ <span id="lobby-ready">4</span> Sẵn Sàng`, tức phần tử chỉ
  * ôm con số, còn chữ「Sẵn Sàng」nằm ngoài nó. Đội tối đa năm người nên danh sách dài nhất là năm
  * mảnh một ký tự.
@@ -304,10 +272,13 @@ export function profileForConfig(config, say, marksToday) {
       }
 
       // HẠN MỨC GIỮ ĐAN. Hai chế độ là hai option KHÁC NHAU trong hồ sơ, và mỗi lượt dịch chỉ
-      // thắp lên đúng một cái: `capOver` mở nhánh phân giải viên dư, `capFull` mở nhánh dừng
-      // khai lô. Cái không được thắp giữ nguyên giá trị mặc định «không hạn mức» — một chuỗi
-      // không lời văn nào của trang chứa nổi, nên nhánh của nó câm hẳn. Cùng mẹo với
-      // «luôn phân giải» ở trên: một danh sách chặn tắt hẳn bằng cách không khớp gì cả.
+      // thắp lên đúng một cái: `capOver` mang ngưỡng bắt đầu có viên dư, `capFull` mang ngưỡng
+      // phải dừng khai lô. Script trong profile đọc trực tiếp hàng Hạ/Trung/Thượng/Cực đang
+      // chọn ở `#ldBagPillStats`, so SỐ và đặt marker DOM; nó không cộng bốn phẩm và không còn
+      // phụ thuộc câu chữ của hộp thông tin viên đan.
+      //
+      // Cái không được thắp giữ nguyên «không hạn mức». `Number(...)` biến nó thành NaN, nên
+      // marker của nhánh ấy luôn tắt.
       //
       // `keepFrom === 0` là「Phân giải tất cả」— không giữ viên nào thì hạn mức giữ đan không
       // có gì để đếm. Form đã khoá công tắc ở mức đó; đây là lớp gác thứ hai cho những ngọc
@@ -321,18 +292,14 @@ export function profileForConfig(config, say, marksToday) {
           // stop  → dừng NGAY KHI đủ hạn mức, nên đếm từ chính `cap`.
           // decompose → chỉ đụng tới viên VƯỢT hạn mức, nên đếm từ `cap + 1`.
           const stop = ld.keepCapMode === "stop";
-          const list = bagCountAtLeast(stop ? cap : cap + 1);
-          if (list) {
-            setOption(luyenDan, stop ? "capFull" : "capOver", list, {
-              allowFreeform: true,
-              log,
-              describe: stop
-                ? `hạn mức giữ đan ${cap} viên — đủ thì thôi khai lô`
-                : `hạn mức giữ đan ${cap} viên — dư thì phân giải`,
-            });
-          } else {
-            log?.(`Hạn mức giữ đan ${cap} viên vượt trần ${BAG_COUNT_CEILING} — bỏ qua hạn mức.`);
-          }
+          const threshold = String(stop ? cap : cap + 1);
+          setOption(luyenDan, stop ? "capFull" : "capOver", threshold, {
+            allowFreeform: true,
+            log,
+            describe: stop
+              ? `hạn mức giữ đan ${cap} viên theo đúng phẩm đang chọn — đủ thì thôi khai lô`
+              : `hạn mức giữ đan ${cap} viên theo đúng phẩm đang chọn — dư thì phân giải`,
+          });
         }
       }
     }

@@ -1,6 +1,6 @@
 {
   "name": "Ho\u1EA1t \u0111\u1ED9ng h\u00E0ng ng\u00E0y (m\u1EB7c \u0111\u1ECBnh)",
-  "schemaVersion": 79,
+  "schemaVersion": 80,
   "dailyQuestPath": "/nhiem-vu-hang-ngay",
   "quests": [
     {
@@ -4722,42 +4722,32 @@
           }
         },
         {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const body = document.body; if (!body) return \u0027\u0027; body.dataset.jvzCollectReady = \u00270\u0027; const b = document.querySelector(\u0027#ldBtnCollect\u0027); if (!b) return \u0027\u0027; const r = b.getBoundingClientRect(); const s = getComputedStyle(b); const shown = r.width \u003E 0 \u0026\u0026 r.height \u003E 0 \u0026\u0026 s.display !== \u0027none\u0027 \u0026\u0026 s.visibility !== \u0027hidden\u0027 \u0026\u0026 s.opacity !== \u00270\u0027; if (shown \u0026\u0026 !b.disabled \u0026\u0026 b.getAttribute(\u0027aria-disabled\u0027) !== \u0027true\u0027) body.dataset.jvzCollectReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u00F3ng d\u1EA5u c\u00F3/kh\u00F4ng m\u1ED9t l\u01B0\u1EE3t Thu \u0110an th\u1EADt tr\u01B0\u1EDBc khi b\u1EA5m"
+        },
+        {
           "action": "click",
           "selector": "#ldBtnCollect",
           "timeoutMs": 5000,
           "note": "Thu \u0110an \u2014 m\u1EBB tr\u01B0\u1EDBc \u0111\u00E3 th\u00E0nh",
-          "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldBtnCollect"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
           "action": "waitForCondition",
-          "timeoutMs": 15000,
-          "note": "b\u1EA3ng th\u01B0\u1EDFng \u0111an m\u1EDF ~5-7s sau khi thu \u2014 n\u00FAt Thu \u0110an c\u00F2n tr\u00EAn m\u00E0n ~3s (splash) r\u1ED3i trang v\u1EBD l\u1EA1i m\u00E0n l\u00F2 tr\u1ED1ng, n\u00EAn ph\u1EA3i \u0111\u1EE9ng \u0111\u00E2y ch\u1EDD modal",
-          "optional": true,
+          "timeoutMs": 20000,
+          "note": "b\u1EA3ng th\u01B0\u1EDFng \u0111an ph\u1EA3i m\u1EDF sau \u0111\u00FAng l\u01B0\u1EE3t Thu \u0110an v\u1EEBa \u0111\u00F3ng d\u1EA5u",
           "condition": {
             "kind": "visible",
             "selector": "#ldModalCloseBtn"
           },
           "when": {
             "kind": "visible",
-            "selector": "#ldBtnCollect"
-          }
-        },
-        {
-          "action": "waitForCondition",
-          "timeoutMs": 15000,
-          "note": "l\u01B0\u1EDBi th\u1EE9 hai g\u00E1c theo \u0110AN TRONG T\u00DAI (b\u1EC1n, hi\u1EC7n ngay khi /collect v\u1EC1): n\u00FAt Thu \u0110an bi\u1EBFn m\u1EA5t nhanh th\u00EC l\u01B0\u1EE3t ch\u1EDD n\u00E0y v\u1EABn b\u1EAFt \u0111\u01B0\u1EE3c modal",
-          "optional": true,
-          "condition": {
-            "kind": "visible",
-            "selector": "#ldModalCloseBtn"
-          },
-          "when": {
-            "kind": "visible",
-            "selector": "#ldInventory .ld-cell--pill"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
@@ -4772,10 +4762,9 @@
           "selector": "#ldModalCloseBtn",
           "timeoutMs": 5000,
           "note": "\u0111\u00F3ng b\u1EA3ng th\u01B0\u1EDFng",
-          "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldModalCloseBtn"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
@@ -4786,67 +4775,142 @@
           "optional": true
         },
         {
-          "action": "click",
-          "selector": "#ldInventory .ld-cell--pill",
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const body = document.body; if (!body) return \u0027\u0027; body.dataset.jvzCollectReady = \u00270\u0027; const b = document.querySelector(\u0027#ldBtnCollect\u0027); if (!b) return \u0027\u0027; const r = b.getBoundingClientRect(); const s = getComputedStyle(b); const shown = r.width \u003E 0 \u0026\u0026 r.height \u003E 0 \u0026\u0026 s.display !== \u0027none\u0027 \u0026\u0026 s.visibility !== \u0027hidden\u0027 \u0026\u0026 s.opacity !== \u00270\u0027; if (shown \u0026\u0026 !b.disabled \u0026\u0026 b.getAttribute(\u0027aria-disabled\u0027) !== \u0027true\u0027) body.dataset.jvzCollectReady = \u00271\u0027; return \u0027\u0027; }",
           "timeoutMs": 4000,
-          "note": "m\u1EDF \u00F4 \u0111an trong t\u00FAi \u2014 ch\u1EC9 khi t\u00FAi th\u1EADt s\u1EF1 c\u00F3 \u0111an",
+          "note": "\u0111\u00F3ng d\u1EA5u l\u01B0\u1EE3t Thu \u0110an ki\u1EC3m l\u1EA1i tr\u01B0\u1EDBc khi \u0111\u1EBFm t\u00FAi"
+        },
+        {
+          "action": "click",
+          "selector": "#ldBtnCollect",
+          "timeoutMs": 5000,
+          "note": "Thu \u0110an l\u1EA7n hai \u2014 m\u1EBB v\u1EEBa ch\u00EDn trong l\u00FAc l\u01B0\u1EE3t n\u00E0y \u0111ang x\u1EED l\u00FD b\u1EA3ng th\u01B0\u1EDFng",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 20000,
+          "note": "ch\u1EDD b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu mu\u1ED9n \u2014 sau b\u01B0\u1EDBc n\u00E0y m\u1EDBi \u0111\u01B0\u1EE3c \u0111\u1EBFm t\u00FAi theo ph\u1EA9m",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldModalCloseBtn"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const m = document.querySelector(\u0027#ldModalCloseBtn\u0027); const vis = m \u0026\u0026 m.getBoundingClientRect().width \u003E 0; return vis ? \u0027!Thu \u0111an (ki\u1EC3m l\u1EA1i tr\u01B0\u1EDBc khai l\u00F4) \u2014 m\u1EBB tr\u01B0\u1EDBc v\u1EEBa k\u1ECBp ch\u00EDn\u0027 : \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: l\u01B0\u1EE3t thu mu\u1ED9n c\u00F3 th\u1EADt \u2014 b\u1EA3ng th\u01B0\u1EDFng \u0111ang m\u1EDF l\u00E0 b\u1EB1ng ch\u1EE9ng",
+          "optional": true
+        },
+        {
+          "action": "click",
+          "selector": "#ldModalCloseBtn",
+          "timeoutMs": 5000,
+          "note": "\u0111\u00F3ng b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu mu\u1ED9n",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const panel = document.querySelector(\u0027#ldBagPillStats\u0027); const body = document.body; if (!panel || !body) throw new Error(\u0027Kh\u00F4ng t\u00ECm th\u1EA5y b\u1EA3ng s\u1ED1 \u0111an theo ph\u1EA9m #ldBagPillStats\u0027); body.dataset.jvzCapOver = \u00270\u0027; body.dataset.jvzCapFull = \u00270\u0027; body.dataset.jvzTierCount = \u0027\u0027; panel.dataset.jvzScanReady = \u00270\u0027; panel.dataset.jvzCapOver = \u00270\u0027; panel.dataset.jvzCapFull = \u00270\u0027; panel.dataset.jvzTierCount = \u0027\u0027; document.querySelectorAll(\u0027#ldInventory .ld-cell--pill[data-jvz-selected-tier]\u0027).forEach(p =\u003E p.removeAttribute(\u0027data-jvz-selected-tier\u0027)); const fold = s =\u003E String(s || \u0027\u0027).toLowerCase().normalize(\u0027NFD\u0027).replace(/\\p{M}/gu, \u0027\u0027).replace(/\u0111/g, \u0027d\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim(); const wanted = \u0027{{tier}}\u0027; const wantedFold = fold(wanted); const keys = {\u0027ha pham\u0027:\u0027ha\u0027,\u0027trung pham\u0027:\u0027trung\u0027,\u0027thuong pham\u0027:\u0027thuong\u0027,\u0027cuc pham\u0027:\u0027cuc\u0027}; const rows = Array.from(panel.querySelectorAll(\u0027.ld-bag-usage--stored .ld-bag-usage__row\u0027)); const row = rows.find(r =\u003E fold(r.querySelector(\u0027.ld-bag-usage__name\u0027)?.textContent) === wantedFold); const m = (row?.querySelector(\u0027.ld-bag-usage__nums\u0027)?.textContent || \u0027\u0027).match(/^\\s*(\\d\u002B)\\s*\\//); const count = m ? Number(m[1]) : NaN; const key = keys[wantedFold]; if (!row || !key || !Number.isFinite(count)) throw new Error(\u0027Kh\u00F4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn: \u0027 \u002B wanted); const over = Number(\u0027{{capOver}}\u0027); const full = Number(\u0027{{capFull}}\u0027); panel.dataset.jvzTierCount = String(count); panel.dataset.jvzCapOver = Number.isFinite(over) \u0026\u0026 count \u003E= over ? \u00271\u0027 : \u00270\u0027; panel.dataset.jvzCapFull = Number.isFinite(full) \u0026\u0026 count \u003E= full ? \u00271\u0027 : \u00270\u0027; body.dataset.jvzTierCount = panel.dataset.jvzTierCount; body.dataset.jvzCapOver = panel.dataset.jvzCapOver; body.dataset.jvzCapFull = panel.dataset.jvzCapFull; const pill = Array.from(document.querySelectorAll(\u0027#ldInventory .ld-cell--pill\u0027)).find(p =\u003E p.dataset.tier === key); if (count \u003E 0 \u0026\u0026 !pill) throw new Error(\u0027B\u1EA3ng b\u00E1o c\u00F3 \u0111an nh\u01B0ng kh\u00F4ng t\u00ECm th\u1EA5y \u00F4 c\u1EE7a ph\u1EA9m: \u0027 \u002B wanted); if (pill) pill.dataset.jvzSelectedTier = \u00271\u0027; panel.dataset.jvzScanReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u1ECDc s\u1ED1 \u0111an RI\u00CANG c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn v\u00E0 \u0111\u00E1nh d\u1EA5u \u0111\u00FAng \u00F4 \u0111an c\u1EA7n x\u1EED l\u00FD"
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "b\u1EAFt bu\u1ED9c \u0111\u1ECDc \u0111\u01B0\u1EE3c h\u00E0ng s\u1ED1 \u0111an theo ph\u1EA9m \u2014 kh\u00F4ng cho l\u1ED7i markup tr\u00F4i qua im l\u1EB7ng",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-scan-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const p = document.querySelector(\u0027#ldBagPillStats\u0027); if (!p || p.getBoundingClientRect().width \u003C 1) return \u0027\u0027; return \u0027!Trong t\u00FAi {{tier}} \u0111\u00E3 c\u00F3 \u0027 \u002B (p.dataset.jvzTierCount || \u0027\u0111\u1EE7\u0027) \u002B \u0027 vi\u00EAn \u2014 gi\u1EEF nguy\u00EAn v\u00E0 th\u00F4i khai l\u00F4 m\u1EDBi\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: ph\u1EA9m \u0111ang ch\u1ECDn \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c, d\u1EEBng luy\u1EC7n",
           "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldInventory .ld-cell--pill"
+            "selector": "#ldBagPillStats[data-jvz-cap-full=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "stopIf",
+          "text": "\u0111\u00E3 gi\u1EEF \u0111\u1EE7 s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn \u2014 th\u00F4i khai l\u00F4 m\u1EDBi",
+          "timeoutMs": 15000,
+          "note": "d\u1EEBng sau c\u1EA3 hai l\u01B0\u1EE3t Thu \u0110an v\u00E0 tr\u01B0\u1EDBc khai l\u00F4, kh\u00F4ng c\u1ED9ng \u0111an c\u1EE7a ph\u1EA9m kh\u00E1c",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-full=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldInventory .ld-cell--pill[data-jvz-selected-tier=\u00221\u0022]",
+          "timeoutMs": 4000,
+          "note": "m\u1EDF \u00F4 \u0111an \u0111\u00FAng ph\u1EA9m \u0111ang c\u1EA5u h\u00ECnh \u2014 kh\u00F4ng l\u1EA5y \u00F4 \u0111\u1EA7u ti\u00EAn c\u1EE7a ph\u1EA9m kh\u00E1c",
+          "when": {
+            "kind": "visible",
+            "selector": "#ldInventory .ld-cell--pill[data-jvz-selected-tier=\u00221\u0022]"
           }
         },
         {
           "action": "waitForCondition",
           "timeoutMs": 5000,
-          "note": "h\u1ED9p th\u00F4ng tin vi\u00EAn \u0111an m\u1EDF ra",
-          "optional": true,
+          "note": "h\u1ED9p th\u00F4ng tin c\u1EE7a \u0111\u00FAng ph\u1EA9m \u0111an \u0111\u00E3 m\u1EDF",
           "condition": {
             "kind": "visible",
             "selector": "#ldModalDecompose"
           },
           "when": {
             "kind": "visible",
-            "selector": "#ldInventory .ld-cell--pill"
+            "selector": "#ldInventory .ld-cell--pill[data-jvz-selected-tier=\u00221\u0022]"
           }
         },
         {
           "action": "evaluateJavaScript",
-          "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const t = b.innerText || \u0027\u0027; const s = t.match(/D\u01B0\u1EE3c kh\u00ED\\s*([1-4])\\s*sao/i); const c = t.match(/\u0110an trong t\u00FAi[^0-9]*(\\d\u002B)\\s*\\//); return \u0027!T\u00FAi \u0111\u00E3 c\u00F3 \u0027 \u002B (c ? c[1] : \u0027?\u0027) \u002B \u0027 vi\u00EAn \u2014 v\u01B0\u1EE3t h\u1EA1n m\u1EE9c gi\u1EEF, ph\u00E2n gi\u1EA3i vi\u00EAn\u0027 \u002B (s ? \u0027 \u0027 \u002B s[1] \u002B \u0027 sao\u0027 : \u0027\u0027) \u002B \u0027 \u0111ang m\u1EDF\u0027; }",
+          "script": "() =\u003E { const p = document.querySelector(\u0027#ldBagPillStats\u0027); const b = document.querySelector(\u0027#ldModalBody\u0027); if (!p || !b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const s = (b.innerText || \u0027\u0027).match(/D\u01B0\u1EE3c kh\u00ED\\s*([1-4])\\s*sao/i); return \u0027!T\u00FAi {{tier}} \u0111\u00E3 c\u00F3 \u0027 \u002B (p.dataset.jvzTierCount || \u0027?\u0027) \u002B \u0027 vi\u00EAn \u2014 v\u01B0\u1EE3t h\u1EA1n m\u1EE9c gi\u1EEF, ph\u00E2n gi\u1EA3i vi\u00EAn\u0027 \u002B (s ? \u0027 \u0027 \u002B s[1] \u002B \u0027 sao\u0027 : \u0027\u0027) \u002B \u0027 \u0111ang m\u1EDF\u0027; }",
           "timeoutMs": 4000,
-          "note": "k\u1EC3 chuy\u1EC7n: vi\u00EAn \u0111an b\u1ECB ph\u00E2n gi\u1EA3i v\u00EC t\u00FAi \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c",
+          "note": "k\u1EC3 chuy\u1EC7n: vi\u00EAn \u0111\u00FAng ph\u1EA9m b\u1ECB ph\u00E2n gi\u1EA3i v\u00EC ph\u1EA9m \u1EA5y v\u01B0\u1EE3t h\u1EA1n m\u1EE9c",
           "optional": true,
           "when": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capOver}}"
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
           "action": "click",
           "selector": "#ldModalDecompose",
           "timeoutMs": 4000,
-          "note": "PH\u00C2N GI\u1EA2I vi\u00EAn v\u01B0\u1EE3t h\u1EA1n m\u1EE9c \u2014 nh\u00E1nh n\u00E0y \u0111i tr\u1ECDn c\u1EE5m x\u00E1c nh\u1EADn c\u1EE7a ri\u00EAng n\u00F3",
-          "optional": true,
+          "note": "PH\u00C2N GI\u1EA2I vi\u00EAn v\u01B0\u1EE3t h\u1EA1n m\u1EE9c c\u1EE7a \u0111\u00FAng ph\u1EA9m \u0111ang c\u1EA5u h\u00ECnh",
           "when": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capOver}}"
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
           "action": "waitForCondition",
           "timeoutMs": 5000,
-          "note": "h\u1ED9p x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i c\u1EE7a nh\u00E1nh h\u1EA1n m\u1EE9c",
-          "optional": true,
+          "note": "h\u1ED9p x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i c\u1EE7a nh\u00E1nh h\u1EA1n m\u1EE9c theo ph\u1EA9m",
           "condition": {
             "kind": "visible",
             "selector": "#ldConfirmOk"
           },
           "when": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capOver}}"
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
@@ -4854,33 +4918,32 @@
           "selector": "#ldConfirmOk",
           "timeoutMs": 4000,
           "note": "x\u00E1c nh\u1EADn \u2014 xong c\u00FA n\u00E0y th\u00EC h\u1ED9p \u0111an \u0111\u00F3ng, nh\u00E1nh sao b\u00EAn d\u01B0\u1EDBi kh\u00F4ng c\u00F2n g\u00EC \u0111\u1EC3 gi\u1EEF",
-          "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldConfirmOk"
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
-          "action": "evaluateJavaScript",
-          "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const c = (b.innerText || \u0027\u0027).match(/\u0110an trong t\u00FAi[^0-9]*(\\d\u002B)\\s*\\//); return \u0027!Trong t\u00FAi \u0111\u00E3 c\u00F3 \u0027 \u002B (c ? c[1] : \u0027\u0111\u1EE7\u0027) \u002B \u0027 vi\u00EAn \u2014 gi\u1EEF nguy\u00EAn v\u00E0 th\u00F4i khai l\u00F4 m\u1EDBi\u0027; }",
-          "timeoutMs": 4000,
-          "note": "k\u1EC3 chuy\u1EC7n: \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c, d\u1EEBng luy\u1EC7n",
-          "optional": true,
-          "when": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capFull}}"
-          }
-        },
-        {
-          "action": "stopIf",
-          "text": "\u0111\u00E3 gi\u1EEF \u0111\u1EE7 s\u1ED1 \u0111an \u0111\u1EB7t ra \u2014 th\u00F4i khai l\u00F4 m\u1EDBi",
-          "timeoutMs": 15000,
-          "note": "d\u1EEBng TR\u01AF\u1EDAC c\u1EE5m khai l\u00F4, n\u00EAn m\u1ED7i l\u01B0\u1EE3t gh\u00E9 \u0111\u1EC1u \u0111\u1EBFm l\u1EA1i ch\u1EE9 kh\u00F4ng luy\u1EC7n th\u1EEBa",
+          "action": "waitForCondition",
+          "timeoutMs": 8000,
+          "note": "nh\u00E1nh v\u01B0\u1EE3t h\u1EA1n m\u1EE9c ph\u1EA3i nh\u1EADn \u0111\u01B0\u1EE3c b\u1EA3ng ho\u00E0n d\u01B0\u1EE3c",
           "condition": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capFull}}"
+            "kind": "visible",
+            "selector": "#ldDecomposeRewardOk"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldDecomposeRewardOk",
+          "timeoutMs": 10000,
+          "note": "\u0111\u00F3ng b\u1EA3ng ho\u00E0n d\u01B0\u1EE3c c\u1EE7a nh\u00E1nh v\u01B0\u1EE3t h\u1EA1n m\u1EE9c",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
@@ -4972,46 +5035,188 @@
           }
         },
         {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const body = document.body; if (!body) return \u0027\u0027; body.dataset.jvzCollectReady = \u00270\u0027; const b = document.querySelector(\u0027#ldBtnCollect\u0027); if (!b) return \u0027\u0027; const r = b.getBoundingClientRect(); const s = getComputedStyle(b); const shown = r.width \u003E 0 \u0026\u0026 r.height \u003E 0 \u0026\u0026 s.display !== \u0027none\u0027 \u0026\u0026 s.visibility !== \u0027hidden\u0027 \u0026\u0026 s.opacity !== \u00270\u0027; if (shown \u0026\u0026 !b.disabled \u0026\u0026 b.getAttribute(\u0027aria-disabled\u0027) !== \u0027true\u0027) body.dataset.jvzCollectReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u00F3ng d\u1EA5u l\u01B0\u1EE3t Thu \u0110an s\u00E1t c\u1EEDa khai l\u00F4"
+        },
+        {
           "action": "click",
           "selector": "#ldBtnCollect",
           "timeoutMs": 5000,
-          "note": "Thu \u0110an l\u1EA7n hai \u2014 m\u1EBB v\u1EEBa ch\u00EDn trong l\u00FAc l\u01B0\u1EE3t n\u00E0y \u0111ang ph\u00E2n gi\u1EA3i",
-          "optional": true,
+          "note": "Thu \u0110an s\u00E1t c\u1EEDa khai l\u00F4 \u2014 m\u1EBB c\u00F3 th\u1EC3 ch\u00EDn trong l\u00FAc x\u1EED l\u00FD vi\u00EAn tr\u01B0\u1EDBc",
           "when": {
             "kind": "visible",
-            "selector": "#ldBtnCollect"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
           "action": "waitForCondition",
-          "timeoutMs": 15000,
-          "note": "ch\u1EDD b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu mu\u1ED9n \u2014 g\u00E1c theo \u0111an trong t\u00FAi nh\u01B0 l\u01B0\u1EE3t \u0111\u1EA7u",
-          "optional": true,
+          "timeoutMs": 20000,
+          "note": "ch\u1EDD b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa khai l\u00F4",
           "condition": {
             "kind": "visible",
             "selector": "#ldModalCloseBtn"
           },
           "when": {
             "kind": "visible",
-            "selector": "#ldInventory .ld-cell--pill"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
           "action": "evaluateJavaScript",
-          "script": "() =\u003E { const m = document.querySelector(\u0027#ldModalCloseBtn\u0027); const vis = m \u0026\u0026 m.getBoundingClientRect().width \u003E 0; return vis ? \u0027!Thu \u0111an (ki\u1EC3m l\u1EA1i tr\u01B0\u1EDBc khai l\u00F4) \u2014 m\u1EBB tr\u01B0\u1EDBc v\u1EEBa k\u1ECBp ch\u00EDn\u0027 : \u0027\u0027; }",
+          "script": "() =\u003E { const m = document.querySelector(\u0027#ldModalCloseBtn\u0027); const vis = m \u0026\u0026 m.getBoundingClientRect().width \u003E 0; return vis ? \u0027!Thu \u0111an s\u00E1t c\u1EEDa khai l\u00F4 \u2014 kh\u00F4ng b\u1ECF s\u00F3t m\u1EBB v\u1EEBa ch\u00EDn\u0027 : \u0027\u0027; }",
           "timeoutMs": 4000,
-          "note": "k\u1EC3 chuy\u1EC7n: l\u01B0\u1EE3t thu mu\u1ED9n c\u00F3 th\u1EADt \u2014 b\u1EA3ng th\u01B0\u1EDFng \u0111ang m\u1EDF l\u00E0 b\u1EB1ng ch\u1EE9ng",
+          "note": "k\u1EC3 chuy\u1EC7n: l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa khai l\u00F4 c\u00F3 th\u1EADt",
           "optional": true
         },
         {
           "action": "click",
           "selector": "#ldModalCloseBtn",
           "timeoutMs": 5000,
-          "note": "\u0111\u00F3ng b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu mu\u1ED9n",
+          "note": "\u0111\u00F3ng b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const panel = document.querySelector(\u0027#ldBagPillStats\u0027); const body = document.body; if (!panel || !body) throw new Error(\u0027Kh\u00F4ng t\u00ECm th\u1EA5y b\u1EA3ng s\u1ED1 \u0111an theo ph\u1EA9m #ldBagPillStats\u0027); body.dataset.jvzCapOver = \u00270\u0027; body.dataset.jvzCapFull = \u00270\u0027; body.dataset.jvzTierCount = \u0027\u0027; panel.dataset.jvzScanReady = \u00270\u0027; panel.dataset.jvzCapOver = \u00270\u0027; panel.dataset.jvzCapFull = \u00270\u0027; panel.dataset.jvzTierCount = \u0027\u0027; document.querySelectorAll(\u0027#ldInventory .ld-cell--pill[data-jvz-selected-tier]\u0027).forEach(p =\u003E p.removeAttribute(\u0027data-jvz-selected-tier\u0027)); const fold = s =\u003E String(s || \u0027\u0027).toLowerCase().normalize(\u0027NFD\u0027).replace(/\\p{M}/gu, \u0027\u0027).replace(/\u0111/g, \u0027d\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim(); const wanted = \u0027{{tier}}\u0027; const wantedFold = fold(wanted); const keys = {\u0027ha pham\u0027:\u0027ha\u0027,\u0027trung pham\u0027:\u0027trung\u0027,\u0027thuong pham\u0027:\u0027thuong\u0027,\u0027cuc pham\u0027:\u0027cuc\u0027}; const rows = Array.from(panel.querySelectorAll(\u0027.ld-bag-usage--stored .ld-bag-usage__row\u0027)); const row = rows.find(r =\u003E fold(r.querySelector(\u0027.ld-bag-usage__name\u0027)?.textContent) === wantedFold); const m = (row?.querySelector(\u0027.ld-bag-usage__nums\u0027)?.textContent || \u0027\u0027).match(/^\\s*(\\d\u002B)\\s*\\//); const count = m ? Number(m[1]) : NaN; const key = keys[wantedFold]; if (!row || !key || !Number.isFinite(count)) throw new Error(\u0027Kh\u00F4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn: \u0027 \u002B wanted); const over = Number(\u0027{{capOver}}\u0027); const full = Number(\u0027{{capFull}}\u0027); panel.dataset.jvzTierCount = String(count); panel.dataset.jvzCapOver = Number.isFinite(over) \u0026\u0026 count \u003E= over ? \u00271\u0027 : \u00270\u0027; panel.dataset.jvzCapFull = Number.isFinite(full) \u0026\u0026 count \u003E= full ? \u00271\u0027 : \u00270\u0027; body.dataset.jvzTierCount = panel.dataset.jvzTierCount; body.dataset.jvzCapOver = panel.dataset.jvzCapOver; body.dataset.jvzCapFull = panel.dataset.jvzCapFull; const pill = Array.from(document.querySelectorAll(\u0027#ldInventory .ld-cell--pill\u0027)).find(p =\u003E p.dataset.tier === key); if (count \u003E 0 \u0026\u0026 !pill) throw new Error(\u0027B\u1EA3ng b\u00E1o c\u00F3 \u0111an nh\u01B0ng kh\u00F4ng t\u00ECm th\u1EA5y \u00F4 c\u1EE7a ph\u1EA9m: \u0027 \u002B wanted); if (pill) pill.dataset.jvzSelectedTier = \u00271\u0027; panel.dataset.jvzScanReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "qu\u00E9t l\u1EA1i \u0111\u00FAng ph\u1EA9m sau l\u01B0\u1EE3t Thu \u0110an s\u00E1t c\u1EEDa khai l\u00F4"
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "b\u1EAFt bu\u1ED9c qu\u00E9t l\u1EA1i \u0111\u01B0\u1EE3c h\u1EA1n m\u1EE9c theo ph\u1EA9m tr\u01B0\u1EDBc khai l\u00F4",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-scan-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const p = document.querySelector(\u0027#ldBagPillStats\u0027); if (!p || p.getBoundingClientRect().width \u003C 1) return \u0027\u0027; return \u0027!Sau l\u01B0\u1EE3t thu cu\u1ED1i, t\u00FAi {{tier}} \u0111\u00E3 c\u00F3 \u0027 \u002B (p.dataset.jvzTierCount || \u0027\u0111\u1EE7\u0027) \u002B \u0027 vi\u00EAn \u2014 gi\u1EEF nguy\u00EAn v\u00E0 kh\u00F4ng khai th\u00EAm l\u00F4\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa \u0111\u00E3 ch\u1EA1m h\u1EA1n m\u1EE9c c\u1EE7a \u0111\u00FAng ph\u1EA9m",
           "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldModalCloseBtn"
+            "selector": "#ldBagPillStats[data-jvz-cap-full=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "stopIf",
+          "text": "l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa \u0111\u00E3 gi\u1EEF \u0111\u1EE7 s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn \u2014 th\u00F4i khai l\u00F4 m\u1EDBi",
+          "timeoutMs": 15000,
+          "note": "ch\u1EB7n race: \u0111\u1EBFm l\u1EA1i sau x\u1EED l\u00FD vi\u00EAn v\u00E0 ngay tr\u01B0\u1EDBc khai l\u00F4",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-full=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldInventory .ld-cell--pill[data-jvz-selected-tier=\u00221\u0022]",
+          "timeoutMs": 5000,
+          "note": "m\u1EDF vi\u00EAn d\u01B0 \u0111\u00FAng ph\u1EA9m v\u1EEBa thu s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 6000,
+          "note": "h\u1ED9p vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4 ph\u1EA3i m\u1EDF \u0111\u00FAng",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldModalDecompose"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldModalDecompose",
+          "timeoutMs": 5000,
+          "note": "ph\u00E2n gi\u1EA3i vi\u00EAn d\u01B0 v\u1EEBa thu s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 6000,
+          "note": "ch\u1EDD x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldConfirmOk"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldConfirmOk",
+          "timeoutMs": 5000,
+          "note": "x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 8000,
+          "note": "ch\u1EDD linh d\u01B0\u1EE3c ho\u00E0n l\u1EA1i c\u1EE7a vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldDecomposeRewardOk"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldDecomposeRewardOk",
+          "timeoutMs": 10000,
+          "note": "\u0111\u00F3ng b\u1EA3ng ho\u00E0n d\u01B0\u1EE3c c\u1EE7a vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const panel = document.querySelector(\u0027#ldBagPillStats\u0027); const body = document.body; if (!panel || !body) throw new Error(\u0027Kh\u00F4ng t\u00ECm th\u1EA5y b\u1EA3ng s\u1ED1 \u0111an theo ph\u1EA9m #ldBagPillStats\u0027); body.dataset.jvzCapOver = \u00270\u0027; body.dataset.jvzCapFull = \u00270\u0027; body.dataset.jvzTierCount = \u0027\u0027; panel.dataset.jvzScanReady = \u00270\u0027; panel.dataset.jvzCapOver = \u00270\u0027; panel.dataset.jvzCapFull = \u00270\u0027; panel.dataset.jvzTierCount = \u0027\u0027; document.querySelectorAll(\u0027#ldInventory .ld-cell--pill[data-jvz-selected-tier]\u0027).forEach(p =\u003E p.removeAttribute(\u0027data-jvz-selected-tier\u0027)); const fold = s =\u003E String(s || \u0027\u0027).toLowerCase().normalize(\u0027NFD\u0027).replace(/\\p{M}/gu, \u0027\u0027).replace(/\u0111/g, \u0027d\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim(); const wanted = \u0027{{tier}}\u0027; const wantedFold = fold(wanted); const keys = {\u0027ha pham\u0027:\u0027ha\u0027,\u0027trung pham\u0027:\u0027trung\u0027,\u0027thuong pham\u0027:\u0027thuong\u0027,\u0027cuc pham\u0027:\u0027cuc\u0027}; const rows = Array.from(panel.querySelectorAll(\u0027.ld-bag-usage--stored .ld-bag-usage__row\u0027)); const row = rows.find(r =\u003E fold(r.querySelector(\u0027.ld-bag-usage__name\u0027)?.textContent) === wantedFold); const m = (row?.querySelector(\u0027.ld-bag-usage__nums\u0027)?.textContent || \u0027\u0027).match(/^\\s*(\\d\u002B)\\s*\\//); const count = m ? Number(m[1]) : NaN; const key = keys[wantedFold]; if (!row || !key || !Number.isFinite(count)) throw new Error(\u0027Kh\u00F4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn: \u0027 \u002B wanted); const over = Number(\u0027{{capOver}}\u0027); const full = Number(\u0027{{capFull}}\u0027); panel.dataset.jvzTierCount = String(count); panel.dataset.jvzCapOver = Number.isFinite(over) \u0026\u0026 count \u003E= over ? \u00271\u0027 : \u00270\u0027; panel.dataset.jvzCapFull = Number.isFinite(full) \u0026\u0026 count \u003E= full ? \u00271\u0027 : \u00270\u0027; body.dataset.jvzTierCount = panel.dataset.jvzTierCount; body.dataset.jvzCapOver = panel.dataset.jvzCapOver; body.dataset.jvzCapFull = panel.dataset.jvzCapFull; const pill = Array.from(document.querySelectorAll(\u0027#ldInventory .ld-cell--pill\u0027)).find(p =\u003E p.dataset.tier === key); if (count \u003E 0 \u0026\u0026 !pill) throw new Error(\u0027B\u1EA3ng b\u00E1o c\u00F3 \u0111an nh\u01B0ng kh\u00F4ng t\u00ECm th\u1EA5y \u00F4 c\u1EE7a ph\u1EA9m: \u0027 \u002B wanted); if (pill) pill.dataset.jvzSelectedTier = \u00271\u0027; panel.dataset.jvzScanReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "x\u00E1c nh\u1EADn l\u1EA1i s\u1ED1 \u0111an \u0111\u00FAng ph\u1EA9m sau nh\u00E1nh vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4"
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "b\u1EA3ng theo ph\u1EA9m ph\u1EA3i c\u1EADp nh\u1EADt sau khi ph\u00E2n gi\u1EA3i vi\u00EAn d\u01B0",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-scan-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 1500,
+          "note": "c\u00F2n d\u01B0 th\u00EC h\u1ECFng an to\u00E0n v\u00E0 gh\u00E9 l\u1EA1i ph\u00E2n gi\u1EA3i ti\u1EBFp \u2014 tuy\u1EC7t \u0111\u1ED1i ch\u01B0a khai l\u00F4 m\u1EDBi",
+          "condition": {
+            "kind": "hidden",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
@@ -5026,7 +5231,6 @@
           "selector": ".ld-recipe-tier:has-text(\u0022{{tier}}\u0022)",
           "timeoutMs": 4000,
           "note": "ch\u1ECDn ph\u1EA9m \u0111an theo tu\u1EF3 ch\u1ECDn",
-          "optional": true,
           "when": {
             "kind": "visible",
             "selector": "#ldBtnCraft"
@@ -5038,8 +5242,27 @@
           "note": "cho trang c\u1EADp nh\u1EADt nguy\u00EAn li\u1EC7u theo ph\u1EA9m v\u1EEBa ch\u1ECDn"
         },
         {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const body = document.body; if (!body) return \u0027\u0027; body.dataset.jvzAlchemyTierReady = \u00270\u0027; const wanted = \u0027{{tier}}\u0027; const el = Array.from(document.querySelectorAll(\u0027.ld-recipe-tier\u0027)).find(x =\u003E (x.textContent || \u0027\u0027).trim() === wanted); if (el \u0026\u0026 el.classList.contains(\u0027is-active\u0027) \u0026\u0026 !el.classList.contains(\u0027is-locked\u0027) \u0026\u0026 el.getAttribute(\u0027aria-disabled\u0027) !== \u0027true\u0027) body.dataset.jvzAlchemyTierReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "x\u00E1c nh\u1EADn ph\u1EA9m \u0111ang active \u0111\u00FAng c\u1EA5u h\u00ECnh v\u00E0 kh\u00F4ng b\u1ECB kh\u00F3a"
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 1500,
+          "note": "kh\u00F4ng luy\u1EC7n nh\u1EA7m ph\u1EA9m c\u0169 khi ph\u1EA9m c\u1EA5u h\u00ECnh b\u1ECB kh\u00F3a ho\u1EB7c click kh\u00F4ng c\u00F3 hi\u1EC7u l\u1EF1c",
+          "condition": {
+            "kind": "visible",
+            "selector": "body[data-jvz-alchemy-tier-ready=\u00221\u0022]"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBtnCraft"
+          }
+        },
+        {
           "action": "click",
-          "selector": "#ldBtnCraft",
+          "selector": "body[data-jvz-alchemy-tier-ready=\u00221\u0022] #ldBtnCraft",
           "timeoutMs": 5000,
           "note": "Luy\u1EC7n \u0110an \u2014 m\u1EDF h\u1ED9p x\u00E1c nh\u1EADn khai l\u00F4",
           "optional": true,
@@ -5051,7 +5274,7 @@
         {
           "action": "waitForCondition",
           "timeoutMs": 6000,
-          "note": "h\u1ED9p x\u00E1c nh\u1EADn d\u00F9ng 20 Ti\u00EAn Ng\u1ECDc",
+          "note": "h\u1ED9p x\u00E1c nh\u1EADn d\u00F9ng Ti\u00EAn Ng\u1ECDc theo ph\u1EA9m/c\u00F4ng th\u1EE9c \u0111ang ch\u1ECDn",
           "optional": true,
           "condition": {
             "kind": "visible",
@@ -5066,7 +5289,7 @@
           "action": "click",
           "selector": "#ldConfirmOk",
           "timeoutMs": 5000,
-          "note": "x\u00E1c nh\u1EADn khai l\u00F4 \u2014 T\u1ED0N 20 Ti\u00EAn Ng\u1ECDc \u002B d\u01B0\u1EE3c li\u1EC7u",
+          "note": "x\u00E1c nh\u1EADn khai l\u00F4 \u2014 T\u1ED0N Ti\u00EAn Ng\u1ECDc theo ph\u1EA9m/c\u00F4ng th\u1EE9c \u002B d\u01B0\u1EE3c li\u1EC7u",
           "optional": true,
           "when": {
             "kind": "visible",
@@ -5230,15 +5453,31 @@
               "label": "Kh\u00F4ng h\u1EA1n m\u1EE9c"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 4/|\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "2",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 1 vi\u00EAn"
+            },
+            {
+              "value": "3",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 2 vi\u00EAn"
+            },
+            {
+              "value": "4",
               "label": "Gi\u1EEF t\u1ED1i \u0111a 3 vi\u00EAn"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "5",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 4 vi\u00EAn"
+            },
+            {
+              "value": "6",
               "label": "Gi\u1EEF t\u1ED1i \u0111a 5 vi\u00EAn"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "7",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 6 vi\u00EAn"
+            },
+            {
+              "value": "11",
               "label": "Gi\u1EEF t\u1ED1i \u0111a 10 vi\u00EAn"
             }
           ],
@@ -5254,15 +5493,31 @@
               "label": "Kh\u00F4ng h\u1EA1n m\u1EE9c"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 3/|\u0111an trong t\u00FAi (ph\u1EA9m) 4/|\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "1",
+              "label": "D\u1EEBng khi \u0111\u1EE7 1 vi\u00EAn"
+            },
+            {
+              "value": "2",
+              "label": "D\u1EEBng khi \u0111\u1EE7 2 vi\u00EAn"
+            },
+            {
+              "value": "3",
               "label": "D\u1EEBng khi \u0111\u1EE7 3 vi\u00EAn"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "4",
+              "label": "D\u1EEBng khi \u0111\u1EE7 4 vi\u00EAn"
+            },
+            {
+              "value": "5",
               "label": "D\u1EEBng khi \u0111\u1EE7 5 vi\u00EAn"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "6",
+              "label": "D\u1EEBng khi \u0111\u1EE7 6 vi\u00EAn"
+            },
+            {
+              "value": "10",
               "label": "D\u1EEBng khi \u0111\u1EE7 10 vi\u00EAn"
             }
           ],
@@ -5273,7 +5528,7 @@
       "fallbackCooldownSeconds": 2700,
       "requiresVip": true,
       "order": 105,
-      "notes": "T\u1EF1 luy\u1EC7n \u0111an \u1EDF Luy\u1EC7n \u0110an \u0110\u01B0\u1EDDng \u2014 m\u1ED7i m\u1EBB T\u1ED0N d\u01B0\u1EE3c li\u1EC7u \u002B 20 Ti\u00EAn Ng\u1ECDc."
+      "notes": "T\u1EF1 luy\u1EC7n \u0111an \u1EDF Luy\u1EC7n \u0110an \u0110\u01B0\u1EDDng \u2014 m\u1ED7i m\u1EBB T\u1ED0N d\u01B0\u1EE3c li\u1EC7u \u002B Ti\u00EAn Ng\u1ECDc theo ph\u1EA9m/c\u00F4ng th\u1EE9c."
     },
     {
       "id": "khoang-mach-thuong",
@@ -6650,42 +6905,32 @@
           }
         },
         {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const body = document.body; if (!body) return \u0027\u0027; body.dataset.jvzCollectReady = \u00270\u0027; const b = document.querySelector(\u0027#ldBtnCollect\u0027); if (!b) return \u0027\u0027; const r = b.getBoundingClientRect(); const s = getComputedStyle(b); const shown = r.width \u003E 0 \u0026\u0026 r.height \u003E 0 \u0026\u0026 s.display !== \u0027none\u0027 \u0026\u0026 s.visibility !== \u0027hidden\u0027 \u0026\u0026 s.opacity !== \u00270\u0027; if (shown \u0026\u0026 !b.disabled \u0026\u0026 b.getAttribute(\u0027aria-disabled\u0027) !== \u0027true\u0027) body.dataset.jvzCollectReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u00F3ng d\u1EA5u c\u00F3/kh\u00F4ng m\u1ED9t l\u01B0\u1EE3t Thu \u0110an th\u1EADt tr\u01B0\u1EDBc khi b\u1EA5m"
+        },
+        {
           "action": "click",
           "selector": "#ldBtnCollect",
           "timeoutMs": 5000,
           "note": "Thu \u0110an \u2014 m\u1EBB tr\u01B0\u1EDBc \u0111\u00E3 th\u00E0nh",
-          "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldBtnCollect"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
           "action": "waitForCondition",
-          "timeoutMs": 15000,
-          "note": "b\u1EA3ng th\u01B0\u1EDFng \u0111an m\u1EDF ~5-7s sau khi thu \u2014 n\u00FAt Thu \u0110an c\u00F2n tr\u00EAn m\u00E0n ~3s (splash) r\u1ED3i trang v\u1EBD l\u1EA1i m\u00E0n l\u00F2 tr\u1ED1ng, n\u00EAn ph\u1EA3i \u0111\u1EE9ng \u0111\u00E2y ch\u1EDD modal",
-          "optional": true,
+          "timeoutMs": 20000,
+          "note": "b\u1EA3ng th\u01B0\u1EDFng \u0111an ph\u1EA3i m\u1EDF sau \u0111\u00FAng l\u01B0\u1EE3t Thu \u0110an v\u1EEBa \u0111\u00F3ng d\u1EA5u",
           "condition": {
             "kind": "visible",
             "selector": "#ldModalCloseBtn"
           },
           "when": {
             "kind": "visible",
-            "selector": "#ldBtnCollect"
-          }
-        },
-        {
-          "action": "waitForCondition",
-          "timeoutMs": 15000,
-          "note": "l\u01B0\u1EDBi th\u1EE9 hai g\u00E1c theo \u0110AN TRONG T\u00DAI (b\u1EC1n, hi\u1EC7n ngay khi /collect v\u1EC1): n\u00FAt Thu \u0110an bi\u1EBFn m\u1EA5t nhanh th\u00EC l\u01B0\u1EE3t ch\u1EDD n\u00E0y v\u1EABn b\u1EAFt \u0111\u01B0\u1EE3c modal",
-          "optional": true,
-          "condition": {
-            "kind": "visible",
-            "selector": "#ldModalCloseBtn"
-          },
-          "when": {
-            "kind": "visible",
-            "selector": "#ldInventory .ld-cell--pill"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
@@ -6700,10 +6945,9 @@
           "selector": "#ldModalCloseBtn",
           "timeoutMs": 5000,
           "note": "\u0111\u00F3ng b\u1EA3ng th\u01B0\u1EDFng",
-          "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldModalCloseBtn"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
@@ -6714,67 +6958,142 @@
           "optional": true
         },
         {
-          "action": "click",
-          "selector": "#ldInventory .ld-cell--pill",
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const body = document.body; if (!body) return \u0027\u0027; body.dataset.jvzCollectReady = \u00270\u0027; const b = document.querySelector(\u0027#ldBtnCollect\u0027); if (!b) return \u0027\u0027; const r = b.getBoundingClientRect(); const s = getComputedStyle(b); const shown = r.width \u003E 0 \u0026\u0026 r.height \u003E 0 \u0026\u0026 s.display !== \u0027none\u0027 \u0026\u0026 s.visibility !== \u0027hidden\u0027 \u0026\u0026 s.opacity !== \u00270\u0027; if (shown \u0026\u0026 !b.disabled \u0026\u0026 b.getAttribute(\u0027aria-disabled\u0027) !== \u0027true\u0027) body.dataset.jvzCollectReady = \u00271\u0027; return \u0027\u0027; }",
           "timeoutMs": 4000,
-          "note": "m\u1EDF \u00F4 \u0111an trong t\u00FAi \u2014 ch\u1EC9 khi t\u00FAi th\u1EADt s\u1EF1 c\u00F3 \u0111an",
+          "note": "\u0111\u00F3ng d\u1EA5u l\u01B0\u1EE3t Thu \u0110an ki\u1EC3m l\u1EA1i tr\u01B0\u1EDBc khi \u0111\u1EBFm t\u00FAi"
+        },
+        {
+          "action": "click",
+          "selector": "#ldBtnCollect",
+          "timeoutMs": 5000,
+          "note": "Thu \u0110an l\u1EA7n hai \u2014 m\u1EBB v\u1EEBa ch\u00EDn trong l\u00FAc l\u01B0\u1EE3t n\u00E0y \u0111ang x\u1EED l\u00FD b\u1EA3ng th\u01B0\u1EDFng",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 20000,
+          "note": "ch\u1EDD b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu mu\u1ED9n \u2014 sau b\u01B0\u1EDBc n\u00E0y m\u1EDBi \u0111\u01B0\u1EE3c \u0111\u1EBFm t\u00FAi theo ph\u1EA9m",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldModalCloseBtn"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const m = document.querySelector(\u0027#ldModalCloseBtn\u0027); const vis = m \u0026\u0026 m.getBoundingClientRect().width \u003E 0; return vis ? \u0027!Thu \u0111an (ki\u1EC3m l\u1EA1i tr\u01B0\u1EDBc khai l\u00F4) \u2014 m\u1EBB tr\u01B0\u1EDBc v\u1EEBa k\u1ECBp ch\u00EDn\u0027 : \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: l\u01B0\u1EE3t thu mu\u1ED9n c\u00F3 th\u1EADt \u2014 b\u1EA3ng th\u01B0\u1EDFng \u0111ang m\u1EDF l\u00E0 b\u1EB1ng ch\u1EE9ng",
+          "optional": true
+        },
+        {
+          "action": "click",
+          "selector": "#ldModalCloseBtn",
+          "timeoutMs": 5000,
+          "note": "\u0111\u00F3ng b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu mu\u1ED9n",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const panel = document.querySelector(\u0027#ldBagPillStats\u0027); const body = document.body; if (!panel || !body) throw new Error(\u0027Kh\u00F4ng t\u00ECm th\u1EA5y b\u1EA3ng s\u1ED1 \u0111an theo ph\u1EA9m #ldBagPillStats\u0027); body.dataset.jvzCapOver = \u00270\u0027; body.dataset.jvzCapFull = \u00270\u0027; body.dataset.jvzTierCount = \u0027\u0027; panel.dataset.jvzScanReady = \u00270\u0027; panel.dataset.jvzCapOver = \u00270\u0027; panel.dataset.jvzCapFull = \u00270\u0027; panel.dataset.jvzTierCount = \u0027\u0027; document.querySelectorAll(\u0027#ldInventory .ld-cell--pill[data-jvz-selected-tier]\u0027).forEach(p =\u003E p.removeAttribute(\u0027data-jvz-selected-tier\u0027)); const fold = s =\u003E String(s || \u0027\u0027).toLowerCase().normalize(\u0027NFD\u0027).replace(/\\p{M}/gu, \u0027\u0027).replace(/\u0111/g, \u0027d\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim(); const wanted = \u0027{{tier}}\u0027; const wantedFold = fold(wanted); const keys = {\u0027ha pham\u0027:\u0027ha\u0027,\u0027trung pham\u0027:\u0027trung\u0027,\u0027thuong pham\u0027:\u0027thuong\u0027,\u0027cuc pham\u0027:\u0027cuc\u0027}; const rows = Array.from(panel.querySelectorAll(\u0027.ld-bag-usage--stored .ld-bag-usage__row\u0027)); const row = rows.find(r =\u003E fold(r.querySelector(\u0027.ld-bag-usage__name\u0027)?.textContent) === wantedFold); const m = (row?.querySelector(\u0027.ld-bag-usage__nums\u0027)?.textContent || \u0027\u0027).match(/^\\s*(\\d\u002B)\\s*\\//); const count = m ? Number(m[1]) : NaN; const key = keys[wantedFold]; if (!row || !key || !Number.isFinite(count)) throw new Error(\u0027Kh\u00F4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn: \u0027 \u002B wanted); const over = Number(\u0027{{capOver}}\u0027); const full = Number(\u0027{{capFull}}\u0027); panel.dataset.jvzTierCount = String(count); panel.dataset.jvzCapOver = Number.isFinite(over) \u0026\u0026 count \u003E= over ? \u00271\u0027 : \u00270\u0027; panel.dataset.jvzCapFull = Number.isFinite(full) \u0026\u0026 count \u003E= full ? \u00271\u0027 : \u00270\u0027; body.dataset.jvzTierCount = panel.dataset.jvzTierCount; body.dataset.jvzCapOver = panel.dataset.jvzCapOver; body.dataset.jvzCapFull = panel.dataset.jvzCapFull; const pill = Array.from(document.querySelectorAll(\u0027#ldInventory .ld-cell--pill\u0027)).find(p =\u003E p.dataset.tier === key); if (count \u003E 0 \u0026\u0026 !pill) throw new Error(\u0027B\u1EA3ng b\u00E1o c\u00F3 \u0111an nh\u01B0ng kh\u00F4ng t\u00ECm th\u1EA5y \u00F4 c\u1EE7a ph\u1EA9m: \u0027 \u002B wanted); if (pill) pill.dataset.jvzSelectedTier = \u00271\u0027; panel.dataset.jvzScanReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u1ECDc s\u1ED1 \u0111an RI\u00CANG c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn v\u00E0 \u0111\u00E1nh d\u1EA5u \u0111\u00FAng \u00F4 \u0111an c\u1EA7n x\u1EED l\u00FD"
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "b\u1EAFt bu\u1ED9c \u0111\u1ECDc \u0111\u01B0\u1EE3c h\u00E0ng s\u1ED1 \u0111an theo ph\u1EA9m \u2014 kh\u00F4ng cho l\u1ED7i markup tr\u00F4i qua im l\u1EB7ng",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-scan-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const p = document.querySelector(\u0027#ldBagPillStats\u0027); if (!p || p.getBoundingClientRect().width \u003C 1) return \u0027\u0027; return \u0027!Trong t\u00FAi {{tier}} \u0111\u00E3 c\u00F3 \u0027 \u002B (p.dataset.jvzTierCount || \u0027\u0111\u1EE7\u0027) \u002B \u0027 vi\u00EAn \u2014 gi\u1EEF nguy\u00EAn v\u00E0 th\u00F4i khai l\u00F4 m\u1EDBi\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: ph\u1EA9m \u0111ang ch\u1ECDn \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c, d\u1EEBng luy\u1EC7n",
           "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldInventory .ld-cell--pill"
+            "selector": "#ldBagPillStats[data-jvz-cap-full=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "stopIf",
+          "text": "\u0111\u00E3 gi\u1EEF \u0111\u1EE7 s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn \u2014 th\u00F4i khai l\u00F4 m\u1EDBi",
+          "timeoutMs": 15000,
+          "note": "d\u1EEBng sau c\u1EA3 hai l\u01B0\u1EE3t Thu \u0110an v\u00E0 tr\u01B0\u1EDBc khai l\u00F4, kh\u00F4ng c\u1ED9ng \u0111an c\u1EE7a ph\u1EA9m kh\u00E1c",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-full=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldInventory .ld-cell--pill[data-jvz-selected-tier=\u00221\u0022]",
+          "timeoutMs": 4000,
+          "note": "m\u1EDF \u00F4 \u0111an \u0111\u00FAng ph\u1EA9m \u0111ang c\u1EA5u h\u00ECnh \u2014 kh\u00F4ng l\u1EA5y \u00F4 \u0111\u1EA7u ti\u00EAn c\u1EE7a ph\u1EA9m kh\u00E1c",
+          "when": {
+            "kind": "visible",
+            "selector": "#ldInventory .ld-cell--pill[data-jvz-selected-tier=\u00221\u0022]"
           }
         },
         {
           "action": "waitForCondition",
           "timeoutMs": 5000,
-          "note": "h\u1ED9p th\u00F4ng tin vi\u00EAn \u0111an m\u1EDF ra",
-          "optional": true,
+          "note": "h\u1ED9p th\u00F4ng tin c\u1EE7a \u0111\u00FAng ph\u1EA9m \u0111an \u0111\u00E3 m\u1EDF",
           "condition": {
             "kind": "visible",
             "selector": "#ldModalDecompose"
           },
           "when": {
             "kind": "visible",
-            "selector": "#ldInventory .ld-cell--pill"
+            "selector": "#ldInventory .ld-cell--pill[data-jvz-selected-tier=\u00221\u0022]"
           }
         },
         {
           "action": "evaluateJavaScript",
-          "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const t = b.innerText || \u0027\u0027; const s = t.match(/D\u01B0\u1EE3c kh\u00ED\\s*([1-4])\\s*sao/i); const c = t.match(/\u0110an trong t\u00FAi[^0-9]*(\\d\u002B)\\s*\\//); return \u0027!T\u00FAi \u0111\u00E3 c\u00F3 \u0027 \u002B (c ? c[1] : \u0027?\u0027) \u002B \u0027 vi\u00EAn \u2014 v\u01B0\u1EE3t h\u1EA1n m\u1EE9c gi\u1EEF, ph\u00E2n gi\u1EA3i vi\u00EAn\u0027 \u002B (s ? \u0027 \u0027 \u002B s[1] \u002B \u0027 sao\u0027 : \u0027\u0027) \u002B \u0027 \u0111ang m\u1EDF\u0027; }",
+          "script": "() =\u003E { const p = document.querySelector(\u0027#ldBagPillStats\u0027); const b = document.querySelector(\u0027#ldModalBody\u0027); if (!p || !b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const s = (b.innerText || \u0027\u0027).match(/D\u01B0\u1EE3c kh\u00ED\\s*([1-4])\\s*sao/i); return \u0027!T\u00FAi {{tier}} \u0111\u00E3 c\u00F3 \u0027 \u002B (p.dataset.jvzTierCount || \u0027?\u0027) \u002B \u0027 vi\u00EAn \u2014 v\u01B0\u1EE3t h\u1EA1n m\u1EE9c gi\u1EEF, ph\u00E2n gi\u1EA3i vi\u00EAn\u0027 \u002B (s ? \u0027 \u0027 \u002B s[1] \u002B \u0027 sao\u0027 : \u0027\u0027) \u002B \u0027 \u0111ang m\u1EDF\u0027; }",
           "timeoutMs": 4000,
-          "note": "k\u1EC3 chuy\u1EC7n: vi\u00EAn \u0111an b\u1ECB ph\u00E2n gi\u1EA3i v\u00EC t\u00FAi \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c",
+          "note": "k\u1EC3 chuy\u1EC7n: vi\u00EAn \u0111\u00FAng ph\u1EA9m b\u1ECB ph\u00E2n gi\u1EA3i v\u00EC ph\u1EA9m \u1EA5y v\u01B0\u1EE3t h\u1EA1n m\u1EE9c",
           "optional": true,
           "when": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capOver}}"
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
           "action": "click",
           "selector": "#ldModalDecompose",
           "timeoutMs": 4000,
-          "note": "PH\u00C2N GI\u1EA2I vi\u00EAn v\u01B0\u1EE3t h\u1EA1n m\u1EE9c \u2014 nh\u00E1nh n\u00E0y \u0111i tr\u1ECDn c\u1EE5m x\u00E1c nh\u1EADn c\u1EE7a ri\u00EAng n\u00F3",
-          "optional": true,
+          "note": "PH\u00C2N GI\u1EA2I vi\u00EAn v\u01B0\u1EE3t h\u1EA1n m\u1EE9c c\u1EE7a \u0111\u00FAng ph\u1EA9m \u0111ang c\u1EA5u h\u00ECnh",
           "when": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capOver}}"
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
           "action": "waitForCondition",
           "timeoutMs": 5000,
-          "note": "h\u1ED9p x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i c\u1EE7a nh\u00E1nh h\u1EA1n m\u1EE9c",
-          "optional": true,
+          "note": "h\u1ED9p x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i c\u1EE7a nh\u00E1nh h\u1EA1n m\u1EE9c theo ph\u1EA9m",
           "condition": {
             "kind": "visible",
             "selector": "#ldConfirmOk"
           },
           "when": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capOver}}"
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
@@ -6782,33 +7101,32 @@
           "selector": "#ldConfirmOk",
           "timeoutMs": 4000,
           "note": "x\u00E1c nh\u1EADn \u2014 xong c\u00FA n\u00E0y th\u00EC h\u1ED9p \u0111an \u0111\u00F3ng, nh\u00E1nh sao b\u00EAn d\u01B0\u1EDBi kh\u00F4ng c\u00F2n g\u00EC \u0111\u1EC3 gi\u1EEF",
-          "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldConfirmOk"
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
-          "action": "evaluateJavaScript",
-          "script": "() =\u003E { const b = document.querySelector(\u0027#ldModalBody\u0027); if (!b || b.getBoundingClientRect().width \u003C 1) return \u0027\u0027; const c = (b.innerText || \u0027\u0027).match(/\u0110an trong t\u00FAi[^0-9]*(\\d\u002B)\\s*\\//); return \u0027!Trong t\u00FAi \u0111\u00E3 c\u00F3 \u0027 \u002B (c ? c[1] : \u0027\u0111\u1EE7\u0027) \u002B \u0027 vi\u00EAn \u2014 gi\u1EEF nguy\u00EAn v\u00E0 th\u00F4i khai l\u00F4 m\u1EDBi\u0027; }",
-          "timeoutMs": 4000,
-          "note": "k\u1EC3 chuy\u1EC7n: \u0111\u00E3 \u0111\u1EE7 h\u1EA1n m\u1EE9c, d\u1EEBng luy\u1EC7n",
-          "optional": true,
-          "when": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capFull}}"
-          }
-        },
-        {
-          "action": "stopIf",
-          "text": "\u0111\u00E3 gi\u1EEF \u0111\u1EE7 s\u1ED1 \u0111an \u0111\u1EB7t ra \u2014 th\u00F4i khai l\u00F4 m\u1EDBi",
-          "timeoutMs": 15000,
-          "note": "d\u1EEBng TR\u01AF\u1EDAC c\u1EE5m khai l\u00F4, n\u00EAn m\u1ED7i l\u01B0\u1EE3t gh\u00E9 \u0111\u1EC1u \u0111\u1EBFm l\u1EA1i ch\u1EE9 kh\u00F4ng luy\u1EC7n th\u1EEBa",
+          "action": "waitForCondition",
+          "timeoutMs": 8000,
+          "note": "nh\u00E1nh v\u01B0\u1EE3t h\u1EA1n m\u1EE9c ph\u1EA3i nh\u1EADn \u0111\u01B0\u1EE3c b\u1EA3ng ho\u00E0n d\u01B0\u1EE3c",
           "condition": {
-            "kind": "textMatches",
-            "selector": "#ldModalBody",
-            "text": "{{capFull}}"
+            "kind": "visible",
+            "selector": "#ldDecomposeRewardOk"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldDecomposeRewardOk",
+          "timeoutMs": 10000,
+          "note": "\u0111\u00F3ng b\u1EA3ng ho\u00E0n d\u01B0\u1EE3c c\u1EE7a nh\u00E1nh v\u01B0\u1EE3t h\u1EA1n m\u1EE9c",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
@@ -6900,46 +7218,188 @@
           }
         },
         {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const body = document.body; if (!body) return \u0027\u0027; body.dataset.jvzCollectReady = \u00270\u0027; const b = document.querySelector(\u0027#ldBtnCollect\u0027); if (!b) return \u0027\u0027; const r = b.getBoundingClientRect(); const s = getComputedStyle(b); const shown = r.width \u003E 0 \u0026\u0026 r.height \u003E 0 \u0026\u0026 s.display !== \u0027none\u0027 \u0026\u0026 s.visibility !== \u0027hidden\u0027 \u0026\u0026 s.opacity !== \u00270\u0027; if (shown \u0026\u0026 !b.disabled \u0026\u0026 b.getAttribute(\u0027aria-disabled\u0027) !== \u0027true\u0027) body.dataset.jvzCollectReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "\u0111\u00F3ng d\u1EA5u l\u01B0\u1EE3t Thu \u0110an s\u00E1t c\u1EEDa khai l\u00F4"
+        },
+        {
           "action": "click",
           "selector": "#ldBtnCollect",
           "timeoutMs": 5000,
-          "note": "Thu \u0110an l\u1EA7n hai \u2014 m\u1EBB v\u1EEBa ch\u00EDn trong l\u00FAc l\u01B0\u1EE3t n\u00E0y \u0111ang ph\u00E2n gi\u1EA3i",
-          "optional": true,
+          "note": "Thu \u0110an s\u00E1t c\u1EEDa khai l\u00F4 \u2014 m\u1EBB c\u00F3 th\u1EC3 ch\u00EDn trong l\u00FAc x\u1EED l\u00FD vi\u00EAn tr\u01B0\u1EDBc",
           "when": {
             "kind": "visible",
-            "selector": "#ldBtnCollect"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
           "action": "waitForCondition",
-          "timeoutMs": 15000,
-          "note": "ch\u1EDD b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu mu\u1ED9n \u2014 g\u00E1c theo \u0111an trong t\u00FAi nh\u01B0 l\u01B0\u1EE3t \u0111\u1EA7u",
-          "optional": true,
+          "timeoutMs": 20000,
+          "note": "ch\u1EDD b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa khai l\u00F4",
           "condition": {
             "kind": "visible",
             "selector": "#ldModalCloseBtn"
           },
           "when": {
             "kind": "visible",
-            "selector": "#ldInventory .ld-cell--pill"
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
           }
         },
         {
           "action": "evaluateJavaScript",
-          "script": "() =\u003E { const m = document.querySelector(\u0027#ldModalCloseBtn\u0027); const vis = m \u0026\u0026 m.getBoundingClientRect().width \u003E 0; return vis ? \u0027!Thu \u0111an (ki\u1EC3m l\u1EA1i tr\u01B0\u1EDBc khai l\u00F4) \u2014 m\u1EBB tr\u01B0\u1EDBc v\u1EEBa k\u1ECBp ch\u00EDn\u0027 : \u0027\u0027; }",
+          "script": "() =\u003E { const m = document.querySelector(\u0027#ldModalCloseBtn\u0027); const vis = m \u0026\u0026 m.getBoundingClientRect().width \u003E 0; return vis ? \u0027!Thu \u0111an s\u00E1t c\u1EEDa khai l\u00F4 \u2014 kh\u00F4ng b\u1ECF s\u00F3t m\u1EBB v\u1EEBa ch\u00EDn\u0027 : \u0027\u0027; }",
           "timeoutMs": 4000,
-          "note": "k\u1EC3 chuy\u1EC7n: l\u01B0\u1EE3t thu mu\u1ED9n c\u00F3 th\u1EADt \u2014 b\u1EA3ng th\u01B0\u1EDFng \u0111ang m\u1EDF l\u00E0 b\u1EB1ng ch\u1EE9ng",
+          "note": "k\u1EC3 chuy\u1EC7n: l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa khai l\u00F4 c\u00F3 th\u1EADt",
           "optional": true
         },
         {
           "action": "click",
           "selector": "#ldModalCloseBtn",
           "timeoutMs": 5000,
-          "note": "\u0111\u00F3ng b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu mu\u1ED9n",
+          "note": "\u0111\u00F3ng b\u1EA3ng th\u01B0\u1EDFng c\u1EE7a l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-collect-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const panel = document.querySelector(\u0027#ldBagPillStats\u0027); const body = document.body; if (!panel || !body) throw new Error(\u0027Kh\u00F4ng t\u00ECm th\u1EA5y b\u1EA3ng s\u1ED1 \u0111an theo ph\u1EA9m #ldBagPillStats\u0027); body.dataset.jvzCapOver = \u00270\u0027; body.dataset.jvzCapFull = \u00270\u0027; body.dataset.jvzTierCount = \u0027\u0027; panel.dataset.jvzScanReady = \u00270\u0027; panel.dataset.jvzCapOver = \u00270\u0027; panel.dataset.jvzCapFull = \u00270\u0027; panel.dataset.jvzTierCount = \u0027\u0027; document.querySelectorAll(\u0027#ldInventory .ld-cell--pill[data-jvz-selected-tier]\u0027).forEach(p =\u003E p.removeAttribute(\u0027data-jvz-selected-tier\u0027)); const fold = s =\u003E String(s || \u0027\u0027).toLowerCase().normalize(\u0027NFD\u0027).replace(/\\p{M}/gu, \u0027\u0027).replace(/\u0111/g, \u0027d\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim(); const wanted = \u0027{{tier}}\u0027; const wantedFold = fold(wanted); const keys = {\u0027ha pham\u0027:\u0027ha\u0027,\u0027trung pham\u0027:\u0027trung\u0027,\u0027thuong pham\u0027:\u0027thuong\u0027,\u0027cuc pham\u0027:\u0027cuc\u0027}; const rows = Array.from(panel.querySelectorAll(\u0027.ld-bag-usage--stored .ld-bag-usage__row\u0027)); const row = rows.find(r =\u003E fold(r.querySelector(\u0027.ld-bag-usage__name\u0027)?.textContent) === wantedFold); const m = (row?.querySelector(\u0027.ld-bag-usage__nums\u0027)?.textContent || \u0027\u0027).match(/^\\s*(\\d\u002B)\\s*\\//); const count = m ? Number(m[1]) : NaN; const key = keys[wantedFold]; if (!row || !key || !Number.isFinite(count)) throw new Error(\u0027Kh\u00F4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn: \u0027 \u002B wanted); const over = Number(\u0027{{capOver}}\u0027); const full = Number(\u0027{{capFull}}\u0027); panel.dataset.jvzTierCount = String(count); panel.dataset.jvzCapOver = Number.isFinite(over) \u0026\u0026 count \u003E= over ? \u00271\u0027 : \u00270\u0027; panel.dataset.jvzCapFull = Number.isFinite(full) \u0026\u0026 count \u003E= full ? \u00271\u0027 : \u00270\u0027; body.dataset.jvzTierCount = panel.dataset.jvzTierCount; body.dataset.jvzCapOver = panel.dataset.jvzCapOver; body.dataset.jvzCapFull = panel.dataset.jvzCapFull; const pill = Array.from(document.querySelectorAll(\u0027#ldInventory .ld-cell--pill\u0027)).find(p =\u003E p.dataset.tier === key); if (count \u003E 0 \u0026\u0026 !pill) throw new Error(\u0027B\u1EA3ng b\u00E1o c\u00F3 \u0111an nh\u01B0ng kh\u00F4ng t\u00ECm th\u1EA5y \u00F4 c\u1EE7a ph\u1EA9m: \u0027 \u002B wanted); if (pill) pill.dataset.jvzSelectedTier = \u00271\u0027; panel.dataset.jvzScanReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "qu\u00E9t l\u1EA1i \u0111\u00FAng ph\u1EA9m sau l\u01B0\u1EE3t Thu \u0110an s\u00E1t c\u1EEDa khai l\u00F4"
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "b\u1EAFt bu\u1ED9c qu\u00E9t l\u1EA1i \u0111\u01B0\u1EE3c h\u1EA1n m\u1EE9c theo ph\u1EA9m tr\u01B0\u1EDBc khai l\u00F4",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-scan-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const p = document.querySelector(\u0027#ldBagPillStats\u0027); if (!p || p.getBoundingClientRect().width \u003C 1) return \u0027\u0027; return \u0027!Sau l\u01B0\u1EE3t thu cu\u1ED1i, t\u00FAi {{tier}} \u0111\u00E3 c\u00F3 \u0027 \u002B (p.dataset.jvzTierCount || \u0027\u0111\u1EE7\u0027) \u002B \u0027 vi\u00EAn \u2014 gi\u1EEF nguy\u00EAn v\u00E0 kh\u00F4ng khai th\u00EAm l\u00F4\u0027; }",
+          "timeoutMs": 4000,
+          "note": "k\u1EC3 chuy\u1EC7n: l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa \u0111\u00E3 ch\u1EA1m h\u1EA1n m\u1EE9c c\u1EE7a \u0111\u00FAng ph\u1EA9m",
           "optional": true,
           "when": {
             "kind": "visible",
-            "selector": "#ldModalCloseBtn"
+            "selector": "#ldBagPillStats[data-jvz-cap-full=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "stopIf",
+          "text": "l\u01B0\u1EE3t thu s\u00E1t c\u1EEDa \u0111\u00E3 gi\u1EEF \u0111\u1EE7 s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn \u2014 th\u00F4i khai l\u00F4 m\u1EDBi",
+          "timeoutMs": 15000,
+          "note": "ch\u1EB7n race: \u0111\u1EBFm l\u1EA1i sau x\u1EED l\u00FD vi\u00EAn v\u00E0 ngay tr\u01B0\u1EDBc khai l\u00F4",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-full=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldInventory .ld-cell--pill[data-jvz-selected-tier=\u00221\u0022]",
+          "timeoutMs": 5000,
+          "note": "m\u1EDF vi\u00EAn d\u01B0 \u0111\u00FAng ph\u1EA9m v\u1EEBa thu s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 6000,
+          "note": "h\u1ED9p vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4 ph\u1EA3i m\u1EDF \u0111\u00FAng",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldModalDecompose"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldModalDecompose",
+          "timeoutMs": 5000,
+          "note": "ph\u00E2n gi\u1EA3i vi\u00EAn d\u01B0 v\u1EEBa thu s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 6000,
+          "note": "ch\u1EDD x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldConfirmOk"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldConfirmOk",
+          "timeoutMs": 5000,
+          "note": "x\u00E1c nh\u1EADn ph\u00E2n gi\u1EA3i vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 8000,
+          "note": "ch\u1EDD linh d\u01B0\u1EE3c ho\u00E0n l\u1EA1i c\u1EE7a vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldDecomposeRewardOk"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "click",
+          "selector": "#ldDecomposeRewardOk",
+          "timeoutMs": 10000,
+          "note": "\u0111\u00F3ng b\u1EA3ng ho\u00E0n d\u01B0\u1EE3c c\u1EE7a vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4",
+          "when": {
+            "kind": "visible",
+            "selector": "body[data-jvz-cap-over=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const panel = document.querySelector(\u0027#ldBagPillStats\u0027); const body = document.body; if (!panel || !body) throw new Error(\u0027Kh\u00F4ng t\u00ECm th\u1EA5y b\u1EA3ng s\u1ED1 \u0111an theo ph\u1EA9m #ldBagPillStats\u0027); body.dataset.jvzCapOver = \u00270\u0027; body.dataset.jvzCapFull = \u00270\u0027; body.dataset.jvzTierCount = \u0027\u0027; panel.dataset.jvzScanReady = \u00270\u0027; panel.dataset.jvzCapOver = \u00270\u0027; panel.dataset.jvzCapFull = \u00270\u0027; panel.dataset.jvzTierCount = \u0027\u0027; document.querySelectorAll(\u0027#ldInventory .ld-cell--pill[data-jvz-selected-tier]\u0027).forEach(p =\u003E p.removeAttribute(\u0027data-jvz-selected-tier\u0027)); const fold = s =\u003E String(s || \u0027\u0027).toLowerCase().normalize(\u0027NFD\u0027).replace(/\\p{M}/gu, \u0027\u0027).replace(/\u0111/g, \u0027d\u0027).replace(/\\s\u002B/g, \u0027 \u0027).trim(); const wanted = \u0027{{tier}}\u0027; const wantedFold = fold(wanted); const keys = {\u0027ha pham\u0027:\u0027ha\u0027,\u0027trung pham\u0027:\u0027trung\u0027,\u0027thuong pham\u0027:\u0027thuong\u0027,\u0027cuc pham\u0027:\u0027cuc\u0027}; const rows = Array.from(panel.querySelectorAll(\u0027.ld-bag-usage--stored .ld-bag-usage__row\u0027)); const row = rows.find(r =\u003E fold(r.querySelector(\u0027.ld-bag-usage__name\u0027)?.textContent) === wantedFold); const m = (row?.querySelector(\u0027.ld-bag-usage__nums\u0027)?.textContent || \u0027\u0027).match(/^\\s*(\\d\u002B)\\s*\\//); const count = m ? Number(m[1]) : NaN; const key = keys[wantedFold]; if (!row || !key || !Number.isFinite(count)) throw new Error(\u0027Kh\u00F4ng \u0111\u1ECDc \u0111\u01B0\u1EE3c s\u1ED1 \u0111an c\u1EE7a ph\u1EA9m \u0111ang ch\u1ECDn: \u0027 \u002B wanted); const over = Number(\u0027{{capOver}}\u0027); const full = Number(\u0027{{capFull}}\u0027); panel.dataset.jvzTierCount = String(count); panel.dataset.jvzCapOver = Number.isFinite(over) \u0026\u0026 count \u003E= over ? \u00271\u0027 : \u00270\u0027; panel.dataset.jvzCapFull = Number.isFinite(full) \u0026\u0026 count \u003E= full ? \u00271\u0027 : \u00270\u0027; body.dataset.jvzTierCount = panel.dataset.jvzTierCount; body.dataset.jvzCapOver = panel.dataset.jvzCapOver; body.dataset.jvzCapFull = panel.dataset.jvzCapFull; const pill = Array.from(document.querySelectorAll(\u0027#ldInventory .ld-cell--pill\u0027)).find(p =\u003E p.dataset.tier === key); if (count \u003E 0 \u0026\u0026 !pill) throw new Error(\u0027B\u1EA3ng b\u00E1o c\u00F3 \u0111an nh\u01B0ng kh\u00F4ng t\u00ECm th\u1EA5y \u00F4 c\u1EE7a ph\u1EA9m: \u0027 \u002B wanted); if (pill) pill.dataset.jvzSelectedTier = \u00271\u0027; panel.dataset.jvzScanReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "x\u00E1c nh\u1EADn l\u1EA1i s\u1ED1 \u0111an \u0111\u00FAng ph\u1EA9m sau nh\u00E1nh vi\u00EAn d\u01B0 s\u00E1t c\u1EEDa khai l\u00F4"
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 5000,
+          "note": "b\u1EA3ng theo ph\u1EA9m ph\u1EA3i c\u1EADp nh\u1EADt sau khi ph\u00E2n gi\u1EA3i vi\u00EAn d\u01B0",
+          "condition": {
+            "kind": "visible",
+            "selector": "#ldBagPillStats[data-jvz-scan-ready=\u00221\u0022]"
+          }
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 1500,
+          "note": "c\u00F2n d\u01B0 th\u00EC h\u1ECFng an to\u00E0n v\u00E0 gh\u00E9 l\u1EA1i ph\u00E2n gi\u1EA3i ti\u1EBFp \u2014 tuy\u1EC7t \u0111\u1ED1i ch\u01B0a khai l\u00F4 m\u1EDBi",
+          "condition": {
+            "kind": "hidden",
+            "selector": "#ldBagPillStats[data-jvz-cap-over=\u00221\u0022]"
           }
         },
         {
@@ -6954,7 +7414,6 @@
           "selector": ".ld-recipe-tier:has-text(\u0022{{tier}}\u0022)",
           "timeoutMs": 4000,
           "note": "ch\u1ECDn ph\u1EA9m \u0111an theo tu\u1EF3 ch\u1ECDn",
-          "optional": true,
           "when": {
             "kind": "visible",
             "selector": "#ldBtnCraft"
@@ -6966,8 +7425,27 @@
           "note": "cho trang c\u1EADp nh\u1EADt nguy\u00EAn li\u1EC7u theo ph\u1EA9m v\u1EEBa ch\u1ECDn"
         },
         {
+          "action": "evaluateJavaScript",
+          "script": "() =\u003E { const body = document.body; if (!body) return \u0027\u0027; body.dataset.jvzAlchemyTierReady = \u00270\u0027; const wanted = \u0027{{tier}}\u0027; const el = Array.from(document.querySelectorAll(\u0027.ld-recipe-tier\u0027)).find(x =\u003E (x.textContent || \u0027\u0027).trim() === wanted); if (el \u0026\u0026 el.classList.contains(\u0027is-active\u0027) \u0026\u0026 !el.classList.contains(\u0027is-locked\u0027) \u0026\u0026 el.getAttribute(\u0027aria-disabled\u0027) !== \u0027true\u0027) body.dataset.jvzAlchemyTierReady = \u00271\u0027; return \u0027\u0027; }",
+          "timeoutMs": 4000,
+          "note": "x\u00E1c nh\u1EADn ph\u1EA9m \u0111ang active \u0111\u00FAng c\u1EA5u h\u00ECnh v\u00E0 kh\u00F4ng b\u1ECB kh\u00F3a"
+        },
+        {
+          "action": "waitForCondition",
+          "timeoutMs": 1500,
+          "note": "kh\u00F4ng luy\u1EC7n nh\u1EA7m ph\u1EA9m c\u0169 khi ph\u1EA9m c\u1EA5u h\u00ECnh b\u1ECB kh\u00F3a ho\u1EB7c click kh\u00F4ng c\u00F3 hi\u1EC7u l\u1EF1c",
+          "condition": {
+            "kind": "visible",
+            "selector": "body[data-jvz-alchemy-tier-ready=\u00221\u0022]"
+          },
+          "when": {
+            "kind": "visible",
+            "selector": "#ldBtnCraft"
+          }
+        },
+        {
           "action": "click",
-          "selector": "#ldBtnCraft",
+          "selector": "body[data-jvz-alchemy-tier-ready=\u00221\u0022] #ldBtnCraft",
           "timeoutMs": 5000,
           "note": "Luy\u1EC7n \u0110an \u2014 m\u1EDF h\u1ED9p x\u00E1c nh\u1EADn khai l\u00F4",
           "optional": true,
@@ -6979,7 +7457,7 @@
         {
           "action": "waitForCondition",
           "timeoutMs": 6000,
-          "note": "h\u1ED9p x\u00E1c nh\u1EADn d\u00F9ng 20 Ti\u00EAn Ng\u1ECDc",
+          "note": "h\u1ED9p x\u00E1c nh\u1EADn d\u00F9ng Ti\u00EAn Ng\u1ECDc theo ph\u1EA9m/c\u00F4ng th\u1EE9c \u0111ang ch\u1ECDn",
           "optional": true,
           "condition": {
             "kind": "visible",
@@ -6994,7 +7472,7 @@
           "action": "click",
           "selector": "#ldConfirmOk",
           "timeoutMs": 5000,
-          "note": "x\u00E1c nh\u1EADn khai l\u00F4 \u2014 T\u1ED0N 20 Ti\u00EAn Ng\u1ECDc \u002B d\u01B0\u1EE3c li\u1EC7u",
+          "note": "x\u00E1c nh\u1EADn khai l\u00F4 \u2014 T\u1ED0N Ti\u00EAn Ng\u1ECDc theo ph\u1EA9m/c\u00F4ng th\u1EE9c \u002B d\u01B0\u1EE3c li\u1EC7u",
           "optional": true,
           "when": {
             "kind": "visible",
@@ -7158,15 +7636,31 @@
               "label": "Kh\u00F4ng h\u1EA1n m\u1EE9c"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 4/|\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "2",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 1 vi\u00EAn"
+            },
+            {
+              "value": "3",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 2 vi\u00EAn"
+            },
+            {
+              "value": "4",
               "label": "Gi\u1EEF t\u1ED1i \u0111a 3 vi\u00EAn"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "5",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 4 vi\u00EAn"
+            },
+            {
+              "value": "6",
               "label": "Gi\u1EEF t\u1ED1i \u0111a 5 vi\u00EAn"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "7",
+              "label": "Gi\u1EEF t\u1ED1i \u0111a 6 vi\u00EAn"
+            },
+            {
+              "value": "11",
               "label": "Gi\u1EEF t\u1ED1i \u0111a 10 vi\u00EAn"
             }
           ],
@@ -7182,15 +7676,31 @@
               "label": "Kh\u00F4ng h\u1EA1n m\u1EE9c"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 3/|\u0111an trong t\u00FAi (ph\u1EA9m) 4/|\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "1",
+              "label": "D\u1EEBng khi \u0111\u1EE7 1 vi\u00EAn"
+            },
+            {
+              "value": "2",
+              "label": "D\u1EEBng khi \u0111\u1EE7 2 vi\u00EAn"
+            },
+            {
+              "value": "3",
               "label": "D\u1EEBng khi \u0111\u1EE7 3 vi\u00EAn"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 5/|\u0111an trong t\u00FAi (ph\u1EA9m) 6/|\u0111an trong t\u00FAi (ph\u1EA9m) 7/|\u0111an trong t\u00FAi (ph\u1EA9m) 8/|\u0111an trong t\u00FAi (ph\u1EA9m) 9/|\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "4",
+              "label": "D\u1EEBng khi \u0111\u1EE7 4 vi\u00EAn"
+            },
+            {
+              "value": "5",
               "label": "D\u1EEBng khi \u0111\u1EE7 5 vi\u00EAn"
             },
             {
-              "value": "\u0111an trong t\u00FAi (ph\u1EA9m) 10/|\u0111an trong t\u00FAi (ph\u1EA9m) 11/|\u0111an trong t\u00FAi (ph\u1EA9m) 12/|\u0111an trong t\u00FAi (ph\u1EA9m) 13/|\u0111an trong t\u00FAi (ph\u1EA9m) 14/|\u0111an trong t\u00FAi (ph\u1EA9m) 15/|\u0111an trong t\u00FAi (ph\u1EA9m) 16/|\u0111an trong t\u00FAi (ph\u1EA9m) 17/|\u0111an trong t\u00FAi (ph\u1EA9m) 18/|\u0111an trong t\u00FAi (ph\u1EA9m) 19/|\u0111an trong t\u00FAi (ph\u1EA9m) 20/|\u0111an trong t\u00FAi (ph\u1EA9m) 21/|\u0111an trong t\u00FAi (ph\u1EA9m) 22/|\u0111an trong t\u00FAi (ph\u1EA9m) 23/|\u0111an trong t\u00FAi (ph\u1EA9m) 24/|\u0111an trong t\u00FAi (ph\u1EA9m) 25/|\u0111an trong t\u00FAi (ph\u1EA9m) 26/|\u0111an trong t\u00FAi (ph\u1EA9m) 27/|\u0111an trong t\u00FAi (ph\u1EA9m) 28/|\u0111an trong t\u00FAi (ph\u1EA9m) 29/|\u0111an trong t\u00FAi (ph\u1EA9m) 30/",
+              "value": "6",
+              "label": "D\u1EEBng khi \u0111\u1EE7 6 vi\u00EAn"
+            },
+            {
+              "value": "10",
               "label": "D\u1EEBng khi \u0111\u1EE7 10 vi\u00EAn"
             }
           ],
@@ -7201,7 +7711,7 @@
       "fallbackCooldownSeconds": 2700,
       "requiresVip": false,
       "order": 105,
-      "notes": "T\u1EF1 luy\u1EC7n \u0111an \u1EDF Luy\u1EC7n \u0110an \u0110\u01B0\u1EDDng \u2014 m\u1ED7i m\u1EBB T\u1ED0N d\u01B0\u1EE3c li\u1EC7u \u002B 20 Ti\u00EAn Ng\u1ECDc."
+      "notes": "T\u1EF1 luy\u1EC7n \u0111an \u1EDF Luy\u1EC7n \u0110an \u0110\u01B0\u1EDDng \u2014 m\u1ED7i m\u1EBB T\u1ED0N d\u01B0\u1EE3c li\u1EC7u \u002B Ti\u00EAn Ng\u1ECDc theo ph\u1EA9m/c\u00F4ng th\u1EE9c."
     }
   ]
 }
