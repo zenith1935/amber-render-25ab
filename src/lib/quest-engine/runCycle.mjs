@@ -7,7 +7,7 @@
  * bao giờ kéo theo một thư viện trình duyệt nặng nề mà nó không dùng.
  */
 
-import { readinessProbe, vipProbe } from "./boardScripts.mjs";
+import { pillBagCapacityProbe, readinessProbe, vipProbe } from "./boardScripts.mjs";
 import { closeBrowserWithin } from "./browserShutdown.mjs";
 import { computeNextDelaySeconds } from "./cooldown.mjs";
 import { DEFAULT_GAME_BASE_URL, parseCookieString } from "./cookies.mjs";
@@ -604,11 +604,29 @@ async function ensureReady(session, baseUrl, say, log, { context, cookieJar, sol
 }
 
 /**
+ * Báo sức chứa ngay trên trang Luyện Đan vừa chạy, không mở thêm trang hay gửi cookie cho
+ * dashboard. Việc đồng bộ là phụ: trang thiếu dữ liệu hoặc server tạm mất liên lạc không
+ * được biến một nhiệm vụ đã làm xong thành thất bại.
+ */
+export async function observePillBagCapacity(session, questId, report) {
+  if (questId !== "luyen-dan-duong" && questId !== "luyen-dan-duong-thuong") return false;
+  try {
+    const caps = await session.evaluate(pillBagCapacityProbe);
+    if (!caps) return false;
+    await report(caps);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * @param {object} deps
  * @param {import('playwright-core').BrowserType} deps.chromium
  * @param {object} deps.config           UserConfig đã giải mã (gameCookie là plaintext)
  * @param {(message: string, level?: string) => Promise<void>|void} deps.say
  * @param {(tier: "vip"|"free") => Promise<void>|void} [deps.reportAccountTier]
+ * @param {(caps: {ha: number, trung: number, thuong: number, cuc: number}) => Promise<void>|void} [deps.reportPillBagCaps]
  * @param {() => boolean} deps.shouldStop  ĐỒNG BỘ — được gọi trong vòng lặp chặt
  * @param {(progress: {running: string[], done: number, total: number}) => void} [deps.reportProgress]
  *   Vòng này đang chạy nhiệm vụ nào — Hàng Đợi Công Việc hiển thị nó. ĐỒNG BỘ, cùng lý do
@@ -630,6 +648,7 @@ export async function runCycle(deps) {
     config,
     say,
     reportAccountTier = async () => {},
+    reportPillBagCaps = async () => {},
     reportProgress = () => {},
     shouldStop = () => false,
     // Thứ tự nguồn có chủ ý: người gọi truyền thẳng (smoke) > tên miền server gửi kèm job >
@@ -1048,6 +1067,7 @@ export async function runCycle(deps) {
         let outcome;
         try {
           outcome = await engine.run(session, profile, quest);
+          await observePillBagCapacity(session, quest.id, reportPillBagCaps);
         } catch (err) {
           if (err instanceof QuestAborted) {
             return { outcome: "stopped", message: `Đã thu đàn giữa chừng — xong ${done}/${quests.length}.` };

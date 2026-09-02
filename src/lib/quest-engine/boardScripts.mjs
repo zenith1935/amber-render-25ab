@@ -286,6 +286,36 @@ export function vipProbe() {
 }
 
 /**
+ * Sức chứa túi đan là dữ liệu CỦA TÀI KHOẢN, không phải hằng số theo phẩm. Probe chỉ đọc
+ * bốn mẫu số của bảng túi đang mở; không dùng số trong modal, không nhớ kết quả của trang
+ * trước và không đoán khi thiếu một hàng. Đây là dữ liệu hiển thị của web, không đổi hạn
+ * mức giữ đan mà người dùng đã cấu hình chung cho các tài khoản.
+ */
+export function pillBagCapacityProbe() {
+  const panel = document.querySelector("#ldBagPillStats .ld-bag-usage--stored");
+  if (!panel) return null;
+  const fold = (value) => String(value || "").toLowerCase().normalize("NFD")
+    .replace(/\p{M}/gu, "").replace(/đ/g, "d").replace(/\s+/g, " ").trim();
+  const labels = ["ha pham", "trung pham", "thuong pham", "cuc pham"];
+  const keys = ["ha", "trung", "thuong", "cuc"];
+  const caps = {};
+  for (const row of panel.querySelectorAll(".ld-bag-usage__row")) {
+    const index = labels.indexOf(fold(row.querySelector(".ld-bag-usage__name")?.textContent));
+    if (index < 0) continue;
+    const key = keys[index];
+    if (Object.prototype.hasOwnProperty.call(caps, key)) return null;
+    const text = row.querySelector(".ld-bag-usage__nums")?.textContent || "";
+    const match = text.match(/^\s*(\d+)\s*\/\s*(\d+)\s*(?:viên)?\s*$/iu);
+    if (!match) return null;
+    const stored = Number(match[1]);
+    const capacity = Number(match[2]);
+    if (!Number.isSafeInteger(stored) || !Number.isSafeInteger(capacity)) return null;
+    caps[key] = capacity;
+  }
+  return keys.every((key) => Object.prototype.hasOwnProperty.call(caps, key)) ? caps : null;
+}
+
+/**
  * Còn thấy màn chắn Cloudflare không, và phiên WordPress đã đăng nhập chưa. `loggedIn` là
  * null khi trang không phát tín hiệu rõ ràng về phía nào.
  */

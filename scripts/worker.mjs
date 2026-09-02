@@ -151,6 +151,7 @@ async function runQuest({
   browserEngine,
   say,
   reportAccountTier,
+  reportPillBagCaps,
   reportProgress,
   shouldStop,
 }) {
@@ -183,6 +184,7 @@ async function runQuest({
     browserEngine,
     say,
     reportAccountTier,
+    reportPillBagCaps,
     reportProgress,
     shouldStop,
     profileDir,
@@ -240,6 +242,10 @@ async function handle(job) {
       reportAccountTier: (tier) =>
         call("accountTier", { jobId: job.id, tier }).catch((err) => {
           console.error("  không lưu được hạng tài khoản:", err.message);
+        }),
+      reportPillBagCaps: (caps) =>
+        call("pillBagCaps", { jobId: job.id, caps }).catch((err) => {
+          console.error("  không lưu được sức chứa túi đan:", err.message);
         }),
       reportProgress: (next) => {
         progress = next;
